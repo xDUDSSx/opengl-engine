@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Lighting.h"
 #include "entity/lights/PointLight.h"
+#include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
 #include "entity/primitives/Cube.h"
 #include "parser/ObjParser.h"
@@ -87,11 +88,16 @@ void init()
     lighting->addLight(light2);
 
     SunLight* sun = new SunLight();
+    sun->direction = glm::vec3(0.5, 0.5, -1);
     lighting->addLight(sun);
+
+    SpotLight* spot = new SpotLight();
+    spot->position = glm::vec3(3, 0, 5);
+    lighting->addLight(spot);
 
     quad = std::make_shared<Quad>();
     quad->create(shader);
-    quad->position = glm::vec3(0, 0, -1);
+    quad->position = glm::vec3(0, -10, -1);
     quad->scale = glm::vec3(100);
 
     cube = std::make_shared<Cube>();

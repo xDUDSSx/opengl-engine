@@ -3,28 +3,39 @@
 #include "Mesh.h"
 
 Mesh::Mesh(float* verts, int vertsCount, unsigned int* indices, int indicesCount, int triangleCount, PhongShader& shader)
-    : indiciesCount(indicesCount)
-    , vertsCount(vertsCount)
+    : verts(verts)
     , indices(indices)
-    , verts(verts)
+	, vertsCount(vertsCount)
+    , indiciesCount(indicesCount) 
     , triangleCount(triangleCount)
-    , drawElementsMode(drawElementsMode)
+	, drawElementsMode(true)
 {
 	initDrawElements(verts, vertsCount, indices, indiciesCount, shader);
 }
 
-void Mesh::render() const {
-    glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, triangleCount * 3, GL_UNSIGNED_INT, nullptr);
-    CHECK_GL_ERROR();
+Mesh::Mesh(float* verts, const int vertsCount, const int triangleCount, PhongShader& shader)
+    : verts(verts)
+    , vertsCount(vertsCount)
+    , triangleCount(triangleCount)
+    , drawElementsMode(false)
+{
+    initDrawArrays(verts, vertsCount, shader);
+}
 
+void Mesh::render() const {
+    if (drawElementsMode) {
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, triangleCount * 3, GL_UNSIGNED_INT, nullptr);    
+    } else {
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, triangleCount * 3);
+    }
+    CHECK_GL_ERROR();
     glBindVertexArray(0);
 }
 
 void Mesh::initDrawElements(float* verts, int vertsCount, unsigned int* indices, int indicesCount, PhongShader& shader)
 {
-    drawElementsMode = true;
-
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);
 
@@ -38,6 +49,30 @@ void Mesh::initDrawElements(float* verts, int vertsCount, unsigned int* indices,
     
     const size_t vertexSize = 8 * sizeof(float);
     
+    glEnableVertexAttribArray(shader.aPos);
+    glVertexAttribPointer(shader.aPos, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)0);
+
+    glEnableVertexAttribArray(shader.aTexCoord);
+    glVertexAttribPointer(shader.aTexCoord, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)(3 * sizeof(float)));
+
+    glEnableVertexAttribArray(shader.aNormal);
+    glVertexAttribPointer(shader.aNormal, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)(5 * sizeof(float)));
+
+    CHECK_GL_ERROR();
+
+    glBindVertexArray(0);
+}
+
+void Mesh::initDrawArrays(float* verts, int vertsCount, PhongShader& shader) {
+    glGenVertexArrays(1, &this->vao);
+    glBindVertexArray(this->vao);
+
+    glGenBuffers(1, &this->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertsCount * sizeof(float), verts, GL_STATIC_DRAW);
+
+    const size_t vertexSize = 8 * sizeof(float);
+
     glEnableVertexAttribArray(shader.aPos);
     glVertexAttribPointer(shader.aPos, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)0);
 

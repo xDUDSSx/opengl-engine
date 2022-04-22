@@ -39,14 +39,30 @@ struct SunLight {
 	vec3 color;
 };
 
+struct SpotLight {
+	vec3 position;
+	vec3 direction;
+	
+	float cutoffAngle;
+	float cutoffSoftAngle;
+	float radius;
+
+	float intensity;
+	vec3 color;
+};
+
 #define MAX_POINT_LIGHTS 25
 #define MAX_SUN_LIGHTS 10
+#define MAX_SPOT_LIGHTS 20
 
 uniform int pointLightsCount;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 uniform int sunLightsCount;
 uniform SunLight sunLights[MAX_SUN_LIGHTS];
+
+uniform int spotLightsCount;
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 vec3 calculateSunLight(SunLight light, Material material, vec3 fragPos, vec3 normal) {
 	vec3 lightDir = (viewMatrix * vec4(light.direction, 0.0)).xyz;
@@ -58,9 +74,44 @@ vec3 calculateSunLight(SunLight light, Material material, vec3 fragPos, vec3 nor
 
 	vec3 ambientLight = light.color * 0.3f * material.ambient;
 	vec3 diffuseLight = light.color * material.diffuse * max(0.0, dot(N, L));
-	vec3 specularLight = light.color * material.specular * pow(max(0.0, dot(R, V)), material.shininess);
+	vec3 specularLight = light.color * 0.3f * material.specular * pow(max(0.0, dot(R, V)), material.shininess);
 
 	return light.intensity * (ambientLight + diffuseLight + specularLight);
+}
+
+vec3 calculateSpotLight(SpotLight light, Material material, vec3 fragPos, vec3 normal) {
+	vec3 lightPos = (viewMatrix * vec4(light.position, 1.0)).xyz;
+	vec3 lightDir = (viewMatrix * vec4(light.direction, 0.0)).xyz;
+
+	vec3 fragToLight = lightPos - fragPos;
+	float lightDist = length(fragToLight);
+	float lightRadius = light.radius;
+	vec3 L = normalize(fragToLight);
+	vec3 N = normalize(normal);
+	vec3 R = reflect(-L, N);
+	vec3 V = normalize(-fragPos);
+	vec3 S = normalize(lightDir);
+
+	float constant = 1.0;
+	float linear = 0.09f;
+	float quadratic = 0.032f;
+
+	vec3 ambientLight = light.color * 0.3f * material.ambient;
+	vec3 diffuseLight = light.color * material.diffuse * max(0.0, dot(N, L));
+	vec3 specularLight = light.color * material.specular * pow(max(0.0, dot(R, V)), material.shininess);
+
+	vec3 outColor = vec3(0);
+
+	float fragAngle = radians(90.0f) * max(0.0, dot(-L, S));
+	if (fragAngle >= light.cutoffAngle) {
+		float attenuation = 1.0 / (constant + linear * lightDist + quadratic * (lightDist * lightDist));    
+		float softFlatDiff = light.cutoffSoftAngle - light.cutoffAngle;
+		float softFactor = clamp((fragAngle - light.cutoffAngle) / softFlatDiff, 0.0, 1.0);
+		outColor = smoothstep(0.0, 1.0, softFactor) * light.intensity * attenuation * (ambientLight + diffuseLight + specularLight);
+	} else {
+		outColor *= 0;
+	}
+	return outColor;
 }
 
 vec3 calculatePointLight(PointLight light, Material material, vec3 fragPos, vec3 normal) {
@@ -101,6 +152,9 @@ void main() {
 	}
 	for (int i = 0; i < pointLightsCount; i++) {
 		outColor += calculatePointLight(pointLights[i], material, FragPos, Normal);
+	}
+	for (int i = 0; i < spotLightsCount; i++) {
+		outColor += calculateSpotLight(spotLights[i], material, FragPos, Normal);
 	}
 
 	FragColor = vec4(outColor, 1.0);

@@ -1,11 +1,13 @@
 #include "Lighting.h"
 
 #include "entity/lights/PointLight.h"
+#include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
 
 void Lighting::setUniforms(const PhongShader& shader) const {
     int pointLightCount = 0;
     int sunLightCount = 0;
+    int spotLightCount = 0;
     for (auto& light : lights) {
         if (typeid(*light) == typeid(PointLight)) {
             light->setUniforms(shader, pointLightCount);
@@ -14,10 +16,15 @@ void Lighting::setUniforms(const PhongShader& shader) const {
         if (typeid(*light) == typeid(SunLight)) {
             light->setUniforms(shader, sunLightCount);
         	sunLightCount++;
+        } else 
+        if (typeid(*light) == typeid(SpotLight)) {
+            light->setUniforms(shader, spotLightCount);
+            spotLightCount++;
         }
     }
     glUniform1i(glGetUniformLocation(shader.id, "pointLightsCount"), pointLightCount);
     glUniform1i(glGetUniformLocation(shader.id, "sunLightsCount"), sunLightCount);
+    glUniform1i(glGetUniformLocation(shader.id, "spotLightsCount"), spotLightCount);
 }
 
 void Lighting::addLight(Light* light) {

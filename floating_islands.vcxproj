@@ -147,7 +147,9 @@
   <ItemGroup>
     <ClCompile Include="src\entity\lights\PointLight.cpp" />
     <ClCompile Include="src\entity\general\Material.cpp" />
+    <ClCompile Include="src\entity\lights\SpotLight.cpp" />
     <ClCompile Include="src\entity\lights\SunLight.cpp" />
+    <ClCompile Include="src\entity\primitives\Teapot.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\entity\Camera.cpp" />
     <ClCompile Include="src\entity\general\Entity.cpp" />
@@ -164,7 +166,9 @@
   <ItemGroup>
     <ClInclude Include="src\entity\lights\PointLight.h" />
     <ClInclude Include="src\entity\general\Material.h" />
+    <ClInclude Include="src\entity\lights\SpotLight.h" />
     <ClInclude Include="src\entity\lights\SunLight.h" />
+    <ClInclude Include="src\entity\primitives\Teapot.h" />
     <ClInclude Include="src\Lighting.h" />
     <ClInclude Include="src\entity\lights\Light.h" />
     <ClInclude Include="src\entity\general\Entity.h" />

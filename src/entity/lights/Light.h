@@ -9,8 +9,4 @@ public:
     float intensity = 1;
 
     virtual void setUniforms(const PhongShader& shader, int index) const = 0;
-
-	//vec3 spotDirection; // spotlight direction
-    //float spotCosCutOff; // cosine of the spotlight's half angle
-    //float spotExponent; // distribution of the light energy within the reflector's cone (center->cone's edge)
 };
