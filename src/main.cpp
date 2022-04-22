@@ -1,12 +1,15 @@
 #include "pgr.h"
 #include <iostream>
 
-//#include "entity/Quad.h"
-#include "Camera.h"
-#include "entity/Cube.h"
+#include "entity/Camera.h"
+#include "Game.h"
+#include "Lighting.h"
+#include "entity/lights/PointLight.h"
+#include "entity/lights/SunLight.h"
+#include "entity/primitives/Cube.h"
 #include "parser/ObjParser.h"
 #include "shader/PhongShader.h"
-#include "entity/Quad.h"
+#include "entity/primitives/Quad.h"
 
 int winWidth = 500;
 int winHeight = 500;
@@ -25,23 +28,32 @@ bool mouseMiddleDown;
 std::shared_ptr<Camera> camera;
 std::shared_ptr<PhongShader> shader;
 
+std::shared_ptr<Lighting> lighting;
+
 std::shared_ptr<Quad> quad;
 std::shared_ptr<Cube> cube;
+std::shared_ptr<Cube> cube2;
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader->use();
+    lighting->setUniforms(*shader);
 
     quad->render(camera);
 	cube->render(camera);
+    cube2->render(camera);
 
     glutSwapBuffers();
 }
 
-void update(int)
+void update(int delta)
 {
-    // update the application state
+    Game::time = 0.001f * (float)glutGet(GLUT_ELAPSED_TIME);
+
+    quad->update();
+    cube->update();
+    cube2->update();
 
     // and plan a new event
     glutTimerFunc(fps, update, 0);
@@ -59,15 +71,35 @@ void init()
 
     camera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
     camera->setZNear(0.2f);
-	camera->setZFar(10.0f);
+	camera->setZFar(70.0f);
 
     shader = std::make_shared<PhongShader>("data/shaders/phongVert.glsl", "data/shaders/phongFrag.glsl");
-    
+
+    lighting = std::make_shared<Lighting>();
+
+    PointLight* light1 = new PointLight();
+    light1->position = glm::vec3(3, 2, 1);
+    lighting->addLight(light1);
+
+    PointLight* light2 = new PointLight();
+    light2->position = glm::vec3(3, -2, 1);
+    light2->color = glm::vec3(1.0, 0.0, 0.0);
+    lighting->addLight(light2);
+
+    SunLight* sun = new SunLight();
+    lighting->addLight(sun);
+
     quad = std::make_shared<Quad>();
     quad->create(shader);
+    quad->position = glm::vec3(0, 0, -1);
+    quad->scale = glm::vec3(100);
 
     cube = std::make_shared<Cube>();
     cube->create(shader);
+
+    cube2 = std::make_shared<Cube>();
+    cube2->create(shader);
+    cube2->position = glm::vec3(8, 0, 0);
 
     ObjParser parser("cube.obj");
     std::vector<float> vbo;

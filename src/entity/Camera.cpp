@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#include "Utils.h"
+#include "../Utils.h"
 
 Camera::Camera(int width, int height, glm::vec3 pivot) {
 	setPivot(pivot);

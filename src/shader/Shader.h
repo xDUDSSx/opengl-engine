@@ -4,7 +4,7 @@
 
 class Shader {
 public:
-    GLuint id;
+	GLuint id;
     
     virtual void use();
 

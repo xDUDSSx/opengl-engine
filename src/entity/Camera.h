@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pgr.h";
-#include "shader/PhongShader.h"
+#include "../shader/PhongShader.h"
 
 class Camera {
 public:
