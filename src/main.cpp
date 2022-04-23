@@ -6,14 +6,15 @@
 #include "Lighting.h"
 #include "Texture.h"
 #include "entity/Capacitor.h"
+#include "entity/C4.h"
 #include "entity/lights/PointLight.h"
 #include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
 #include "entity/primitives/Cube.h"
-#include "parser/ObjParser.h"
 #include "shader/PhongShader.h"
 #include "entity/primitives/Quad.h"
 #include "entity/primitives/Teapot.h"
+#include "shader/NormalDebugShader.h"
 
 int winWidth = 500;
 int winHeight = 500;
@@ -29,8 +30,11 @@ bool mouseLeftDown;
 bool mouseRightDown;
 bool mouseMiddleDown;
 
+bool drawDebugNormals = false;
+
 std::shared_ptr<Camera> camera;
 std::shared_ptr<PhongShader> shader;
+std::shared_ptr<NormalDebugShader> normalDebugShader;
 
 std::shared_ptr<Lighting> lighting;
 
@@ -39,120 +43,141 @@ std::shared_ptr<Quad> quad2;
 std::shared_ptr<Cube> cube;
 std::shared_ptr<Teapot> teapot;
 std::shared_ptr<Capacitor> capacitor;
+std::shared_ptr<C4> c4;
 
 void render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader->use();
-    lighting->setUniforms(*shader);
+	shader->use();
+	lighting->setUniforms(*shader);
 
-    quad->render(camera);
-    quad2->render(camera);
-	cube->render(camera);
-    teapot->render(camera);
-    capacitor->render(camera);
+	quad->render(*shader, *camera);
+	quad2->render(*shader, *camera);
+	cube->render(*shader, *camera);
+	teapot->render(*shader, *camera);
+	capacitor->render(*shader, *camera);
+	c4->render(*shader, *camera);
 
-    glutSwapBuffers();
+	if (drawDebugNormals) {
+        normalDebugShader->use();
+        capacitor->render(*normalDebugShader, *camera);
+        quad2->render(*normalDebugShader, *camera);
+        cube->render(*normalDebugShader, *camera);
+        c4->render(*normalDebugShader, *camera);
+	}
+
+	glutSwapBuffers();
 }
 
 void update(int delta)
 {
-    Game::time = 0.001f * (float)glutGet(GLUT_ELAPSED_TIME);
+	Game::time = 0.001f * (float)glutGet(GLUT_ELAPSED_TIME);
 
-    quad->update();
-    quad2->update();
-    cube->update();
-    teapot->update();
-    capacitor->update();
+	quad->update();
+	quad2->update();
+	cube->update();
+	teapot->update();
+	capacitor->update();
+    c4->update();
 
-    // and plan a new event
-    glutTimerFunc(fps, update, 0);
+	// and plan a new event
+	glutTimerFunc(fps, update, 0);
 
-    // create display event
-    glutPostRedisplay();
+	// create display event
+	glutPostRedisplay();
 }
 
 void init()
 {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClearStencil(0);
-    glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_MULTISAMPLE);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearStencil(0);
+	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_MULTISAMPLE);
 
-    camera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-    camera->setZNear(0.2f);
+	camera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
+	camera->setZNear(0.2f);
 	camera->setZFar(70.0f);
 
-    shader = std::make_shared<PhongShader>("data/shaders/phongVert.glsl", "data/shaders/phongFrag.glsl");
+	shader = std::make_shared<PhongShader>("data/shaders/phongVert.glsl", "data/shaders/phongFrag.glsl");
 
-    lighting = std::make_shared<Lighting>();
+	std::string geoShader = "data/shaders/normalDebugGeo.glsl";
+	normalDebugShader = std::make_shared<NormalDebugShader>("data/shaders/normalDebugVert.glsl", "data/shaders/normalDebugFrag.glsl", &geoShader);
 
-    PointLight* light1 = new PointLight();
-    light1->position = glm::vec3(6, 4, 5);
-    lighting->addLight(light1);
+	lighting = std::make_shared<Lighting>();
 
-    PointLight* light2 = new PointLight();
-    light2->position = glm::vec3(0, -2, 5);
-    light2->color = glm::vec3(1.0, 0.0, 0.0);
-    lighting->addLight(light2);
+	PointLight* light1 = new PointLight();
+	light1->position = glm::vec3(6, 4, 5);
+	lighting->addLight(light1);
 
-    PointLight* light3 = new PointLight();
-    light3->position = glm::vec3(-3, -1.5, 0.5);
-    lighting->addLight(light3);
+	PointLight* light2 = new PointLight();
+	light2->position = glm::vec3(0, -2, 5);
+	light2->color = glm::vec3(1.0, 0.0, 0.0);
+	lighting->addLight(light2);
 
-    PointLight* light4 = new PointLight();
-    light4->intensity = 0.7f;
-    light4->radius = 20;
-    light4->position = glm::vec3(2, 7, 3);
-    lighting->addLight(light4);
+	PointLight* light3 = new PointLight();
+	light3->position = glm::vec3(-3, -1.5, 0.5);
+	lighting->addLight(light3);
 
-    SunLight* sun = new SunLight();
-    sun->color = glm::vec3(0.93, 0.98, 1.0);
-    sun->direction = glm::vec3(0.5, 0.5, -1);
-    //lighting->addLight(sun);
+	PointLight* light4 = new PointLight();
+	light4->intensity = 2.0f;
+	light4->radius = 15;
+	light4->position = glm::vec3(2, 7, 3);
+	lighting->addLight(light4);
 
-    SpotLight* spot = new SpotLight();
-    spot->intensity = 0.4f;
-    spot->position = glm::vec3(4, 3, 6);
-    spot->direction = glm::vec3(3, -1.5, -6);
-    //lighting->addLight(spot);
+	SunLight* sun = new SunLight();
+	sun->color = glm::vec3(0.93, 0.98, 1.0);
+	sun->direction = glm::vec3(0.5, 0.5, -1);
+	lighting->addLight(sun);
 
-    quad = std::make_shared<Quad>();
-    quad->create(shader);
-    quad->position = glm::vec3(0, -10, -1);
-    quad->scale = glm::vec3(100);
+	SpotLight* spot = new SpotLight();
+	spot->intensity = 0.4f;
+	spot->position = glm::vec3(4, 3, 6);
+	spot->direction = glm::vec3(3, -1.5, -6);
+	lighting->addLight(spot);
 
-    quad2 = std::make_shared<Quad>();
+	quad = std::make_shared<Quad>();
+	quad->create(shader);
+	quad->position = glm::vec3(0, -10, -1);
+	quad->scale = glm::vec3(100);
+
+	quad2 = std::make_shared<Quad>();
 	quad2->create(shader);
 	quad2->position = glm::vec3(5, 5, -0.5);
 	quad2->scale = glm::vec3(3);
-    //quad2->rotation = glm::vec3(90, 0, 0);
+	//quad2->rotation = glm::vec3(90, 0, 0);
 	//quad2->material->diffuse = glm::vec3(1, 0, 0);
-    quad2->material->shininess = 24;
+	quad2->material->shininess = 24;
 	quad2->texture = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebbles-diffuse.jpg", "diffuse");
-    //quad2->specularMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebble-specular_inv.jpg", "specular");
+	//quad2->specularMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebble-specular_inv.jpg", "specular");
 	quad2->normalMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebbles-normal.jpg", "normal");
-    //quad2->texture = std::make_shared<Texture>("data/textures/brickwall.jpg", "diffuse");
-    //quad2->normalMap = std::make_shared<Texture>("data/textures/brickwall_normal.jpg", "normal");
+	//quad2->texture = std::make_shared<Texture>("data/textures/brickwall.jpg", "diffuse");
+	//quad2->normalMap = std::make_shared<Texture>("data/textures/brickwall_normal.jpg", "normal");
 
-    cube = std::make_shared<Cube>();
-    cube->create(shader);
+	cube = std::make_shared<Cube>();
+	cube->create(shader);
 
-    teapot = std::make_shared<Teapot>();
-    teapot->create(shader);
-    teapot->position = glm::vec3(8, 0, 0);
+	teapot = std::make_shared<Teapot>();
+	teapot->create(shader);
+	teapot->position = glm::vec3(8, 0, 0);
 
-    capacitor = std::make_shared<Capacitor>();
-    capacitor->create(shader);
-    capacitor->position = glm::vec3(0, 7, -1);
-    capacitor->scale = glm::vec3(3);
+	capacitor = std::make_shared<Capacitor>();
+	capacitor->create(shader);
+	capacitor->position = glm::vec3(0, 7, -1);
+	capacitor->scale = glm::vec3(3);
+
+	c4 = std::make_shared<C4>();
+    c4->create(shader);
+    c4->position = glm::vec3(0, 4, 0);
+    c4->scale = glm::vec3(1);
 }
 
 void reshape(int newWidth, int newHeight) {
-    winWidth = newWidth;
-    winHeight = newHeight;
-    glViewport(0, 0, winWidth, winHeight);
-    camera->size(newWidth, newHeight);
+	winWidth = newWidth;
+	winHeight = newHeight;
+	glViewport(0, 0, winWidth, winHeight);
+	camera->size(newWidth, newHeight);
 };
 
 /**
@@ -165,6 +190,15 @@ void reshape(int newWidth, int newHeight) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
+	switch (keyPressed) {
+		case 27: // escape
+			#ifndef __APPLE__
+				glutLeaveMainLoop();
+			#else
+				exit(0);
+			#endif
+			break;
+	}
 }
 
 /**
@@ -188,6 +222,11 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
+	switch (specKeyPressed) {
+		case GLUT_KEY_F1:
+            drawDebugNormals = !drawDebugNormals;
+			break;
+	}
 }
 
 void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
@@ -204,24 +243,24 @@ void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
  * \param y mouse (cursor) Y position
  */
 void mouseClicked(int button, int state, int x, int y) {
-    mouseX = x;
-    mouseY = y;
+	mouseX = x;
+	mouseY = y;
 	if (button == GLUT_LEFT_BUTTON) {
-        mouseLeftDown = (state == GLUT_DOWN);
-    } else
-    if (button == GLUT_RIGHT_BUTTON) {
-        mouseRightDown = (state == GLUT_DOWN);
-    } else 
-    if (button == GLUT_MIDDLE_BUTTON) {
-        mouseMiddleDown = (state == GLUT_DOWN);
-    }
+		mouseLeftDown = (state == GLUT_DOWN);
+	} else
+	if (button == GLUT_RIGHT_BUTTON) {
+		mouseRightDown = (state == GLUT_DOWN);
+	} else 
+	if (button == GLUT_MIDDLE_BUTTON) {
+		mouseMiddleDown = (state == GLUT_DOWN);
+	}
 }
 
 void mouseWheel(int wheel, int dir, int x, int y)
 {
-    mouseX = x;
-    mouseY = y;
-    camera->mouseWheel(dir, 1);
+	mouseX = x;
+	mouseY = y;
+	camera->mouseWheel(dir, 1);
 }
 
 /**
@@ -232,9 +271,9 @@ void mouseWheel(int wheel, int dir, int x, int y)
  */
 void mouseDragged(int x, int y) {
 	mouseDx = x - mouseX;
-    mouseDy = y - mouseY;
-    mouseX = x;
-    mouseY = y;
+	mouseDy = y - mouseY;
+	mouseX = x;
+	mouseY = y;
 	camera->mouseDrag(mouseDx, mouseDy, mouseLeftDown, mouseMiddleDown);
 }
 
@@ -244,9 +283,9 @@ void mouseDragged(int x, int y) {
  * \param y mouse (cursor) Y position
  */
 void mouseMoved(int x, int y) {
-    mouseX = x;
-    mouseY = y;
-    glutPostRedisplay();
+	mouseX = x;
+	mouseY = y;
+	glutPostRedisplay();
 }
 
 /**
@@ -254,13 +293,13 @@ void mouseMoved(int x, int y) {
  */
 void dispose(void) {
 
-    // cleanUpObjects();
+	// cleanUpObjects();
 
-    // delete buffers
-    // cleanupModels();
+	// delete buffers
+	// cleanupModels();
 
-    // delete shaders
-    // cleanupShaderPrograms();
+	// delete shaders
+	// cleanupShaderPrograms();
 }
 
 /**
@@ -272,50 +311,51 @@ void dispose(void) {
 int main(int argc, char** argv)
 {
 
-    // initialize the GLUT library (windowing system)
-    glutInit(&argc, argv);
+	// initialize the GLUT library (windowing system)
+	glutInit(&argc, argv);
 
-    glutInitContextVersion(pgr::OGL_VER_MAJOR, pgr::OGL_VER_MINOR);
-    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+	glutInitContextVersion(pgr::OGL_VER_MAJOR, pgr::OGL_VER_MINOR);
+	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
 
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutSetOption(GLUT_MULTISAMPLE, 4);
 
-    // for each window
-    {
-        //   initial window size + title
-        glutInitWindowSize(winWidth, winHeight);
-        glutCreateWindow(winTitle.c_str());
+	// for each window
+	{
+		//   initial window size + title
+		glutInitWindowSize(winWidth, winHeight);
+		glutCreateWindow(winTitle.c_str());
 
-        // Callbacks - use only those you need
-        glutDisplayFunc(render);
-        glutReshapeFunc(reshape);
-        // glutKeyboardFunc(keyboardCb);
-        // glutKeyboardUpFunc(keyboardUpCb);
-        // glutSpecialFunc(specialKeyboardCb);     // key pressed
-        // glutSpecialUpFunc(specialKeyboardUpCb); // key released
-        glutMouseFunc(mouseClicked);
-        glutMotionFunc(mouseDragged);
-        glutPassiveMotionFunc(mouseMoved);
-        glutMouseWheelFunc(mouseWheel);
-        glutTimerFunc(fps, update, 0);
-    }
-    // end for each window
+		// Callbacks - use only those you need
+		glutDisplayFunc(render);
+		glutReshapeFunc(reshape);
+		glutKeyboardFunc(keyboardCb);
+		glutKeyboardUpFunc(keyboardUpCb);
+		glutSpecialFunc(specialKeyboardCb);     // key pressed
+		glutSpecialUpFunc(specialKeyboardUpCb); // key released
+		glutMouseFunc(mouseClicked);
+		glutMotionFunc(mouseDragged);
+		glutPassiveMotionFunc(mouseMoved);
+		glutMouseWheelFunc(mouseWheel);
+		glutTimerFunc(fps, update, 0);
+	}
+	// end for each window
 
-    // initialize PGR framework (GL, DevIl, etc.)
-    if (!pgr::initialize(pgr::OGL_VER_MAJOR, pgr::OGL_VER_MINOR))
-        pgr::dieWithError("pgr init failed, required OpenGL not supported?");
+	// initialize PGR framework (GL, DevIl, etc.)
+	if (!pgr::initialize(pgr::OGL_VER_MAJOR, pgr::OGL_VER_MINOR))
+		pgr::dieWithError("pgr init failed, required OpenGL not supported?");
 
-    // init your stuff - shaders & program, buffers, locations, state of the application
-    init();
+	// init your stuff - shaders & program, buffers, locations, state of the application
+	init();
 
-    // handle window close by the user
-    glutCloseFunc(dispose);
+	// handle window close by the user
+	glutCloseFunc(dispose);
 
-    // Infinite loop handling the events
-    glutMainLoop();
+	// Infinite loop handling the events
+	glutMainLoop();
 
-    // code after glutLeaveMainLoop()
-    // cleanup
+	// code after glutLeaveMainLoop()
+	// cleanup
 
-    return 0;
+	return 0;
 }

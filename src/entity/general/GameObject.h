@@ -6,6 +6,7 @@
 #include "../../Mesh.h"
 #include "../../entity/Camera.h"
 #include "../../Texture.h"
+#include "../../parser/ObjParser.h"
 
 class GameObject : public Entity{
 public:
@@ -20,6 +21,7 @@ public:
     std::shared_ptr<Texture> specularMap;
     std::shared_ptr<Texture> aoMap;
     std::shared_ptr<Texture> normalMap;
+    std::shared_ptr<Texture> emissionMap;
 
 protected:
     glm::mat4 modelMatrix;
@@ -27,7 +29,9 @@ protected:
 public:
     GameObject();
 
-    virtual void render(std::shared_ptr<Camera> camera);
+    virtual void render(PhongShader& shader, Camera& camera);
     virtual void update();
 	virtual void create(std::shared_ptr<PhongShader> shader);
+
+    void loadMesh(const char* path, bool arraysOrElements);
 };

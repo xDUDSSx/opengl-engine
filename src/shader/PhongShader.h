@@ -13,14 +13,14 @@ public:
 
     // Uniforms
     GLuint pvmMatrixId;
-    GLuint modelMatrixId;
+    GLuint projectionMatrixId;
+	GLuint modelMatrixId;
     GLuint viewMatrixId;
     GLuint normalMatrixId;
 
-    // Precomputed
-    glm::mat4 pvMatrix;
-
     PhongShader(const std::string& vertShader, const std::string& fragShader);
+    PhongShader(const std::string& vertShader, const std::string& fragShader, const std::string* geoShader);
+
 
     /**
      * \brief Applies MVP matrices.

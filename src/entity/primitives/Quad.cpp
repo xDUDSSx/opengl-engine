@@ -1,8 +1,8 @@
 #include "Quad.h"
 
-void Quad::render(std::shared_ptr<Camera> camera)
+void Quad::render(PhongShader& shader, Camera& camera)
 {
-    GameObject::render(camera);
+    GameObject::render(shader, camera);
 }
 
 void Quad::create(std::shared_ptr<PhongShader> shader)

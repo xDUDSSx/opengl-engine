@@ -16,11 +16,14 @@ uniform bool		diffuse0_active = false;
 uniform sampler2D	specular0;
 uniform bool		specular0_active = false;
 
+uniform sampler2D	normal0;
+uniform bool		normal0_active = false;
+
 uniform sampler2D	ao0;
 uniform bool		ao0_active = false;
 
-uniform sampler2D	normal0;
-uniform bool		normal0_active = false;
+uniform sampler2D	emission0;
+uniform bool		emission0_active = false;
 
 struct Material {
 	vec3 diffuse;
@@ -81,11 +84,24 @@ vec3 calculateAmbientLight(vec3 lightColor, vec3 ambient) {
 }
 
 vec3 calculateDiffuseLight(vec3 lightColor, vec3 diffuse, vec3 N, vec3 L) {
-	return lightColor * diffuse * max(0.0, dot(N, L)) * (diffuse0_active ? vec3(texture(diffuse0, TexCoords)) : vec3(1));
+	vec3 res = lightColor * diffuse * max(0.0, dot(N, L));
+	res *= (diffuse0_active ? vec3(texture(diffuse0, TexCoords)) : vec3(1));
+	res *= (ao0_active ? vec3(texture(ao0, TexCoords)) : vec3(1));
+	res += (emission0_active ? vec3(texture(emission0, TexCoords)) : vec3(0));
+	return res;
 }
 
 vec3 calculateSpecularLight(vec3 lightColor, vec3 specular, vec3 R, vec3 V, float shininess) {
 	return lightColor * specular * pow(max(0.0, dot(R, V)), material.shininess) * (specular0_active ? vec3(texture(specular0, TexCoords)) : vec3(1));
+}
+
+vec3 calculateNormalMapping(vec3 normal, vec3 tangent, vec3 binormal) {
+	if (normal0_active) {
+		vec3 mapNormal = texture(normal0, TexCoords).rgb;
+		mapNormal = normalize(mapNormal * 2.0 - 1.0); // from [0, 1] to [-1, 1]
+		normal = normalize(mat3(tangent, binormal, normal) * mapNormal); // from tangent space to view space
+	}
+	return normal;
 }
 
 float calculateAttenuation(float dist, float radius) {
@@ -100,7 +116,9 @@ float calculateAttenuation(float dist, float radius) {
 	return attenuation;
 }
 
-vec3 calculateSunLight(SunLight light, Material material, vec3 fragPos, vec3 normal) {
+vec3 calculateSunLight(SunLight light, Material material, vec3 fragPos, vec3 normal, vec3 tangent, vec3 binormal) {
+	normal = calculateNormalMapping(normal, tangent, binormal);
+
 	vec3 lightDir = (viewMatrix * vec4(light.direction, 0.0)).xyz;
 	vec3 fragToLight = -lightDir;
 	vec3 L = normalize(fragToLight);
@@ -117,7 +135,9 @@ vec3 calculateSunLight(SunLight light, Material material, vec3 fragPos, vec3 nor
 	return light.intensity * (ambientLight + diffuseLight + specularLight);
 }
 
-vec3 calculateSpotLight(SpotLight light, Material material, vec3 fragPos, vec3 normal) {
+vec3 calculateSpotLight(SpotLight light, Material material, vec3 fragPos, vec3 normal, vec3 tangent, vec3 binormal) {
+	normal = calculateNormalMapping(normal, tangent, binormal);
+
 	vec3 lightPos = (viewMatrix * vec4(light.position, 1.0)).xyz;
 	vec3 lightDir = (viewMatrix * vec4(light.direction, 0.0)).xyz;
 
@@ -148,14 +168,8 @@ vec3 calculateSpotLight(SpotLight light, Material material, vec3 fragPos, vec3 n
 	return outColor;
 }
 
-vec3 calculatePointLight(PointLight light, Material material, vec3 fragPos, vec3 normal) {
-	// Normal mapping
-	if (normal0_active) {
-		normal = texture(normal0, TexCoords).rgb;
-		//normal = vec3(normal.x, 1.0f - normal.y, normal.z);
-		normal = normalize(normal * 2.0 - 1.0); // from [0, 1] to [-1, 1]
-		normal = normalize(mat3(Tangent, Binormal, Normal) * normal); // from tangent space to view space
-	}
+vec3 calculatePointLight(PointLight light, Material material, vec3 fragPos, vec3 normal, vec3 tangent, vec3 binormal) {
+	normal = calculateNormalMapping(normal, tangent, binormal);
 
 	vec3 lightPos = (viewMatrix * vec4(light.position, 1.0)).xyz;
 	vec3 fragToLight = lightPos - fragPos;
@@ -171,21 +185,26 @@ vec3 calculatePointLight(PointLight light, Material material, vec3 fragPos, vec3
 	vec3 specularLight = calculateSpecularLight(light.color, material.specular, R, V, material.shininess);
 
 	float attenuation = calculateAttenuation(lightDist, lightRadius);
-
 	return light.intensity * attenuation * (ambientLight + diffuseLight + specularLight);
 }
 
 void main() {
 	vec3 outColor = vec3(0);
 	for (int i = 0; i < sunLightsCount; i++) {
-		outColor += calculateSunLight(sunLights[i], material, FragPos, Normal);
+		outColor += calculateSunLight(sunLights[i], material, FragPos, Normal, Tangent, Binormal);
 	}
 	for (int i = 0; i < pointLightsCount; i++) {
-		outColor += calculatePointLight(pointLights[i], material, FragPos, Normal);
+		outColor += calculatePointLight(pointLights[i], material, FragPos, Normal, Tangent, Binormal);
 	}
 	for (int i = 0; i < spotLightsCount; i++) {
-		outColor += calculateSpotLight(spotLights[i], material, FragPos, Normal);
+		outColor += calculateSpotLight(spotLights[i], material, FragPos, Normal, Tangent, Binormal);
 	}
 
-	FragColor = vec4(outColor, 1.0);
+	float gamma = 1.1;
+	float exposure = 1.6;
+	
+	vec3 mapped = vec3(1.0) - exp(-outColor * exposure); // HDR correction
+	mapped = pow(mapped, vec3(1.0 / gamma)); // gamma correction
+  
+	FragColor = vec4(mapped, 1.0);
 }

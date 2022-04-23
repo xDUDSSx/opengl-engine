@@ -2,11 +2,18 @@
 
 #define MAX_DIFFUSE_TEXTURES 1
 #define MAX_SPECULAR_TEXTURES 1
-#define MAX_AO_TEXTURES 1
 #define MAX_NORMAL_TEXTURES 1
+#define MAX_AO_TEXTURES 1
+#define MAX_EMISSION_TEXTURES 1
 
 PhongShader::PhongShader(const std::string& vertShader, const std::string& fragShader)
-	: Shader(vertShader, fragShader)
+	: PhongShader(vertShader, fragShader, nullptr)
+{
+    //Empty
+}
+
+PhongShader::PhongShader(const std::string& vertShader, const std::string& fragShader, const std::string* geoShader)
+    : Shader(vertShader, fragShader, geoShader)
 {
     aPos = 0;
     aColor = 1;
@@ -15,6 +22,7 @@ PhongShader::PhongShader(const std::string& vertShader, const std::string& fragS
     aTangent = 4;
 
     pvmMatrixId = glGetUniformLocation(id, "pvmMatrix");
+    projectionMatrixId = glGetUniformLocation(id, "projectionMatrix");
     modelMatrixId = glGetUniformLocation(id, "modelMatrix");
     viewMatrixId = glGetUniformLocation(id, "viewMatrix");
     normalMatrixId = glGetUniformLocation(id, "normalMatrix");
@@ -30,6 +38,7 @@ void PhongShader::setTransformUniforms(const glm::mat4& model, const glm::mat4& 
     glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelRotationMatrix));
 
     glUniformMatrix4fv(pvmMatrixId, 1, GL_FALSE, glm::value_ptr(pvm));
+    glUniformMatrix4fv(projectionMatrixId, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(viewMatrixId, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(modelMatrixId, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(normalMatrixId, 1, GL_FALSE, glm::value_ptr(normalMatrix));
@@ -47,12 +56,16 @@ void PhongShader::clearTextures() const {
     for (int i = 0; i < MAX_SPECULAR_TEXTURES; i++) {
         glUniform1i(glGetUniformLocation(id, (type + std::to_string(i) + "_active").c_str()), GL_FALSE);
     }
+    type = "normal";
+    for (int i = 0; i < MAX_NORMAL_TEXTURES; i++) {
+        glUniform1i(glGetUniformLocation(id, (type + std::to_string(i) + "_active").c_str()), GL_FALSE);
+    }
     type = "ao";
     for (int i = 0; i < MAX_AO_TEXTURES; i++) {
         glUniform1i(glGetUniformLocation(id, (type + std::to_string(i) + "_active").c_str()), GL_FALSE);
     }
-    type = "normal";
-    for (int i = 0; i < MAX_NORMAL_TEXTURES; i++) {
+    type = "emission";
+    for (int i = 0; i < MAX_EMISSION_TEXTURES; i++) {
         glUniform1i(glGetUniformLocation(id, (type + std::to_string(i) + "_active").c_str()), GL_FALSE);
     }
 }

@@ -6,6 +6,7 @@ layout (location = 3) in vec3 aNormal;
 layout (location = 4) in vec3 aTangent;
 
 uniform mat4 pvmMatrix;
+uniform mat4 projectionMatrix;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 normalMatrix;
