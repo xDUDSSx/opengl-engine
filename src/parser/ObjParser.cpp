@@ -9,6 +9,7 @@
 ObjParser::ObjParser(const char* path)
 {
     parseObj(path);
+    calculateTangents();
 }
 
 // Only parses obj files with triangle faces, so the mesh needs to be triangulated prior to export.
@@ -85,6 +86,51 @@ void ObjParser::parseObj(const char* path)
     std::cout << "Loaded obj from file '" << path << "'" << std::endl;
 }
 
+void ObjParser::calculateTangents() {
+    tangentIndices.clear();
+    tangentIndices.reserve(triangleCount * 3);
+    tangents.clear();
+    tangents.reserve(triangleCount);
+
+	//Go through each triangle
+    for (int i = 0; i < vertexIndices.size(); i++) {
+        auto v = vertexIndices[i];
+        auto t = uvIndices[i];
+        auto n = normalIndices[i];
+
+        //Calculating a tangent vector from vertex positions and uv coordinates
+        //Essentially just solving a matrix equation
+        //The method is described here
+        //http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/
+        //and here
+        //https://learnopengl.com/Advanced-Lighting/Normal-Mapping
+
+        glm::vec3 pos1 = vertices[v[0] - 1];
+        glm::vec3 pos2 = vertices[v[1] - 1];
+        glm::vec3 pos3 = vertices[v[2] - 1];
+
+        glm::vec2 uv1 = uvs[t[0] - 1];
+        glm::vec2 uv2 = uvs[t[1] - 1];
+        glm::vec2 uv3 = uvs[t[2] - 1];
+
+        glm::vec3 e1 = pos2 - pos1;
+        glm::vec3 e2 = pos3 - pos1;
+        glm::vec2 d1 = uv2 - uv1;
+        glm::vec2 d2 = uv3 - uv1;
+
+        float f = 1.0f / d1.x * d2.y - d2.x * d1.y;
+
+        glm::vec3 tangent = glm::vec3(0);
+		tangent.x = f * (d2.y * e1.x - d1.y * e2.x);
+		tangent.y = f * (d2.y * e1.y - d1.y * e2.y);
+		tangent.z = f * (d2.y * e1.z - d1.y * e2.z);
+
+        tangents.push_back(glm::normalize(tangent));
+    	// Assign tangent to the triangle. Same for all vertices of a triangle (only store a single index)
+    	tangentIndices.push_back(i);
+    }
+}
+
 void ObjParser::getDrawArraysGeo(std::vector<float> &vbo)
 {
     vbo.clear();
@@ -92,8 +138,9 @@ void ObjParser::getDrawArraysGeo(std::vector<float> &vbo)
 
     for (int i = 0; i < vertexIndices.size(); i++) {
         auto v = vertexIndices[i];
-        auto t = uvIndices[i];
+        auto u = uvIndices[i];
         auto n = normalIndices[i];
+        auto t = tangentIndices[i];
 
         for (int k = 0; k < 3; k++) {
             glm::vec3 vertex = vertices[v[k] - 1];
@@ -101,7 +148,7 @@ void ObjParser::getDrawArraysGeo(std::vector<float> &vbo)
             vbo.push_back(vertex.y);
             vbo.push_back(vertex.z);
 
-            glm::vec2 uv = uvs[t[k] - 1];
+            glm::vec2 uv = uvs[u[k] - 1];
             vbo.push_back(uv.x);
             vbo.push_back(uv.y);
 
@@ -109,6 +156,11 @@ void ObjParser::getDrawArraysGeo(std::vector<float> &vbo)
             vbo.push_back(normal.x);
             vbo.push_back(normal.y);
             vbo.push_back(normal.z);
+
+            glm::vec3 tangent = tangents[t]; //Same for all vertices of a triangle
+            vbo.push_back(tangent.x);
+            vbo.push_back(tangent.y);
+            vbo.push_back(tangent.z);
         }
     }
 }
@@ -129,14 +181,16 @@ void ObjParser::getDrawElementsGeo(std::vector<float>& vbo, std::vector<unsigned
 
     for (int i = 0; i < vertexIndices.size(); i++) {
         auto v = vertexIndices[i];
-        auto t = uvIndices[i];
+        auto u = uvIndices[i];
         auto n = normalIndices[i];
+        auto t = tangentIndices[i];
 
         for (int k = 0; k < 3; k++) {
             ObjVertex* vertex = &vboEntries[v[k] - 1];
             ebo.push_back(v[k] - 1);
-            vertex->uv = uvs[t[k] - 1];
+            vertex->uv = uvs[u[k] - 1];
             vertex->normal = normals[n[k] - 1];
+            vertex->tangent = tangents[t]; //Same for all vertices of a triangle
         }
     }
 
@@ -152,6 +206,10 @@ void ObjParser::getDrawElementsGeo(std::vector<float>& vbo, std::vector<unsigned
         vbo.push_back(e.normal.x);
         vbo.push_back(e.normal.y);
         vbo.push_back(e.normal.z);
+
+        vbo.push_back(e.tangent.x);
+        vbo.push_back(e.tangent.y);
+        vbo.push_back(e.tangent.z);
     }
 }
 

@@ -4,7 +4,7 @@
 
 class SpotLight : public Light {
 public:
-    float radius = 200.0f;
+    float radius = 70.0f;
     float cutoffAngle = 10;
     float cutoffSoftAngle = 6;
     glm::vec3 direction = glm::vec3(0, 0, -1);

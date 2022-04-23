@@ -4,6 +4,8 @@
 #include "entity/Camera.h"
 #include "Game.h"
 #include "Lighting.h"
+#include "Texture.h"
+#include "entity/Capacitor.h"
 #include "entity/lights/PointLight.h"
 #include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
@@ -11,6 +13,7 @@
 #include "parser/ObjParser.h"
 #include "shader/PhongShader.h"
 #include "entity/primitives/Quad.h"
+#include "entity/primitives/Teapot.h"
 
 int winWidth = 500;
 int winHeight = 500;
@@ -32,8 +35,10 @@ std::shared_ptr<PhongShader> shader;
 std::shared_ptr<Lighting> lighting;
 
 std::shared_ptr<Quad> quad;
+std::shared_ptr<Quad> quad2;
 std::shared_ptr<Cube> cube;
-std::shared_ptr<Cube> cube2;
+std::shared_ptr<Teapot> teapot;
+std::shared_ptr<Capacitor> capacitor;
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -42,8 +47,10 @@ void render() {
     lighting->setUniforms(*shader);
 
     quad->render(camera);
+    quad2->render(camera);
 	cube->render(camera);
-    cube2->render(camera);
+    teapot->render(camera);
+    capacitor->render(camera);
 
     glutSwapBuffers();
 }
@@ -53,8 +60,10 @@ void update(int delta)
     Game::time = 0.001f * (float)glutGet(GLUT_ELAPSED_TIME);
 
     quad->update();
+    quad2->update();
     cube->update();
-    cube2->update();
+    teapot->update();
+    capacitor->update();
 
     // and plan a new event
     glutTimerFunc(fps, update, 0);
@@ -79,44 +88,64 @@ void init()
     lighting = std::make_shared<Lighting>();
 
     PointLight* light1 = new PointLight();
-    light1->position = glm::vec3(3, 2, 1);
+    light1->position = glm::vec3(6, 4, 5);
     lighting->addLight(light1);
 
     PointLight* light2 = new PointLight();
-    light2->position = glm::vec3(3, -2, 1);
+    light2->position = glm::vec3(0, -2, 5);
     light2->color = glm::vec3(1.0, 0.0, 0.0);
     lighting->addLight(light2);
 
+    PointLight* light3 = new PointLight();
+    light3->position = glm::vec3(-3, -1.5, 0.5);
+    lighting->addLight(light3);
+
+    PointLight* light4 = new PointLight();
+    light4->intensity = 0.7f;
+    light4->radius = 20;
+    light4->position = glm::vec3(2, 7, 3);
+    lighting->addLight(light4);
+
     SunLight* sun = new SunLight();
+    sun->color = glm::vec3(0.93, 0.98, 1.0);
     sun->direction = glm::vec3(0.5, 0.5, -1);
-    lighting->addLight(sun);
+    //lighting->addLight(sun);
 
     SpotLight* spot = new SpotLight();
-    spot->position = glm::vec3(3, 0, 5);
-    lighting->addLight(spot);
+    spot->intensity = 0.4f;
+    spot->position = glm::vec3(4, 3, 6);
+    spot->direction = glm::vec3(3, -1.5, -6);
+    //lighting->addLight(spot);
 
     quad = std::make_shared<Quad>();
     quad->create(shader);
     quad->position = glm::vec3(0, -10, -1);
     quad->scale = glm::vec3(100);
 
+    quad2 = std::make_shared<Quad>();
+	quad2->create(shader);
+	quad2->position = glm::vec3(5, 5, -0.5);
+	quad2->scale = glm::vec3(3);
+    //quad2->rotation = glm::vec3(90, 0, 0);
+	//quad2->material->diffuse = glm::vec3(1, 0, 0);
+    quad2->material->shininess = 24;
+	quad2->texture = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebbles-diffuse.jpg", "diffuse");
+    //quad2->specularMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebble-specular_inv.jpg", "specular");
+	quad2->normalMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebbles-normal.jpg", "normal");
+    //quad2->texture = std::make_shared<Texture>("data/textures/brickwall.jpg", "diffuse");
+    //quad2->normalMap = std::make_shared<Texture>("data/textures/brickwall_normal.jpg", "normal");
+
     cube = std::make_shared<Cube>();
     cube->create(shader);
 
-    cube2 = std::make_shared<Cube>();
-    cube2->create(shader);
-    cube2->position = glm::vec3(8, 0, 0);
+    teapot = std::make_shared<Teapot>();
+    teapot->create(shader);
+    teapot->position = glm::vec3(8, 0, 0);
 
-    ObjParser parser("cube.obj");
-    std::vector<float> vbo;
-    std::vector<unsigned int> ebo;
-    parser.getDrawElementsGeo(vbo, ebo);
-    std::cout << "Triangle count: " << parser.getTriangleCount() << std::endl;
-
-    //// initialize shaders
-    //initializeShaderPrograms();
-    //// create geometry for all models used
-    //initializeModels();
+    capacitor = std::make_shared<Capacitor>();
+    capacitor->create(shader);
+    capacitor->position = glm::vec3(0, 7, -1);
+    capacitor->scale = glm::vec3(3);
 }
 
 void reshape(int newWidth, int newHeight) {

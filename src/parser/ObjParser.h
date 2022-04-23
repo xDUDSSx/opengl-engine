@@ -22,12 +22,15 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> tangents;
 
     std::vector<ObjVertex> vboEntries;
 
-    std::vector<std::array<int, 3>> vertexIndices;
-    std::vector<std::array<int, 3>> uvIndices;
-    std::vector<std::array<int, 3>> normalIndices;
+    std::vector<std::array<int, 3>> vertexIndices; //Start at 1
+    std::vector<std::array<int, 3>> uvIndices; //Start at 1
+    std::vector<std::array<int, 3>> normalIndices; //Start at 1
+    std::vector<unsigned int> tangentIndices; //Start at 0
 
     void parseObj(const char* path);
+    void calculateTangents();
 };

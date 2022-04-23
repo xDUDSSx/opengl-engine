@@ -145,8 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\entity\Capacitor.cpp" />
     <ClCompile Include="src\entity\lights\PointLight.cpp" />
-    <ClCompile Include="src\entity\general\Material.cpp" />
+    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\entity\lights\SpotLight.cpp" />
     <ClCompile Include="src\entity\lights\SunLight.cpp" />
     <ClCompile Include="src\entity\primitives\Teapot.cpp" />
@@ -159,13 +160,15 @@
     <ClCompile Include="src\shader\PhongShader.cpp" />
     <ClCompile Include="src\shader\Shader.cpp" />
     <ClCompile Include="src\entity\primitives\Quad.cpp" />
-    <ClCompile Include="src\entity\general\Mesh.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\entity\general\GameObject.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entity\Capacitor.h" />
     <ClInclude Include="src\entity\lights\PointLight.h" />
-    <ClInclude Include="src\entity\general\Material.h" />
+    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\entity\lights\SpotLight.h" />
     <ClInclude Include="src\entity\lights\SunLight.h" />
     <ClInclude Include="src\entity\primitives\Teapot.h" />
@@ -180,9 +183,10 @@
     <ClInclude Include="src\shader\PhongShader.h" />
     <ClInclude Include="src\shader\Shader.h" />
     <ClInclude Include="src\entity\primitives\Quad.h" />
-    <ClInclude Include="src\entity\general\Mesh.h" />
+    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\entity\general\GameObject.h" />
     <ClInclude Include="src\entity\general\object.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Utils.h" />
   </ItemGroup>
   <ItemGroup>

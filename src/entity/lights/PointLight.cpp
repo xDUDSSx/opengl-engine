@@ -1,7 +1,5 @@
 #include "PointLight.h"
 
-#include <sstream>
-
 void PointLight::setUniforms(const PhongShader& shader, int index) const {
     const std::string prefix = "pointLights[" + std::to_string(index) + "]";
     glUniform1f(glGetUniformLocation(shader.id, (prefix + ".intensity").c_str()), intensity);

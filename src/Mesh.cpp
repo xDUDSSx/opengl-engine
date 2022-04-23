@@ -47,7 +47,7 @@ void Mesh::initDrawElements(float* verts, int vertsCount, unsigned int* indices,
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
     
-    const size_t vertexSize = 8 * sizeof(float);
+    const size_t vertexSize = 11 * sizeof(float);
     
     glEnableVertexAttribArray(shader.aPos);
     glVertexAttribPointer(shader.aPos, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)0);
@@ -57,6 +57,9 @@ void Mesh::initDrawElements(float* verts, int vertsCount, unsigned int* indices,
 
     glEnableVertexAttribArray(shader.aNormal);
     glVertexAttribPointer(shader.aNormal, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)(5 * sizeof(float)));
+
+    glEnableVertexAttribArray(shader.aTangent);
+    glVertexAttribPointer(shader.aTangent, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)(8 * sizeof(float)));
 
     CHECK_GL_ERROR();
 
@@ -71,7 +74,7 @@ void Mesh::initDrawArrays(float* verts, int vertsCount, PhongShader& shader) {
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER, vertsCount * sizeof(float), verts, GL_STATIC_DRAW);
 
-    const size_t vertexSize = 8 * sizeof(float);
+    const size_t vertexSize = 11 * sizeof(float);
 
     glEnableVertexAttribArray(shader.aPos);
     glVertexAttribPointer(shader.aPos, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)0);
@@ -81,6 +84,9 @@ void Mesh::initDrawArrays(float* verts, int vertsCount, PhongShader& shader) {
 
     glEnableVertexAttribArray(shader.aNormal);
     glVertexAttribPointer(shader.aNormal, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)(5 * sizeof(float)));
+
+    glEnableVertexAttribArray(shader.aTangent);
+    glVertexAttribPointer(shader.aTangent, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)(8 * sizeof(float)));
 
     CHECK_GL_ERROR();
 

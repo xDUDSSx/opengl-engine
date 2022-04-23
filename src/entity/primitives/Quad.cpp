@@ -9,12 +9,12 @@ void Quad::create(std::shared_ptr<PhongShader> shader)
 {
     GameObject::create(shader);
 
-    unsigned int verticiesCount = 4 * 8;
+    unsigned int verticiesCount = 4 * 11;
     float vertices[] = {
-        0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f , 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f , 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
     };
 	unsigned int indicesCount = 6;
     unsigned int indices[] = {
