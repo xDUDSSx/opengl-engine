@@ -1,20 +1,27 @@
 #include "pgr.h"
 #include <iostream>
 
-#include "entity/Camera.h"
 #include "Game.h"
 #include "Lighting.h"
-#include "Texture.h"
+#include "Skybox.h"
+
+#include "texture/Texture.h"
+#include "texture/Cubemap.h"
+
+#include "entity/Camera.h"
 #include "entity/Capacitor.h"
 #include "entity/C4.h"
+#include "entity/TestSurface.h"
 #include "entity/lights/PointLight.h"
 #include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
 #include "entity/primitives/Cube.h"
-#include "shader/PhongShader.h"
 #include "entity/primitives/Quad.h"
 #include "entity/primitives/Teapot.h"
+
+#include "shader/PhongShader.h"
 #include "shader/NormalDebugShader.h"
+#include "shader/SkyboxShader.h"
 
 int winWidth = 500;
 int winHeight = 500;
@@ -35,8 +42,11 @@ bool drawDebugNormals = false;
 std::shared_ptr<Camera> camera;
 std::shared_ptr<PhongShader> shader;
 std::shared_ptr<NormalDebugShader> normalDebugShader;
+std::shared_ptr<SkyboxShader> skyboxShader;
 
 std::shared_ptr<Lighting> lighting;
+std::shared_ptr<Cubemap> cubemap;
+std::shared_ptr<Skybox> skybox;
 
 std::shared_ptr<Quad> quad;
 std::shared_ptr<Quad> quad2;
@@ -44,9 +54,15 @@ std::shared_ptr<Cube> cube;
 std::shared_ptr<Teapot> teapot;
 std::shared_ptr<Capacitor> capacitor;
 std::shared_ptr<C4> c4;
+std::shared_ptr<TestSurface> test;
 
 void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDepthMask(GL_FALSE);
+	skyboxShader->use();
+    skybox->render(*skyboxShader, *camera);
+    glDepthMask(GL_TRUE);
 
 	shader->use();
 	lighting->setUniforms(*shader);
@@ -57,13 +73,15 @@ void render() {
 	teapot->render(*shader, *camera);
 	capacitor->render(*shader, *camera);
 	c4->render(*shader, *camera);
+	test->render(*shader, *camera);
 
 	if (drawDebugNormals) {
-        normalDebugShader->use();
-        capacitor->render(*normalDebugShader, *camera);
-        quad2->render(*normalDebugShader, *camera);
-        cube->render(*normalDebugShader, *camera);
-        c4->render(*normalDebugShader, *camera);
+		normalDebugShader->use();
+		capacitor->render(*normalDebugShader, *camera);
+		quad2->render(*normalDebugShader, *camera);
+		cube->render(*normalDebugShader, *camera);
+		c4->render(*normalDebugShader, *camera);
+		test->render(*normalDebugShader, *camera);
 	}
 
 	glutSwapBuffers();
@@ -78,12 +96,10 @@ void update(int delta)
 	cube->update();
 	teapot->update();
 	capacitor->update();
-    c4->update();
+	c4->update();
+	test->update();
 
-	// and plan a new event
 	glutTimerFunc(fps, update, 0);
-
-	// create display event
 	glutPostRedisplay();
 }
 
@@ -92,39 +108,53 @@ void init()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClearStencil(0);
 	glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_MULTISAMPLE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_MULTISAMPLE);
 
 	camera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
 	camera->setZNear(0.2f);
-	camera->setZFar(70.0f);
+	camera->setZFar(100.0f);
 
+	// Create shaders
 	shader = std::make_shared<PhongShader>("data/shaders/phongVert.glsl", "data/shaders/phongFrag.glsl");
 
 	std::string geoShader = "data/shaders/normalDebugGeo.glsl";
 	normalDebugShader = std::make_shared<NormalDebugShader>("data/shaders/normalDebugVert.glsl", "data/shaders/normalDebugFrag.glsl", &geoShader);
 
+	skyboxShader = std::make_shared<SkyboxShader>("data/shaders/skyboxVert.glsl", "data/shaders/skyboxFrag.glsl");
+
+	// Create lights
 	lighting = std::make_shared<Lighting>();
 
 	PointLight* light1 = new PointLight();
-	light1->position = glm::vec3(6, 4, 5);
+	light1->transform.pos = glm::vec3(6, 4, 5);
 	lighting->addLight(light1);
 
 	PointLight* light2 = new PointLight();
-	light2->position = glm::vec3(0, -2, 5);
+	light2->transform.pos = glm::vec3(0, -2, 5);
 	light2->color = glm::vec3(1.0, 0.0, 0.0);
 	lighting->addLight(light2);
 
 	PointLight* light3 = new PointLight();
-	light3->position = glm::vec3(-3, -1.5, 0.5);
+	light3->transform.pos = glm::vec3(-3, -1.5, 0.5);
 	lighting->addLight(light3);
 
 	PointLight* light4 = new PointLight();
 	light4->intensity = 2.0f;
 	light4->radius = 15;
-	light4->position = glm::vec3(2, 7, 3);
+	light4->transform.pos = glm::vec3(2, 7, 3);
 	lighting->addLight(light4);
+
+	PointLight* light5 = new PointLight();
+	light4->radius = 8;
+	light5->transform.pos = glm::vec3(6, 7, 2);
+	lighting->addLight(light5);
+
+	PointLight* light6 = new PointLight();
+    light6->radius = 20.0f;
+	light6->transform.pos = glm::vec3(4, 10, 2);
+	lighting->addLight(light6);
 
 	SunLight* sun = new SunLight();
 	sun->color = glm::vec3(0.93, 0.98, 1.0);
@@ -133,44 +163,62 @@ void init()
 
 	SpotLight* spot = new SpotLight();
 	spot->intensity = 0.4f;
-	spot->position = glm::vec3(4, 3, 6);
+	spot->transform.pos = glm::vec3(4, 3, 6);
 	spot->direction = glm::vec3(3, -1.5, -6);
 	lighting->addLight(spot);
 
+	// Create objects
+
 	quad = std::make_shared<Quad>();
 	quad->create(shader);
-	quad->position = glm::vec3(0, -10, -1);
-	quad->scale = glm::vec3(100);
+	quad->transform.pos = glm::vec3(0, -10, -1);
+	quad->transform.scale = glm::vec3(100);
 
 	quad2 = std::make_shared<Quad>();
 	quad2->create(shader);
-	quad2->position = glm::vec3(5, 5, -0.5);
-	quad2->scale = glm::vec3(3);
-	//quad2->rotation = glm::vec3(90, 0, 0);
-	//quad2->material->diffuse = glm::vec3(1, 0, 0);
+	quad2->transform.pos = glm::vec3(6, 7, -0.5);
+	quad2->transform.scale = glm::vec3(3);
 	quad2->material->shininess = 24;
-	quad2->texture = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebbles-diffuse.jpg", "diffuse");
-	//quad2->specularMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebble-specular_inv.jpg", "specular");
-	quad2->normalMap = std::make_shared<Texture>("data/textures/pebbles_wet-2K/2K-wet-Pebbles-normal.jpg", "normal");
-	//quad2->texture = std::make_shared<Texture>("data/textures/brickwall.jpg", "diffuse");
-	//quad2->normalMap = std::make_shared<Texture>("data/textures/brickwall_normal.jpg", "normal");
+	quad2->texture = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
+	quad2->specularMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular.jpg", "specular");
+	quad2->aoMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
+	quad2->normalMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
 
 	cube = std::make_shared<Cube>();
+    cube->transform.pos = glm::vec3(0, -3, 0);
 	cube->create(shader);
 
 	teapot = std::make_shared<Teapot>();
 	teapot->create(shader);
-	teapot->position = glm::vec3(8, 0, 0);
+	teapot->transform.pos = glm::vec3(8, 0, 0);
 
 	capacitor = std::make_shared<Capacitor>();
 	capacitor->create(shader);
-	capacitor->position = glm::vec3(0, 7, -1);
-	capacitor->scale = glm::vec3(3);
+	capacitor->transform.pos = glm::vec3(0, 7, -1);
+	capacitor->transform.scale = glm::vec3(3);
 
 	c4 = std::make_shared<C4>();
-    c4->create(shader);
-    c4->position = glm::vec3(0, 4, 0);
-    c4->scale = glm::vec3(1);
+	c4->create(shader);
+	c4->transform.pos = glm::vec3(0, 4, 0);
+	c4->transform.scale = glm::vec3(1);
+
+	test = std::make_shared<TestSurface>();
+    test->create(shader);
+	test->transform.pos = glm::vec3(4, 10,-1);
+	test->transform.scale = glm::vec3(0.5f);
+
+	// Create skybox
+	std::vector<std::string> cubemapTextures;
+	cubemapTextures.push_back("data/textures/skybox_front.png");
+	cubemapTextures.push_back("data/textures/skybox_back.png");
+	cubemapTextures.push_back("data/textures/skybox_left.png");
+	cubemapTextures.push_back("data/textures/skybox_right.png");
+	cubemapTextures.push_back("data/textures/skybox_top.png");
+	cubemapTextures.push_back("data/textures/skybox_bottom.png");
+	cubemap = std::make_shared<Cubemap>(cubemapTextures);
+
+	skybox = std::make_shared<Skybox>(cubemap);
+    skybox->create(*skyboxShader);
 }
 
 void reshape(int newWidth, int newHeight) {
@@ -224,7 +272,7 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
 void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
 	switch (specKeyPressed) {
 		case GLUT_KEY_F1:
-            drawDebugNormals = !drawDebugNormals;
+			drawDebugNormals = !drawDebugNormals;
 			break;
 	}
 }
@@ -318,7 +366,7 @@ int main(int argc, char** argv)
 	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-    glutSetOption(GLUT_MULTISAMPLE, 4);
+	glutSetOption(GLUT_MULTISAMPLE, 4);
 
 	// for each window
 	{

@@ -6,104 +6,108 @@
 
 #include "../Utils.h"
 
-ObjParser::ObjParser(const char* path)
+ObjParser::ObjParser(const char* path) : ObjParser(path, 1.0f)
 {
-	parseObj(path);
-	calculateTangents();
+	//Empty
+}
+
+ObjParser::ObjParser(const char* path, float uvScale)
+{
+    parseObj(path, uvScale);
+    calculateTangents();
 }
 
 // Only parses obj files with triangle faces, so the mesh needs to be triangulated prior to export.
-void ObjParser::parseObj(const char* path)
-{
-    //int cwCount = 0;
-    //int ccwCount = 0;
+void ObjParser::parseObj(const char* path, float uvScale) {
+    // int cwCount = 0;
+    // int ccwCount = 0;
 
-	std::ifstream file(path);
-	std::vector<std::string> words;
-	std::string line;
-	int index = 0;
-	while (std::getline(file, line)) {
-		index++;
-		std::istringstream iss(line);
-		words.clear();
-		while (iss) {
-			std::string word;
-			iss >> word;
-			if (!iss) {
-				break;
-			}
-			words.push_back(word);
-		}
-		if (words.empty()) {
-			continue;
-		}
+    std::ifstream file(path);
+    std::vector<std::string> words;
+    std::string line;
+    int index = 0;
+    while (std::getline(file, line)) {
+        index++;
+        std::istringstream iss(line);
+        words.clear();
+        while (iss) {
+            std::string word;
+            iss >> word;
+            if (!iss) {
+                break;
+            }
+            words.push_back(word);
+        }
+        if (words.empty()) {
+            continue;
+        }
 
-		if (words[0] == "v") {
-			float x = std::stof(words[1]);
-			float y = std::stof(words[2]);
-			float z = std::stof(words[3]);
-			vertices.push_back(glm::vec3(x, y, z));
-		} else if (words[0] == "vt") {
-			float u = std::stof(words[1]);
-			float v = std::stof(words[2]);
-			uvs.push_back(glm::vec2(u, v));
-		} else if (words[0] == "vn") {
-			float x = std::stof(words[1]);
-			float y = std::stof(words[2]);
-			float z = std::stof(words[3]);
-			normals.push_back(glm::vec3(x, y, z));
-		} else if (words[0] == "f") {
-			if (words.size() != 4) {
-				std::cerr << "Face is not a triangle at index " << index << "!" << std::endl;
-				break;
-			}
-			std::vector<int> vs;
-			std::vector<int> vts;
-			std::vector<int> vns;
-			for (int i = 1; i < words.size(); i++) {
-				// Three v/vt/vn or v//vn
-				std::vector<std::string> tokens;
-				Utils::tokenize(words[i], '/', tokens);
-				if (tokens.size() == 3) {
-					vs.push_back(std::stoi(tokens[0]));
-					vts.push_back(std::stoi(tokens[1]));
-					vns.push_back(std::stoi(tokens[2]));
-				} else if (tokens.size() == 2) {
-					vs.push_back(std::stoi(tokens[0]));
-					vns.push_back(std::stoi(tokens[1]));
-				} else {
-					std::cerr << "Invalid face attribute count (" << tokens.size() << ") at index " << index << "!" << std::endl;
-					break;
-				}
-			}
-			triangleCount++;
-			vertexIndices.push_back({ vs[0], vs[1], vs[2]});
-			uvIndices.push_back({vts[0], vts[1], vts[2]});
-			normalIndices.push_back({vns[0], vns[1], vns[2]});
+        if (words[0] == "v") {
+            float x = std::stof(words[1]);
+            float y = std::stof(words[2]);
+            float z = std::stof(words[3]);
+            vertices.push_back(glm::vec3(x, y, z));
+        } else if (words[0] == "vt") {
+            float u = std::stof(words[1]) * uvScale;
+            float v = std::stof(words[2]) * uvScale;
+            uvs.push_back(glm::vec2(u, v));
+        } else if (words[0] == "vn") {
+            float x = std::stof(words[1]);
+            float y = std::stof(words[2]);
+            float z = std::stof(words[3]);
+            normals.push_back(glm::vec3(x, y, z));
+        } else if (words[0] == "f") {
+            if (words.size() != 4) {
+                std::cerr << "Face is not a triangle at index " << index << "!" << std::endl;
+                break;
+            }
+            std::vector<int> vs;
+            std::vector<int> vts;
+            std::vector<int> vns;
+            for (int i = 1; i < words.size(); i++) {
+                // Three v/vt/vn or v//vn
+                std::vector<std::string> tokens;
+                Utils::tokenize(words[i], '/', tokens);
+                if (tokens.size() == 3) {
+                    vs.push_back(std::stoi(tokens[0]));
+                    vts.push_back(std::stoi(tokens[1]));
+                    vns.push_back(std::stoi(tokens[2]));
+                } else if (tokens.size() == 2) {
+                    vs.push_back(std::stoi(tokens[0]));
+                    vns.push_back(std::stoi(tokens[1]));
+                } else {
+                    std::cerr << "Invalid face attribute count (" << tokens.size() << ") at index " << index << "!" << std::endl;
+                    break;
+                }
+            }
+            triangleCount++;
+            vertexIndices.push_back({ vs[0], vs[1], vs[2] });
+            uvIndices.push_back({ vts[0], vts[1], vts[2] });
+            normalIndices.push_back({ vns[0], vns[1], vns[2] });
 
-			//Detect winding (unused)
-			//glm::vec3 a = vertices[vs[0] - 1];
-			//glm::vec3 b = vertices[vs[1] - 1];
-			//glm::vec3 c = vertices[vs[2] - 1];
+            // Detect winding (unused)
+            // glm::vec3 a = vertices[vs[0] - 1];
+            // glm::vec3 b = vertices[vs[1] - 1];
+            // glm::vec3 c = vertices[vs[2] - 1];
 
-			//glm::vec3 x = glm::normalize(b - a);
-			//glm::vec3 y = glm::normalize(c - a);
-			//glm::vec3 z = glm::cross(x, y);
+            // glm::vec3 x = glm::normalize(b - a);
+            // glm::vec3 y = glm::normalize(c - a);
+            // glm::vec3 z = glm::cross(x, y);
 
-			//glm::mat3 triangleSpaceToStandardBasis = glm::inverse(glm::mat3(x, y, z));
-			//glm::vec3 normal = triangleSpaceToStandardBasis * z;
-			//if (normal.z > 0.0f) {
-			//	// CCW
-			//	ccwCount++;
-			//} else {
-			//	// CW
-			//	cwCount++;
-			//}
-		}
-	}
-	std::cout << "Loaded obj from file '" << path << "'" << std::endl;
-    //std::cout << "CW: " << std::to_string(cwCount) << std::endl;
-    //std::cout << "CCW: " << std::to_string(ccwCount) << std::endl;
+            // glm::mat3 triangleSpaceToStandardBasis = glm::inverse(glm::mat3(x, y, z));
+            // glm::vec3 normal = triangleSpaceToStandardBasis * z;
+            // if (normal.z > 0.0f) {
+            //	// CCW
+            //	ccwCount++;
+            // } else {
+            //	// CW
+            //	cwCount++;
+            // }
+        }
+    }
+    std::cout << "Loaded obj from file '" << path << "'" << std::endl;
+    // std::cout << "CW: " << std::to_string(cwCount) << std::endl;
+    // std::cout << "CCW: " << std::to_string(ccwCount) << std::endl;
 }
 
 void ObjParser::calculateTangents() {

@@ -14,6 +14,12 @@ void Camera::matrix(const PhongShader &shader, const glm::mat4 &model)
 	shader.setTransformUniforms(model, view, projection);
 }
 
+void Camera::matrix(const SkyboxShader& shader)
+{
+    this->update();
+    shader.setTransformUniforms(view, projection);
+}
+
 void Camera::update() {
     glm::mat4 cameraTransform = glm::mat4(1.0f);
 

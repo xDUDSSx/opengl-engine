@@ -2,9 +2,16 @@
 
 #include "pgr.h"
 
+#include "../../entity/Camera.h"
+#include "Transform.h"
+
 class Entity {
 public:
-    glm::vec3 position;
+    Transform transform;
 
-    Entity();
+    Entity() = default;
+
+    virtual void render(PhongShader& shader, Camera& camera) = 0;
+    virtual void update() = 0;
+    virtual void create(std::shared_ptr<PhongShader> shader) = 0;
 };

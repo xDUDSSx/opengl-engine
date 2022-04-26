@@ -11,7 +11,7 @@ void Teapot::render(PhongShader& shader, Camera& camera)
 void Teapot::update()
 {
     GameObject::update();
-	rotation.z = Game::time * 60;
+    transform.rot.z = Game::time * 60;
     //scale = glm::vec3(cos(Game::time) * 0.5f);
 }
 

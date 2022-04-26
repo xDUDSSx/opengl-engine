@@ -2,6 +2,7 @@
 
 #include "pgr.h";
 #include "../shader/PhongShader.h"
+#include "../shader/SkyboxShader.h"
 
 class Camera {
 public:
@@ -36,6 +37,7 @@ public:
     Camera(int width, int height, glm::vec3 pivot);
 
     void matrix(const PhongShader& shader, const glm::mat4 &model);
+    void matrix(const SkyboxShader& shader);
 
     void mouseDrag(int dx, int dy, bool left, bool middle);
 

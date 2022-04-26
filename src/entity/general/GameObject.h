@@ -1,18 +1,15 @@
 #pragma once
 
+#include "pgr.h"
+
 #include "Entity.h"
 #include "../../Material.h"
-#include "pgr.h"
 #include "../../Mesh.h"
 #include "../../entity/Camera.h"
-#include "../../Texture.h"
-#include "../../parser/ObjParser.h"
+#include "../../texture/Texture.h"
 
-class GameObject : public Entity{
+class GameObject : public Entity {
 public:
-    glm::vec3 rotation;
-    glm::vec3 scale;
-
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<Material> material;
     std::shared_ptr<PhongShader> shader;
@@ -29,9 +26,10 @@ protected:
 public:
     GameObject();
 
-    virtual void render(PhongShader& shader, Camera& camera);
-    virtual void update();
-	virtual void create(std::shared_ptr<PhongShader> shader);
+    void render(PhongShader& shader, Camera& camera) override;
+    void update() override;
+    void create(std::shared_ptr<PhongShader> shader) override;
 
     void loadMesh(const char* path, bool arraysOrElements);
+    void loadMesh(const char* path, bool arraysOrElements, float uvScale);
 };

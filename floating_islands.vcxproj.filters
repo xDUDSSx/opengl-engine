@@ -11,18 +11,21 @@
     <ClCompile Include="src\entity\Camera.cpp" />
     <ClCompile Include="src\parser\ObjParser.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\entity\general\Entity.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\entity\lights\PointLight.cpp" />
     <ClCompile Include="src\entity\lights\SunLight.cpp" />
     <ClCompile Include="src\entity\primitives\Teapot.cpp" />
     <ClCompile Include="src\entity\lights\SpotLight.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\texture\Texture.cpp" />
     <ClCompile Include="src\entity\Capacitor.cpp" />
     <ClCompile Include="src\debug\Debug.cpp" />
     <ClCompile Include="src\shader\NormalDebugShader.cpp" />
     <ClCompile Include="src\entity\C4.cpp" />
+    <ClCompile Include="src\entity\TestSurface.cpp" />
+    <ClCompile Include="src\texture\Cubemap.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
+    <ClCompile Include="src\shader\SkyboxShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\object.h" />
@@ -45,11 +48,16 @@
     <ClInclude Include="src\entity\lights\SunLight.h" />
     <ClInclude Include="src\entity\primitives\Teapot.h" />
     <ClInclude Include="src\entity\lights\SpotLight.h" />
-    <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\texture\Texture.h" />
     <ClInclude Include="src\entity\Capacitor.h" />
     <ClInclude Include="src\debug\Debug.h" />
     <ClInclude Include="src\shader\NormalDebugShader.h" />
     <ClInclude Include="src\entity\C4.h" />
+    <ClInclude Include="src\entity\general\Transform.h" />
+    <ClInclude Include="src\entity\TestSurface.h" />
+    <ClInclude Include="src\texture\Cubemap.h" />
+    <ClInclude Include="src\Skybox.h" />
+    <ClInclude Include="src\shader\SkyboxShader.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />
@@ -61,5 +69,7 @@
     <None Include="data\shaders\normalDebugFrag.glsl" />
     <None Include="data\shaders\normalDebugGeo.glsl" />
     <None Include="data\shaders\normalDebugVert.glsl" />
+    <None Include="data\shaders\skyboxVert.glsl" />
+    <None Include="data\shaders\skyboxFrag.glsl" />
   </ItemGroup>
 </Project>
