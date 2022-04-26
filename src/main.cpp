@@ -1,7 +1,9 @@
 #include "pgr.h"
+#include "AntTweakBar.h"
 #include <iostream>
 
 #include "Game.h"
+#include "InputManager.h"
 #include "Lighting.h"
 #include "Skybox.h"
 
@@ -32,10 +34,6 @@ int mouseX = 0;
 int mouseY = 0;
 int mouseDx = 0;
 int mouseDy = 0;
-
-bool mouseLeftDown;
-bool mouseRightDown;
-bool mouseMiddleDown;
 
 bool drawDebugNormals = false;
 
@@ -103,6 +101,11 @@ void update(int delta)
 	glutPostRedisplay();
 }
 
+void initUI()
+{
+    TwInit(TW_OPENGL_CORE, NULL);
+}
+
 void init()
 {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -111,6 +114,8 @@ void init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_MULTISAMPLE);
+
+	initUI();
 
 	camera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
 	camera->setZNear(0.2f);
@@ -168,7 +173,6 @@ void init()
 	lighting->addLight(spot);
 
 	// Create objects
-
 	quad = std::make_shared<Quad>();
 	quad->create(shader);
 	quad->transform.pos = glm::vec3(0, -10, -1);
@@ -247,6 +251,10 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 			#endif
 			break;
 	}
+    //TwKeyPressed(ATBKey, TW_KMOD_NONE) == 1
+
+	InputManager::keyMap[InputManager::glutKeyToImKey(keyPressed)] = true;
+    InputManager::debugPrint();
 }
 
 /**
@@ -258,6 +266,8 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
+    InputManager::keyMap[InputManager::glutKeyToImKey(keyReleased)] = false;
+    InputManager::debugPrint();
 }
 
 //
@@ -275,9 +285,13 @@ void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
 			drawDebugNormals = !drawDebugNormals;
 			break;
 	}
+    InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyPressed)] = true;
+    InputManager::debugPrint();
 }
 
 void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
+    InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyReleased)] = false;
+    InputManager::debugPrint();
 }
 
 /**
@@ -293,15 +307,7 @@ void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
 void mouseClicked(int button, int state, int x, int y) {
 	mouseX = x;
 	mouseY = y;
-	if (button == GLUT_LEFT_BUTTON) {
-		mouseLeftDown = (state == GLUT_DOWN);
-	} else
-	if (button == GLUT_RIGHT_BUTTON) {
-		mouseRightDown = (state == GLUT_DOWN);
-	} else 
-	if (button == GLUT_MIDDLE_BUTTON) {
-		mouseMiddleDown = (state == GLUT_DOWN);
-	}
+    InputManager::mouseMap[InputManager::glutMouseButtonToImMouseButton(button)] = (state == GLUT_DOWN);
 }
 
 void mouseWheel(int wheel, int dir, int x, int y)
@@ -322,7 +328,10 @@ void mouseDragged(int x, int y) {
 	mouseDy = y - mouseY;
 	mouseX = x;
 	mouseY = y;
-	camera->mouseDrag(mouseDx, mouseDy, mouseLeftDown, mouseMiddleDown);
+    camera->mouseDrag(mouseDx, mouseDy, 
+					  InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_LEFT],
+					  InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_MIDDLE]
+	);
 }
 
 /**

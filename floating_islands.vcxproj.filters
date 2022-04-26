@@ -26,6 +26,7 @@
     <ClCompile Include="src\texture\Cubemap.cpp" />
     <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\shader\SkyboxShader.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\object.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="src\texture\Cubemap.h" />
     <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\shader\SkyboxShader.h" />
+    <ClInclude Include="src\InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />

@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\shader\SkyboxShader.cpp" />
     <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\texture\Cubemap.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="src\texture\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\shader\SkyboxShader.h" />
     <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\texture\Cubemap.h" />
