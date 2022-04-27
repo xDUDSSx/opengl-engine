@@ -125,6 +125,7 @@ public:
 	static ImKey glutKeyToImKey(int key);
     static ImKey glutSpecialKeyToImKey(int key);
     static ImMouseButton glutMouseButtonToImMouseButton(int key);
+    static int imKeyToAtbKey(ImKey key);
     static void debugPrint();
 
 private:

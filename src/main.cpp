@@ -37,7 +37,10 @@ int mouseDy = 0;
 
 bool drawDebugNormals = false;
 
-std::shared_ptr<Camera> camera;
+std::shared_ptr<Camera> camera1;
+std::shared_ptr<Camera> camera2;
+std::shared_ptr<Camera> activeCamera;
+
 std::shared_ptr<PhongShader> shader;
 std::shared_ptr<NormalDebugShader> normalDebugShader;
 std::shared_ptr<SkyboxShader> skyboxShader;
@@ -54,33 +57,37 @@ std::shared_ptr<Capacitor> capacitor;
 std::shared_ptr<C4> c4;
 std::shared_ptr<TestSurface> test;
 
+TwBar* bar;
+
 void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glDepthMask(GL_FALSE);
 	skyboxShader->use();
-    skybox->render(*skyboxShader, *camera);
-    glDepthMask(GL_TRUE);
+		skybox->render(*skyboxShader, *activeCamera);
+	glDepthMask(GL_TRUE);
 
 	shader->use();
 	lighting->setUniforms(*shader);
 
-	quad->render(*shader, *camera);
-	quad2->render(*shader, *camera);
-	cube->render(*shader, *camera);
-	teapot->render(*shader, *camera);
-	capacitor->render(*shader, *camera);
-	c4->render(*shader, *camera);
-	test->render(*shader, *camera);
+	quad->render(*shader, *activeCamera);
+	quad2->render(*shader, *activeCamera);
+	cube->render(*shader, *activeCamera);
+	teapot->render(*shader, *activeCamera);
+	capacitor->render(*shader, *activeCamera);
+	c4->render(*shader, *activeCamera);
+	test->render(*shader, *activeCamera);
 
 	if (drawDebugNormals) {
 		normalDebugShader->use();
-		capacitor->render(*normalDebugShader, *camera);
-		quad2->render(*normalDebugShader, *camera);
-		cube->render(*normalDebugShader, *camera);
-		c4->render(*normalDebugShader, *camera);
-		test->render(*normalDebugShader, *camera);
+		capacitor->render(*normalDebugShader, *activeCamera);
+		quad2->render(*normalDebugShader, *activeCamera);
+		cube->render(*normalDebugShader, *activeCamera);
+		c4->render(*normalDebugShader, *activeCamera);
+		test->render(*normalDebugShader, *activeCamera);
 	}
+
+	TwDraw();
 
 	glutSwapBuffers();
 }
@@ -103,7 +110,9 @@ void update(int delta)
 
 void initUI()
 {
-    TwInit(TW_OPENGL_CORE, NULL);
+	TwInit(TW_OPENGL_CORE, NULL);
+	bar = TwNewBar("Tweak bar");
+    TwSetParam(bar, NULL, "iconified", TW_PARAM_CSTRING, 1, "true");
 }
 
 void init()
@@ -117,9 +126,12 @@ void init()
 
 	initUI();
 
-	camera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-	camera->setZNear(0.2f);
-	camera->setZFar(100.0f);
+	// Create cameras
+	camera1 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
+	camera1->setZNear(0.2f);
+	camera1->setZFar(100.0f);
+
+	activeCamera = camera1;
 
 	// Create shaders
 	shader = std::make_shared<PhongShader>("data/shaders/phongVert.glsl", "data/shaders/phongFrag.glsl");
@@ -153,11 +165,11 @@ void init()
 
 	PointLight* light5 = new PointLight();
 	light4->radius = 8;
-	light5->transform.pos = glm::vec3(6, 7, 2);
+	light5->transform.pos = glm::vec3(6, 7, 1);
 	lighting->addLight(light5);
 
 	PointLight* light6 = new PointLight();
-    light6->radius = 20.0f;
+	light6->radius = 20.0f;
 	light6->transform.pos = glm::vec3(4, 10, 2);
 	lighting->addLight(light6);
 
@@ -182,14 +194,14 @@ void init()
 	quad2->create(shader);
 	quad2->transform.pos = glm::vec3(6, 7, -0.5);
 	quad2->transform.scale = glm::vec3(3);
-	quad2->material->shininess = 24;
+	quad2->material->shininess = 100;
 	quad2->texture = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
 	quad2->specularMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular.jpg", "specular");
 	quad2->aoMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
 	quad2->normalMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
 
 	cube = std::make_shared<Cube>();
-    cube->transform.pos = glm::vec3(0, -3, 0);
+	cube->transform.pos = glm::vec3(0, -3, 0);
 	cube->create(shader);
 
 	teapot = std::make_shared<Teapot>();
@@ -207,7 +219,7 @@ void init()
 	c4->transform.scale = glm::vec3(1);
 
 	test = std::make_shared<TestSurface>();
-    test->create(shader);
+	test->create(shader);
 	test->transform.pos = glm::vec3(4, 10,-1);
 	test->transform.scale = glm::vec3(0.5f);
 
@@ -222,14 +234,15 @@ void init()
 	cubemap = std::make_shared<Cubemap>(cubemapTextures);
 
 	skybox = std::make_shared<Skybox>(cubemap);
-    skybox->create(*skyboxShader);
+	skybox->create(*skyboxShader);
 }
 
 void reshape(int newWidth, int newHeight) {
 	winWidth = newWidth;
 	winHeight = newHeight;
 	glViewport(0, 0, winWidth, winHeight);
-	camera->size(newWidth, newHeight);
+	activeCamera->size(winWidth, winHeight);
+	TwWindowSize(winWidth, winHeight);
 };
 
 /**
@@ -251,10 +264,8 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 			#endif
 			break;
 	}
-    //TwKeyPressed(ATBKey, TW_KMOD_NONE) == 1
-
+    TwEventKeyboardGLUT(keyPressed, mouseX, mouseY);
 	InputManager::keyMap[InputManager::glutKeyToImKey(keyPressed)] = true;
-    InputManager::debugPrint();
 }
 
 /**
@@ -266,8 +277,7 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
-    InputManager::keyMap[InputManager::glutKeyToImKey(keyReleased)] = false;
-    InputManager::debugPrint();
+	InputManager::keyMap[InputManager::glutKeyToImKey(keyReleased)] = false;
 }
 
 //
@@ -285,13 +295,12 @@ void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
 			drawDebugNormals = !drawDebugNormals;
 			break;
 	}
-    InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyPressed)] = true;
-    InputManager::debugPrint();
+    TwEventSpecialGLUT(specKeyPressed, mouseX, mouseY);
+	InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyPressed)] = true;
 }
 
 void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
-    InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyReleased)] = false;
-    InputManager::debugPrint();
+	InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyReleased)] = false;
 }
 
 /**
@@ -307,6 +316,7 @@ void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
 void mouseClicked(int button, int state, int x, int y) {
 	mouseX = x;
 	mouseY = y;
+	TwEventMouseButtonGLUT(button, state, x, y);
     InputManager::mouseMap[InputManager::glutMouseButtonToImMouseButton(button)] = (state == GLUT_DOWN);
 }
 
@@ -314,7 +324,7 @@ void mouseWheel(int wheel, int dir, int x, int y)
 {
 	mouseX = x;
 	mouseY = y;
-	camera->mouseWheel(dir, 1);
+	activeCamera->mouseWheel(dir, 1);
 }
 
 /**
@@ -328,10 +338,12 @@ void mouseDragged(int x, int y) {
 	mouseDy = y - mouseY;
 	mouseX = x;
 	mouseY = y;
-    camera->mouseDrag(mouseDx, mouseDy, 
-					  InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_LEFT],
-					  InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_MIDDLE]
-	);
+	if (!TwEventMouseMotionGLUT(mouseX, mouseY)) {
+		activeCamera->mouseDrag(mouseDx, mouseDy,
+			InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_LEFT],
+			InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_MIDDLE]
+		);   
+	}
 }
 
 /**
@@ -342,6 +354,7 @@ void mouseDragged(int x, int y) {
 void mouseMoved(int x, int y) {
 	mouseX = x;
 	mouseY = y;
+	TwEventMouseMotionGLUT(mouseX, mouseY);
 	glutPostRedisplay();
 }
 
@@ -357,6 +370,8 @@ void dispose(void) {
 
 	// delete shaders
 	// cleanupShaderPrograms();
+
+	TwTerminate();
 }
 
 /**
