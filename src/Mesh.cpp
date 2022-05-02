@@ -34,6 +34,12 @@ void Mesh::render() const {
     glBindVertexArray(0);
 }
 
+void Mesh::dispose() {
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &ebo);
+	glDeleteBuffers(1, &vbo);
+}
+
 void Mesh::initDrawElements(float* verts, int vertsCount, unsigned int* indices, int indicesCount, PhongShader& shader)
 {
     glGenVertexArrays(1, &this->vao);

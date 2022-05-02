@@ -9,12 +9,12 @@ Cubemap::Cubemap(std::vector<std::string> textures)
 
 void Cubemap::bind(GLuint location)
 {
-    glActiveTexture(GL_TEXTURE0);
-    CHECK_GL_ERROR();
-    glUniform1i(location, 0);
-    CHECK_GL_ERROR();
+	glActiveTexture(GL_TEXTURE0);
+	CHECK_GL_ERROR();
+	glUniform1i(location, 0);
+	CHECK_GL_ERROR();
 	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-    CHECK_GL_ERROR();
+	CHECK_GL_ERROR();
 }
 
 GLuint Cubemap::loadTextures(std::vector<std::string> textures)

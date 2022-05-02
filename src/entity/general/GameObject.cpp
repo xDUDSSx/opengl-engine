@@ -9,40 +9,39 @@ GameObject::GameObject() : Entity()
 
 void GameObject::render(PhongShader& shader, Camera& camera)
 {
-	modelMatrix = glm::mat4(1.0f);
-	modelMatrix = glm::translate(modelMatrix, transform.pos);
-	modelMatrix = glm::rotate(modelMatrix, glm::radians(transform.rot.x), glm::vec3(1, 0, 0));
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(transform.rot.y), glm::vec3(0, 1, 0));
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(transform.rot.z), glm::vec3(0, 0, 1));
-    modelMatrix = glm::scale(modelMatrix, transform.scale);
+    render(shader, camera, transform.constructMatrix());
+}
+
+void GameObject::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) {
+    this->modelMatrix = modelMatrix;
 
 	// Apply transform
-	camera.matrix(shader, modelMatrix);
+    camera.matrix(shader, modelMatrix);
 
-	// Apply material
-	material->setUniforms(shader);
+    // Apply material
+    material->setUniforms(shader);
 
-	// Apply texture / maps
-	if (texture != nullptr) {
-		texture->bind(0, 0, shader);
-	}
-	if (specularMap != nullptr) {
-		specularMap->bind(0, 1, shader);
-	}
+    // Apply texture / maps
+    if (texture != nullptr) {
+        texture->bind(0, 0, shader);
+    }
+    if (specularMap != nullptr) {
+        specularMap->bind(0, 1, shader);
+    }
     if (normalMap != nullptr) {
         normalMap->bind(0, 2, shader);
     }
-	if (aoMap != nullptr) {
-		aoMap->bind(0, 3, shader);
-	}
+    if (aoMap != nullptr) {
+        aoMap->bind(0, 3, shader);
+    }
     if (emissionMap != nullptr) {
         emissionMap->bind(0, 4, shader);
     }
 
-	mesh->render();
+    mesh->render();
 
-	// Clear texture state
-	shader.clearTextures();
+    // Clear texture state
+    shader.clearTextures();
 }
 
 void GameObject::update()
@@ -74,4 +73,26 @@ void GameObject::loadMesh(const char* path, bool arraysOrElements, float uvScale
         g = new Mesh(vbo.data(), vbo.size(), ebo.data(), ebo.size(), triangles, *this->shader);
     }
     this->mesh = std::shared_ptr<Mesh>(g);
+}
+
+void GameObject::dispose() {
+    if (mesh != nullptr) {
+        mesh->dispose();
+    }
+
+    if (texture != nullptr) {
+        texture->dispose();
+    }
+    if (specularMap != nullptr) {
+        specularMap->dispose();
+    }
+    if (normalMap != nullptr) {
+        normalMap->dispose();
+    }
+    if (aoMap != nullptr) {
+        aoMap->dispose();
+    }
+    if (emissionMap != nullptr) {
+        emissionMap->dispose();
+    }
 }

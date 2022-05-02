@@ -27,6 +27,22 @@
     <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\shader\SkyboxShader.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui.cpp" />
+    <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_demo.cpp" />
+    <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_draw.cpp" />
+    <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_tables.cpp" />
+    <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_widgets.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_glut.cpp" />
+    <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\ui\ImGuiManager.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\scene\SceneNode.cpp" />
+    <ClCompile Include="src\entity\general\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\object.h" />
@@ -60,6 +76,24 @@
     <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\shader\SkyboxShader.h" />
     <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imconfig.h" />
+    <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui.h" />
+    <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_internal.h" />
+    <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_rectpack.h" />
+    <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_textedit.h" />
+    <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_truetype.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_glut.h" />
+    <ClInclude Include="imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\ui\ImGuiManager.h" />
+    <ClInclude Include="src\scene\Scene.h" />
+    <ClInclude Include="src\scene\SceneNode.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />

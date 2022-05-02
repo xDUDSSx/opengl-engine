@@ -15,4 +15,5 @@ public:
 
     void render(SkyboxShader& shader, Camera& camera) const;
     void create(SkyboxShader& shader);
+    void dispose();
 };

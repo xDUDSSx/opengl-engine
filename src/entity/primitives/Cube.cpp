@@ -1,4 +1,5 @@
 #include "Cube.h"
+#include "../../Game.h"
 
 void Cube::render(PhongShader& shader, Camera& camera)
 {
@@ -8,6 +9,7 @@ void Cube::render(PhongShader& shader, Camera& camera)
 void Cube::update()
 {
     GameObject::update();
+    transform.rot.z = Game::time * 60;
 }
 
 void Cube::create(std::shared_ptr<PhongShader> shader)

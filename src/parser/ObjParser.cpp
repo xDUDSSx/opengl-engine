@@ -123,7 +123,7 @@ void ObjParser::calculateTangents() {
 		auto n = normalIndices[i];
 
 		//Calculating a tangent vector from vertex positions and uv coordinates
-		//Essentially just solving a matrix equation
+		
 		//The method is described here
 		//http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/
 		//and here

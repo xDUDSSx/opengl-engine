@@ -10,6 +10,10 @@ in vec3 Binormal;
 
 uniform mat4 viewMatrix;
 
+uniform bool selected;
+
+// Textures ====================================
+
 uniform sampler2D	diffuse0;
 uniform bool		diffuse0_active = false;
 
@@ -33,6 +37,8 @@ struct Material {
 };
 
 uniform Material material;
+
+// Lights ======================================
 
 struct PointLight {
 	vec3 position;
@@ -189,6 +195,18 @@ vec3 calculatePointLight(PointLight light, Material material, vec3 fragPos, vec3
 }
 
 void main() {
+	float alpha = 1.0;
+	if (diffuse0_active) {
+		alpha = texture(diffuse0, TexCoords).a;
+	}
+	if (selected) {
+		FragColor = vec4(1, 1, 1, 1);
+		return;
+	}
+	if (alpha < 0.1f) {
+		discard;
+	}
+
 	vec3 outColor = vec3(0);
 	for (int i = 0; i < sunLightsCount; i++) {
 		outColor += calculateSunLight(sunLights[i], material, FragPos, Normal, Tangent, Binormal);
@@ -205,6 +223,6 @@ void main() {
 	
 	vec3 mapped = vec3(1.0) - exp(-outColor * exposure); // HDR correction
 	mapped = pow(mapped, vec3(1.0 / gamma)); // gamma correction
-  
-	FragColor = vec4(mapped, 1.0);
+	
+	FragColor = vec4(mapped, alpha);
 }

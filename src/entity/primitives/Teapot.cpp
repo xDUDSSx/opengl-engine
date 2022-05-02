@@ -1,6 +1,6 @@
 #include "Teapot.h"
 
-#include "../../parser/ObjParser.h";
+#include "../../parser/ObjParser.h"
 #include "../../Game.h"
 
 void Teapot::render(PhongShader& shader, Camera& camera)

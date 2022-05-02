@@ -15,6 +15,7 @@ public:
 
     void bind();
 	void bind(int typeIndex, GLuint textureUnit, PhongShader& shader);
+    void dispose();
 
 private:
     GLuint loadTexture(const char* path);

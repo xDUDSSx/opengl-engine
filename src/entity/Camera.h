@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pgr.h";
+#include "pgr.h"
 #include "../shader/PhongShader.h"
 #include "../shader/SkyboxShader.h"
 

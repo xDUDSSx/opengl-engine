@@ -18,8 +18,8 @@ void Quad::create(std::shared_ptr<PhongShader> shader)
     };
 	unsigned int indicesCount = 6;
     unsigned int indices[] = {
-        0, 1, 2,
-        2, 3, 0
+        0, 2, 1,
+        2, 0, 3
     };
     unsigned int triangles = 2;
 

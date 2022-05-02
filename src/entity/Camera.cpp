@@ -40,7 +40,7 @@ void Camera::update() {
         cameraUpTransformed
     );
 
-    position = glm::normalize(cameraPosTransformed);
+    position = cameraPosTransformed;
     up = glm::normalize(cameraUpTransformed);
     direction = glm::normalize(pivot - glm::vec3(cameraPosTransformed));
     right = glm::cross(up, direction);

@@ -31,3 +31,8 @@ void Shader::use()
 {
     glUseProgram(id);
 }
+
+void Shader::dispose()
+{
+    pgr::deleteProgramAndShaders(id);
+}

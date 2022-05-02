@@ -6,12 +6,12 @@
 
 class Cubemap {
 public:
-    GLuint id;
+	GLuint id;
 
-    Cubemap(std::vector<std::string> textures);
+	Cubemap(std::vector<std::string> textures);
 
-    void bind(GLuint location);
+	void bind(GLuint location);
 
 private:
-    GLuint loadTextures(std::vector<std::string> textures);
+	GLuint loadTextures(std::vector<std::string> textures);
 };
