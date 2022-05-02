@@ -12,7 +12,7 @@ void Cube::update()
     transform.rot.z = Game::time * 60;
 }
 
-void Cube::create(std::shared_ptr<PhongShader> shader)
+void Cube::create(PhongShader* shader)
 {
     GameObject::create(shader);
 

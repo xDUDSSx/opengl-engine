@@ -7,7 +7,9 @@
 class Camera {
 public:
 	// Controls
-    glm::vec3 pivot = glm::vec3(0.0f, 0.0f, 0.0f);
+    
+
+	glm::vec3 pivot = glm::vec3(0.0f, 0.0f, 0.0f);
 
     float radius = 3.0f;
     float rotationX = 0.0f;

@@ -46,6 +46,11 @@ void PhongShader::setTransformUniforms(const glm::mat4& model, const glm::mat4& 
     CHECK_GL_ERROR();
 }
 
+void PhongShader::setUniforms()
+{
+    // Empty
+}
+
 void PhongShader::clearTextures() const {
     std::string type;
 	type = "diffuse";

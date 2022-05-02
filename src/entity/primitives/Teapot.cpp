@@ -15,7 +15,7 @@ void Teapot::update()
     //scale = glm::vec3(cos(Game::time) * 0.5f);
 }
 
-void Teapot::create(std::shared_ptr<PhongShader> shader)
+void Teapot::create(PhongShader* shader)
 {
     GameObject::create(shader);
 

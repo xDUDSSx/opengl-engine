@@ -5,7 +5,7 @@ void Quad::render(PhongShader& shader, Camera& camera)
     GameObject::render(shader, camera);
 }
 
-void Quad::create(std::shared_ptr<PhongShader> shader)
+void Quad::create(PhongShader* shader)
 {
     GameObject::create(shader);
 

@@ -5,20 +5,24 @@
 
 #include "SceneNode.h"
 
-unsigned long Scene::counter = 0;
+#include "../shader/GrassShader.h"
 
-Scene::Scene() {
+unsigned long Scene::counter = 1;
+
+Scene::Scene()
+{
     root = std::make_shared<SceneNode>();
 }
 
-void Scene::render(PhongShader& shader, Camera& camera) {
+void Scene::render(PhongShader* explicitShader, Camera& camera)
+{
     matrix();
     delayedRenderEntities.clear();
     for (auto& e : entities) {
         if (!e.second->opaque) {
             delayedRenderEntities.push_back(e.second.get());
         } else {
-            e.second->render(shader, camera);    
+            renderEntity(*e.second, explicitShader, camera);
         }
     }
 
@@ -26,14 +30,18 @@ void Scene::render(PhongShader& shader, Camera& camera) {
     auto sortByDistanceToCamera = [&](Entity* e1, Entity* e2) -> bool {
         const float e1dist = glm::distance(camera.position, e1->transform.pos);
     	const float e2dist = glm::distance(camera.position, e2->transform.pos);
-    	return e1dist >= e2dist;
+    	return e1dist > e2dist;
     };
     std::sort(delayedRenderEntities.begin(), delayedRenderEntities.end(), sortByDistanceToCamera);
 
     // Render the non opaque entities in proper order
     for (auto& e : delayedRenderEntities) {
-        e->render(shader, camera);
+        renderEntity(*e, explicitShader, camera);
     }
+}
+
+void Scene::render(Camera& camera) {
+    render(nullptr, camera);
 }
 
 void Scene::matrix() {
@@ -76,11 +84,32 @@ void Scene::add(SceneNode* parent, SceneNode* child) {
     parent->add(childPtr);
 }
 
-void Scene::select(unsigned long id) {
-    if (entities.find(id) != entities.end()) {
-        Entity* entity = entities[id].get();
-        entity->selected = !entity->selected;
+void Scene::dispose()
+{
+    for (auto& e : entities) {
+        e.second->dispose();
     }
+}
+
+void Scene::select(unsigned long id) {
+    if (id <= 0)
+        return;
+    const bool alreadySelected = selectedEntities.find(id) != selectedEntities.end();
+    clearSelection();
+    if (!alreadySelected) {
+        selectedEntities.insert(id);
+    }
+}
+
+void Scene::clearSelection() {
+    selectedEntities.clear();
+}
+
+Entity* Scene::getSelectedEntity() {
+    if (selectedEntities.size() > 0) {
+        return entities[*selectedEntities.begin()].get();
+    }
+    return nullptr;
 }
 
 SceneNode* Scene::findNodeForEntity(Entity* entity) const {
@@ -99,6 +128,33 @@ SceneNode* Scene::findNodeForEntity(Entity* entity) const {
         }
 	}
     return targetNode;
+}
+
+void Scene::renderEntity(Entity& entity, PhongShader* explicitShader, Camera& camera) {
+    PhongShader* shader = explicitShader;
+    if (explicitShader == nullptr) {
+        if (entity.shader != nullptr) {
+            shader = entity.shader;
+        }
+    }
+    shader->use();
+    shader->setUniforms();
+
+	glStencilFunc(GL_ALWAYS, entity.id, 0xFF);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (shader != nullptr)
+        glUniform1i(glGetUniformLocation(shader->id, "selected"), false);
+    entity.render(*shader, camera, entity.worldMatrix);
+
+    bool selected = selectedEntities.find(entity.id) != selectedEntities.end();
+    if (selected) {
+        if (shader != nullptr)
+			glUniform1i(glGetUniformLocation(shader->id, "selected"), true);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        entity.render(*shader, camera, entity.worldMatrix);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 }
 
 

@@ -30,6 +30,8 @@ public:
      */
     void setTransformUniforms(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) const;
 
+    virtual void setUniforms();
+
     /**
      * \brief Sets all texture active flags to false. Used to reset texture state before binding new set of textures.
      */

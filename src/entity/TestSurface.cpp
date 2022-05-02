@@ -10,7 +10,7 @@ void TestSurface::update()
 	GameObject::update();
 }
 
-void TestSurface::create(std::shared_ptr<PhongShader> shader)
+void TestSurface::create(PhongShader* shader)
 {
 	GameObject::create(shader);
 

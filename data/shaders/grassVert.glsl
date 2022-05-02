@@ -5,6 +5,9 @@ layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 aNormal;
 layout (location = 4) in vec3 aTangent;
 
+uniform float time;
+uniform float windStrength;
+
 uniform mat4 pvmMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 modelMatrix;
@@ -23,16 +26,21 @@ out vec3 Binormal;
 //https://learnopengl.com/Advanced-Lighting/Normal-Mapping
 
 void main() {
-	gl_Position = pvmMatrix * vec4(aPos, 1.0);
+	vec3 position = aPos;
+	float offset = (sin(time) + sin(1.3 * time + 5.7)) * 0.5; // [-1, 1] 
+	if (aTexCoords.y > 0.5) {
+		position += (aTangent * offset * windStrength);
+	}
 
-	FragPos = (viewMatrix * modelMatrix * vec4(aPos, 1.0)).xyz;
-	
+	gl_Position = pvmMatrix * vec4(position, 1.0);
+	FragPos = (viewMatrix * modelMatrix * vec4(position, 1.0)).xyz;
+
 	Normal = normalize(viewMatrix * normalMatrix * vec4(aNormal, 0.0)).xyz;
 	
 	//Remaining view space normal basis vectors, used to convert from tangent space to view space in frag shader
 	Tangent = normalize(viewMatrix * normalMatrix * vec4(aTangent, 0.0)).xyz;
 	Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal); //Gram–Schmidt process
 	Binormal = cross(Normal, Tangent); //Get third basis vector as a cross of the two existing orthogonal ones
-
+	
 	TexCoords = aTexCoords;
 }

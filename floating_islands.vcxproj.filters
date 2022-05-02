@@ -10,7 +10,6 @@
     <ClCompile Include="src\entity\primitives\Cube.cpp" />
     <ClCompile Include="src\entity\Camera.cpp" />
     <ClCompile Include="src\parser\ObjParser.cpp" />
-    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\entity\lights\PointLight.cpp" />
@@ -19,7 +18,6 @@
     <ClCompile Include="src\entity\lights\SpotLight.cpp" />
     <ClCompile Include="src\texture\Texture.cpp" />
     <ClCompile Include="src\entity\Capacitor.cpp" />
-    <ClCompile Include="src\debug\Debug.cpp" />
     <ClCompile Include="src\shader\NormalDebugShader.cpp" />
     <ClCompile Include="src\entity\C4.cpp" />
     <ClCompile Include="src\entity\TestSurface.cpp" />
@@ -43,6 +41,9 @@
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneNode.cpp" />
     <ClCompile Include="src\entity\general\Transform.cpp" />
+    <ClCompile Include="src\shader\GrassShader.cpp" />
+    <ClCompile Include="src\entity\general\Entity.cpp" />
+    <ClCompile Include="src\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\object.h" />
@@ -67,7 +68,6 @@
     <ClInclude Include="src\entity\lights\SpotLight.h" />
     <ClInclude Include="src\texture\Texture.h" />
     <ClInclude Include="src\entity\Capacitor.h" />
-    <ClInclude Include="src\debug\Debug.h" />
     <ClInclude Include="src\shader\NormalDebugShader.h" />
     <ClInclude Include="src\entity\C4.h" />
     <ClInclude Include="src\entity\general\Transform.h" />
@@ -94,10 +94,12 @@
     <ClInclude Include="src\ui\ImGuiManager.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneNode.h" />
+    <ClInclude Include="src\shader\GrassShader.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />
     <Text Include="data\shaders\basicVert.glsl" />
+    <Text Include="data\shaders\grassVert.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\phongFrag.glsl" />

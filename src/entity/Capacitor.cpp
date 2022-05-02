@@ -1,7 +1,5 @@
 #include "Capacitor.h"
 
-#include "../Game.h"
-
 void Capacitor::render(PhongShader& shader, Camera& camera)
 {
 	GameObject::render(shader, camera);
@@ -14,7 +12,7 @@ void Capacitor::update()
 	//this->position += Game::time * 0.01f;
 }
 
-void Capacitor::create(std::shared_ptr<PhongShader> shader)
+void Capacitor::create(PhongShader* shader)
 {
 	GameObject::create(shader);
 

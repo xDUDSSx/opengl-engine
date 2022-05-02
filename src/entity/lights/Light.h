@@ -11,7 +11,8 @@ public:
     void render(PhongShader& shader, Camera& camera) override;
     void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
 	void update() override;
-    void create(std::shared_ptr<PhongShader> shader) override;
+    void create(PhongShader* shader) override;
+    void dispose() override;
 
     virtual void setUniforms(const PhongShader& shader, int index) const = 0;
 };
@@ -19,4 +20,5 @@ public:
 inline void Light::render(PhongShader& shader, Camera& camera) {}
 inline void Light::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) {}
 inline void Light::update() {}
-inline void Light::create(std::shared_ptr<PhongShader> shader) {}
+inline void Light::create(PhongShader* shader) { }
+inline void Light::dispose() {}

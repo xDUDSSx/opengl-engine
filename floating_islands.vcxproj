@@ -150,6 +150,9 @@
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_draw.cpp" />
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_tables.cpp" />
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_widgets.cpp" />
+    <ClCompile Include="src\entity\general\Entity.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\shader\GrassShader.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -167,7 +170,6 @@
     <ClCompile Include="src\entity\C4.cpp" />
     <ClCompile Include="src\entity\TestSurface.cpp" />
     <ClCompile Include="src\shader\NormalDebugShader.cpp" />
-    <ClCompile Include="src\debug\Debug.cpp" />
     <ClCompile Include="src\entity\Capacitor.cpp" />
     <ClCompile Include="src\entity\lights\PointLight.cpp" />
     <ClCompile Include="src\Material.cpp" />
@@ -177,7 +179,6 @@
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\entity\Camera.cpp" />
     <ClCompile Include="src\entity\primitives\Cube.cpp" />
-    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\parser\ObjParser.cpp" />
     <ClCompile Include="src\shader\PhongShader.cpp" />
     <ClCompile Include="src\shader\Shader.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_rectpack.h" />
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_textedit.h" />
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_truetype.h" />
+    <ClInclude Include="src\shader\GrassShader.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glut.h" />
@@ -213,7 +215,6 @@
     <ClInclude Include="src\entity\C4.h" />
     <ClInclude Include="src\entity\TestSurface.h" />
     <ClInclude Include="src\shader\NormalDebugShader.h" />
-    <ClInclude Include="src\debug\Debug.h" />
     <ClInclude Include="src\entity\Capacitor.h" />
     <ClInclude Include="src\entity\lights\PointLight.h" />
     <ClInclude Include="src\Material.h" />
@@ -242,6 +243,7 @@
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />
     <Text Include="data\shaders\basicVert.glsl" />
+    <Text Include="data\shaders\grassVert.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\normalDebugFrag.glsl" />

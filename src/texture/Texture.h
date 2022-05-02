@@ -17,6 +17,8 @@ public:
 	void bind(int typeIndex, GLuint textureUnit, PhongShader& shader);
     void dispose();
 
+    void setClampToEdge();
+
 private:
     GLuint loadTexture(const char* path);
 };

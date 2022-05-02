@@ -28,7 +28,7 @@ void Texture::bind()
 void Texture::bind(int typeIndex, GLuint textureUnit, PhongShader& shader)
 {
 	//Activate texture unit
-	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glActiveTexture(GL_TEXTURE0+ textureUnit);
 	//Find appropriate sampler and set its texture unit
 	glUniform1i(glGetUniformLocation(shader.id, (type + std::to_string(typeIndex)).c_str()), textureUnit);
 	//Also enable flag saying this sampler is active
@@ -39,6 +39,12 @@ void Texture::bind(int typeIndex, GLuint textureUnit, PhongShader& shader)
 
 void Texture::dispose() {
 	glDeleteTextures(1, &id);
+}
+
+void Texture::setClampToEdge() {
+    this->bind();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 GLuint Texture::loadTexture(const char* path)

@@ -10,30 +10,34 @@ SceneNode::SceneNode(Entity* entity)
     updateLocalMatrix();
 }
 
-void SceneNode::render(PhongShader& shader, Camera& camera) const
-{
-    if (entity != nullptr) {
-        glStencilFunc(GL_ALWAYS, entity->id, 0xFF);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    	glUniform1i(glGetUniformLocation(shader.id, "selected"), false);
-        entity->render(shader, camera, worldMatrix);
-
-        if (entity->selected) {
-            glUniform1i(glGetUniformLocation(shader.id, "selected"), true);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            entity->render(shader, camera, worldMatrix);
-        }
-    }
-    for (auto& child : children) {
-        child->render(shader, camera);
-    }
-}
+//void SceneNode::render(PhongShader& shader, Camera& camera) const
+//{
+//    if (entity != nullptr) {
+//        glStencilFunc(GL_ALWAYS, entity->id, 0xFF);
+//
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//    	glUniform1i(glGetUniformLocation(shader.id, "selected"), false);
+//        entity->render(shader, camera, worldMatrix);
+//
+//        if (entity->selected) {
+//            glUniform1i(glGetUniformLocation(shader.id, "selected"), true);
+//            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//            entity->render(shader, camera, worldMatrix);
+//        }
+//    }
+//    for (auto& child : children) {
+//        child->render(shader, camera);
+//    }
+//}
 
 void SceneNode::matrix()
 {
     updateLocalMatrix();
     updateWorldMatrix();
+
+    if (entity != nullptr) {
+        entity->worldMatrix = worldMatrix;
+    }
 
     for (auto& child : children) {
         child->matrix();

@@ -29,12 +29,12 @@ public:
      */
     explicit SceneNode(Entity* entity);
 
-    /**
-     * \brief Render the node (non-recursive)
-     * \param shader Active shader
-     * \param camera Active camera
-     */
-    void render(PhongShader& shader, Camera& camera) const;
+    ///**
+    // * \brief Render the node (non-recursive)
+    // * \param shader Active shader
+    // * \param camera Active camera
+    // */
+    //void render(PhongShader& shader, Camera& camera) const;
 
     /**
      * \brief Update local and world matrices using parent and recursively update child nodes.

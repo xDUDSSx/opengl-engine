@@ -7,5 +7,5 @@ public:
     Quad() = default;
 
     void render(PhongShader& shader, Camera& camera) override;
-    void create(std::shared_ptr<PhongShader> shader) override;
+    void create(PhongShader* shader) override;
 };

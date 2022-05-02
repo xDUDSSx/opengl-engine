@@ -10,8 +10,8 @@ in VS_OUT {
 
 out vec3 fColor;
 
-const float MAGNITUDE = 0.1;
-  
+uniform float magnitude;
+
 uniform mat4 projectionMatrix;
 
 void generate(int index, int type)
@@ -21,15 +21,15 @@ void generate(int index, int type)
 	EmitVertex();
 	if (type == 0) {
 		fColor = vec3(0, 1, 0);
-		gl_Position = projectionMatrix * (gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * MAGNITUDE);
+		gl_Position = projectionMatrix * (gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * magnitude);
 	} else
 	if (type == 1) {
 		fColor = vec3(1, 0, 0);
-		gl_Position = projectionMatrix * (gl_in[index].gl_Position + vec4(gs_in[index].tangent, 0.0) * MAGNITUDE);
+		gl_Position = projectionMatrix * (gl_in[index].gl_Position + vec4(gs_in[index].tangent, 0.0) * magnitude);
 	} else
 	if (type == 2) {
 		fColor = vec3(0, 0, 1);
-		gl_Position = projectionMatrix * (gl_in[index].gl_Position + vec4(gs_in[index].binormal, 0.0) * MAGNITUDE);
+		gl_Position = projectionMatrix * (gl_in[index].gl_Position + vec4(gs_in[index].binormal, 0.0) * magnitude);
 	}
 	EmitVertex();
 	EndPrimitive();

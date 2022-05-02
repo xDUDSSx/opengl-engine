@@ -1,5 +1,9 @@
 #pragma once
+
+#include "pgr.h"
+
 #include <memory>
+#include <set>
 #include <unordered_map>
 
 class Camera;
@@ -15,8 +19,9 @@ class Scene {
 	static unsigned long counter;
 
     std::vector<Entity*> delayedRenderEntities;
+    std::set<unsigned long> selectedEntities;
 
-public:
+    public:
 	/** \brief The scene graph root node */
 	std::shared_ptr<SceneNode> root;
 
@@ -28,12 +33,18 @@ public:
 	 */
 	Scene();
 
+    /**
+	 * \brief Render the scene (non-recursively)
+	 * \param camera Active camera
+	 */
+	void render(Camera& camera);
+
 	/**
      * \brief Render the scene (non-recursively)
-     * \param shader Active shader
+     * \param shader Explicit shader
      * \param camera Active camera
      */
-    void render(PhongShader& shader, Camera& camera);
+    void render(PhongShader* explicitShader, Camera& camera);
 
     /**
      * \brief Recursively update local and world matrices of scene nodes.
@@ -50,8 +61,13 @@ public:
     void add(SceneNode* parent, Entity* entity);
 	void add(SceneNode* parent, SceneNode* child);
 
+    void dispose();
+
 	void select(unsigned long id);
+    void clearSelection();
+    Entity* getSelectedEntity();
 
 private:
 	SceneNode* findNodeForEntity(Entity* entity) const;
+    void renderEntity(Entity& entity, PhongShader* explicitShader, Camera& camera);
 };

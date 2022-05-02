@@ -8,5 +8,5 @@ uniform samplerCube cubemap;
 
 void main()
 {
-    FragColor = texture(cubemap, TexCoords);
+	FragColor = texture(cubemap, TexCoords);
 }

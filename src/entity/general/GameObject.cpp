@@ -49,9 +49,9 @@ void GameObject::update()
 	// Empty
 }
 
-void GameObject::create(std::shared_ptr<PhongShader> shader)
+void GameObject::create(PhongShader* shader)
 {
-	this->shader = shader;
+    Entity::create(shader);
 	this->material = std::make_shared<Material>();
 }
 

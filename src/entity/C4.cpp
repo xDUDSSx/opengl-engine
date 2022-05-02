@@ -10,7 +10,7 @@ void C4::update()
 	GameObject::update();
 }
 
-void C4::create(std::shared_ptr<PhongShader> shader)
+void C4::create(PhongShader* shader)
 {
 	GameObject::create(shader);
 
