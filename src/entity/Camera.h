@@ -7,7 +7,8 @@
 class Camera {
 public:
 	// Controls
-    
+    //TODO: Implement fps mode
+    bool fpsMode = false;
 
 	glm::vec3 pivot = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -19,15 +20,20 @@ public:
     float rotateSpeed = 0.42f;
     float translateSpeed = 0.12f;
 
+    float fpsTranslateSpeed = 0.1f;
+    float fpsRotateSpeed = 0.2f;
+
     // Matrices
     glm::mat4 view;
     glm::mat4 projection;
 
     // Info
-    glm::vec3 position;
-    glm::vec3 direction = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 position = glm::vec3(-3.0f, 0.0f, 2.0f);
+	glm::vec3 direction = glm::vec3(1.0f, 0.0f, 0.0f);
     glm::vec3 up = glm::vec3(0.0f, 0.0f, 1.0f);
     glm::vec3 right = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    glm::vec3 lastTogglePosition = position;
 
     int width;
     int height;
@@ -42,8 +48,13 @@ public:
     void matrix(const SkyboxShader& shader);
 
     void mouseDrag(int dx, int dy, bool left, bool middle);
-
+    void mouseMoved(int x, int y);
     void mouseWheel(int direction, int notches);
+
+    void keyboard(bool w, bool s, bool a, bool d);
+
+    void enableFpsMode(bool b);
+    void toggleFpsMode();
 
     void size(int width, int height);
 

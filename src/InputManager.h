@@ -105,6 +105,12 @@ public:
 		IM_KEY_F10,
 		IM_KEY_F11,
 		IM_KEY_F12,
+		IM_KEY_SHIFT_L,
+        IM_KEY_SHIFT_R,
+        IM_KEY_CTRL_L,
+        IM_KEY_CTRL_R,
+        IM_KEY_ALT_L,
+        IM_KEY_ALT_R,
 		IM_KEY_UNDEFINED = 999,
 	};
 
@@ -127,6 +133,10 @@ public:
     static ImMouseButton glutMouseButtonToImMouseButton(int key);
     static int imKeyToAtbKey(ImKey key);
     static void debugPrint();
+
+	static bool isShiftDown();
+    static bool isCtrlDown();
+    static bool isAltDown();
 
 private:
 	static std::map<ImKey, bool> initKeyMap();

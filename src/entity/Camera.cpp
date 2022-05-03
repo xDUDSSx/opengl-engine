@@ -23,39 +23,74 @@ void Camera::matrix(const SkyboxShader& shader)
 void Camera::update() {
     glm::mat4 cameraTransform = glm::mat4(1.0f);
 
-    cameraTransform = glm::translate(cameraTransform, pivot);
-	cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationX), glm::vec3(0.0f, 0.0f, 1.0f));
-    cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
-    cameraTransform = glm::translate(cameraTransform, glm::vec3(radius, 0.0f, 0.0f));
+    if (fpsMode) {
+        cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationX), glm::vec3(0.0f, 0.0f, 1.0f));
+        cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    const glm::vec4 cameraPos = glm::vec4(0.0f, 0.0f, 0.0f, 1.0);
-    const glm::vec4 cameraUp = glm::vec4(0.0f, 0.0f, 1.0f, 0.0);
-    const glm::vec3 cameraPosTransformed = glm::vec3(cameraTransform * cameraPos);
-    const glm::vec3 cameraUpTransformed = glm::vec3(cameraTransform * cameraUp);
+        const glm::vec4 cameraDir = glm::vec4(-1.0f, 0.0f, 0.0f, 0.0);
+        const glm::vec4 cameraUp = glm::vec4(0.0f, 0.0f, 1.0f, 0.0);
+        const glm::vec3 cameraDirTransformed = glm::vec3(cameraTransform * cameraDir);
+    	const glm::vec3 cameraUpTransformed = glm::vec3(cameraTransform * cameraUp);
+        const glm::vec3 cameraCenter = position + cameraDirTransformed;
 
-    projection = glm::perspective(glm::radians(fov), width / (float)height, zNear, zFar);
-    view = glm::lookAt(
-        cameraPosTransformed,
-        pivot,
-        cameraUpTransformed
-    );
+        projection = glm::perspective(glm::radians(fov), width / (float)height, zNear, zFar);
+        view = glm::lookAt(
+            position,
+            cameraCenter,
+            cameraUpTransformed);
 
-    position = cameraPosTransformed;
-    up = glm::normalize(cameraUpTransformed);
-    direction = glm::normalize(pivot - glm::vec3(cameraPosTransformed));
-    right = glm::cross(up, direction);
+        position = position;
+        up = glm::normalize(cameraUpTransformed);
+        direction = glm::normalize(cameraDirTransformed);
+        right = glm::cross(up, direction);
+    } else {
+        cameraTransform = glm::translate(cameraTransform, pivot);
+        cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationX), glm::vec3(0.0f, 0.0f, 1.0f));
+        cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
+        cameraTransform = glm::translate(cameraTransform, glm::vec3(radius, 0.0f, 0.0f));
+
+        const glm::vec4 cameraPos = glm::vec4(0.0f, 0.0f, 0.0f, 1.0);
+        const glm::vec4 cameraUp = glm::vec4(0.0f, 0.0f, 1.0f, 0.0);
+        const glm::vec3 cameraPosTransformed = glm::vec3(cameraTransform * cameraPos);
+        const glm::vec3 cameraUpTransformed = glm::vec3(cameraTransform * cameraUp);
+
+        projection = glm::perspective(glm::radians(fov), width / (float)height, zNear, zFar);
+        view = glm::lookAt(
+            cameraPosTransformed,
+            pivot,
+            cameraUpTransformed);
+
+        position = cameraPosTransformed;
+        up = glm::normalize(cameraUpTransformed);
+        direction = glm::normalize(pivot - glm::vec3(cameraPosTransformed));
+        right = glm::cross(up, direction);
+    }
 }
 
-void Camera::mouseDrag(int dx, int dy, bool left, bool middle) {
+void Camera::mouseDrag(int dx, int dy, bool left, bool middle)
+{
     if (left) {
-        rotationX += -dx * rotateSpeed;
-        rotationY += -dy * rotateSpeed;
+        if (fpsMode) {
+            rotationX += -dx * fpsRotateSpeed;
+            rotationY += -dy * fpsRotateSpeed;
+        } else {
+            rotationX += -dx * rotateSpeed;
+            rotationY += -dy * rotateSpeed;
+        }
     }
     if (middle) {
         const float ratio = radius / zNear / 100.0f;
     	pivot += glm::vec3(right) * (translateSpeed * dx * ratio);
         pivot += glm::vec3(up) * (translateSpeed * dy * ratio);
     }
+}
+
+void Camera::mouseMoved(int dx, int dy)
+{
+    /*if (fpsMode) {
+        rotationX += -dx * fpsRotateSpeed;
+        rotationY += -dy * fpsRotateSpeed;
+    }*/
 }
 
 void Camera::mouseWheel(int direction, int notches) {
@@ -67,6 +102,37 @@ void Camera::mouseWheel(int direction, int notches) {
     }
     if (radius < 0.01f) {
         radius = 0.01f;
+    }
+}
+
+void Camera::keyboard(bool w, bool s, bool a, bool d) {
+    if (fpsMode) {
+        float speed = fpsTranslateSpeed;
+        if (w) {
+            position += direction * speed;
+        }
+        if (s) {
+            position -= direction * speed;
+        }
+        if (a) {
+            position += right * speed;
+        }
+        if (d) {
+            position -= right * speed;
+        }
+    }
+}
+
+
+void Camera::toggleFpsMode() {
+    enableFpsMode(!fpsMode);
+}
+
+void Camera::enableFpsMode(bool b) {
+    fpsMode = b;
+    lastTogglePosition = position;
+    if (!fpsMode) {
+        pivot = position + (direction * radius);
     }
 }
 

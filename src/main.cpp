@@ -61,6 +61,8 @@ std::shared_ptr<Capacitor> capacitor;
 std::shared_ptr<C4> c4;
 std::shared_ptr<TestSurface> test;
 
+bool ignoreMouseEvent = false;
+
 void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -99,6 +101,13 @@ void update(int delta)
 {
 	Game::time = 0.001f * (float)glutGet(GLUT_ELAPSED_TIME);
 
+	activeCamera->keyboard(
+        InputManager::keyMap[InputManager::IM_KEY_w],
+        InputManager::keyMap[InputManager::IM_KEY_s],
+        InputManager::keyMap[InputManager::IM_KEY_a],
+        InputManager::keyMap[InputManager::IM_KEY_d]
+    );
+	
 	scene->update();
 
 	glutTimerFunc(fps, update, 0);
@@ -312,11 +321,16 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 			activeCamera = camera2;
 			activeCamera->size(winWidth, winHeight);
 			break;
-		case ',':
-			Entity* e = scene->getSelectedEntity();
-			if (e != nullptr) {
-				activeCamera->pivot = e->transform.pos;
-			}
+		case ',': 
+			{
+	            Entity* e = scene->getSelectedEntity();
+	            if (e != nullptr) {
+	                activeCamera->pivot = e->transform.pos;
+	            }
+            }
+            break;
+		case 'f':
+            activeCamera->toggleFpsMode(); 
 			break;
 	}
 	ImGui_ImplGLUT_KeyboardFunc(keyPressed, mouseX, mouseY);
@@ -421,10 +435,30 @@ void mouseDragged(int x, int y) {
  * \param y mouse (cursor) Y position
  */
 void mouseMoved(int x, int y) {
+	mouseDx = x - mouseX;
+    mouseDy = y - mouseY;
 	mouseX = x;
 	mouseY = y;
 	ImGui_ImplGLUT_MotionFunc(x, y);
-	glutPostRedisplay();
+    if (!ImGui::GetIO().WantCaptureMouse) {
+        activeCamera->mouseMoved(mouseDx, mouseDy);
+    	if (activeCamera->fpsMode) {
+            //int border = 3;
+            //if (x < border) {
+            //    glutWarpPointer(winWidth - border, y);    
+            //}
+            //if (x > winWidth - border) {
+            //    glutWarpPointer(border, y);
+            //}
+
+            //int centerX = winWidth / 2;
+            //int centerY = winHeight / 2;
+            //if (x != centerX || y != centerY) {
+            //    glutWarpPointer(centerX, centerY);
+            //}
+        }
+    }
+    glutPostRedisplay();
 }
 
 /**
