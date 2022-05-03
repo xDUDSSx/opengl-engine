@@ -11,6 +11,7 @@ public:
 	unsigned long id = -1;
 
 	bool opaque = true;
+    bool backFaceCull = false;
 
 	Transform transform;
 	glm::mat4 worldMatrix = glm::mat4(1);

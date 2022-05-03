@@ -9,6 +9,10 @@ void Quad::create(PhongShader* shader)
 {
     GameObject::create(shader);
 
+    addEmptyMaterial();
+    addEmptyTextureSet();
+
+    //Create mesh
     unsigned int verticiesCount = 4 * 11;
     float vertices[] = {
         0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
@@ -24,5 +28,5 @@ void Quad::create(PhongShader* shader)
     unsigned int triangles = 2;
 
 	Mesh* g = new Mesh(vertices, verticiesCount, indices, indicesCount, triangles, *this->shader);
-	this->mesh = std::shared_ptr<Mesh>(g);
+    this->meshes.push_back(std::shared_ptr<Mesh>(g));
 }

@@ -7,7 +7,6 @@
 class Camera {
 public:
 	// Controls
-    //TODO: Implement fps mode
     bool fpsMode = false;
 
 	glm::vec3 pivot = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -20,9 +19,11 @@ public:
     float rotateSpeed = 0.42f;
     float translateSpeed = 0.12f;
 
-    float fpsTranslateSpeed = 0.1f;
+    float fpsTranslateSpeed = 0.05f;
+    float fpsMouseWheelSpeedDelta = 0.001f;
     float fpsRotateSpeed = 0.2f;
-
+    float fpsSpeedBoostMultiplier = 3.0f;
+    
     // Matrices
     glm::mat4 view;
     glm::mat4 projection;
@@ -51,7 +52,7 @@ public:
     void mouseMoved(int x, int y);
     void mouseWheel(int direction, int notches);
 
-    void keyboard(bool w, bool s, bool a, bool d);
+    void keyboard(bool w, bool s, bool a, bool d, bool shift);
 
     void enableFpsMode(bool b);
     void toggleFpsMode();

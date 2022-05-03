@@ -21,6 +21,11 @@ ObjParser::ObjParser(const char* path, float uvScale)
 void ObjParser::parseObj(const char* path, float uvScale) {
     // int cwCount = 0;
     // int ccwCount = 0;
+    std::cout << "Loading obj from file '" << path << "' ..." << std::endl;
+
+	// Count number of lines
+	std::ifstream inFile(path);
+    unsigned int lineCount = std::count(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>(), '\n');
 
     std::ifstream file(path);
     std::vector<std::string> words;
@@ -28,6 +33,10 @@ void ObjParser::parseObj(const char* path, float uvScale) {
     int index = 0;
     while (std::getline(file, line)) {
         index++;
+        if (index % 50000 == 0) {
+            int progress = static_cast<unsigned int>((float)index / lineCount * 100);
+            std::cout << "Loaded " << index << "/" << lineCount << " lines (" << progress << "%)" << std::endl;
+        }
         std::istringstream iss(line);
         words.clear();
         while (iss) {

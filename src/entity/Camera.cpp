@@ -94,20 +94,33 @@ void Camera::mouseMoved(int dx, int dy)
 }
 
 void Camera::mouseWheel(int direction, int notches) {
-    const float ratio = radius / zNear / 100.0f;
-    if (direction < 0) {
-        radius = radius + notches * zoomSpeed * ratio;
+    if (fpsMode) {
+        if (direction < 0) {
+            fpsTranslateSpeed -= fpsMouseWheelSpeedDelta;
+        } else {
+            fpsTranslateSpeed += fpsMouseWheelSpeedDelta;
+        }
+        fpsTranslateSpeed = std::abs(fpsTranslateSpeed);
+        fpsTranslateSpeed = std::max(fpsTranslateSpeed, 0.001f);
     } else {
-        radius = radius - notches * zoomSpeed * ratio;
-    }
-    if (radius < 0.01f) {
-        radius = 0.01f;
+        const float ratio = radius / zNear / 100.0f;
+        if (direction < 0) {
+            radius = radius + notches * zoomSpeed * ratio;
+        } else {
+            radius = radius - notches * zoomSpeed * ratio;
+        }
+        if (radius < 0.01f) {
+            radius = 0.01f;
+        }   
     }
 }
 
-void Camera::keyboard(bool w, bool s, bool a, bool d) {
+void Camera::keyboard(bool w, bool s, bool a, bool d, bool shift) {
     if (fpsMode) {
         float speed = fpsTranslateSpeed;
+        if (shift) {
+            speed *= fpsSpeedBoostMultiplier;
+        }
         if (w) {
             position += direction * speed;
         }

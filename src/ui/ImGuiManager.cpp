@@ -30,7 +30,7 @@ void ImGuiManager::init() {
     ImGui_ImplOpenGL3_Init();
 }
 
-void ImGuiManager::draw(Scene& scene)
+void ImGuiManager::draw(Scene& scene, Camera& activeCamera)
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGLUT_NewFrame();
@@ -48,8 +48,11 @@ void ImGuiManager::draw(Scene& scene)
         ImGui::Separator();
 
         ImGui::Checkbox("Draw normals", &Game::drawDebugNormals);
-        ImGui::SliderFloat("Normals size", &Game::normalDebugShaderMagnitude, 0.01f, 10.0f);
+        ImGui::SliderFloat("Normals size", &Game::normalDebugShaderMagnitude, 0.01f, 1.0f);
         ImGui::SliderFloat("Wind strength", &Game::windStrength, 0.01f, 3.0f);
+
+        ImGui::SliderFloat("zNear", &activeCamera.zNear, 0.005f, 0.3f);
+        ImGui::SliderFloat("zFar", &activeCamera.zFar, 10.0f, 200.0f);
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
@@ -84,9 +87,9 @@ void ImGuiManager::drawEntityInfo(Entity& entity) {
     // I use "ugly" dynamic_casts here over using OOP simply because I want to strictly
     // decouple GUI from entities. This is the easiest way I can think of to do it.
 
-    ImGui::DragFloat3("testPos", &entity.transform.pos.x);
+    ImGui::DragFloat3("testPos", glm::value_ptr(entity.transform.pos));
 
     if (GameObject* gameObject = dynamic_cast<GameObject*>(&entity)) {
-        ImGui::SliderFloat("test", &gameObject->material->shininess, 0, 300);
+        //ImGui::SliderFloat("test", &gameObject->material->shininess, 0, 300);
     }
 }

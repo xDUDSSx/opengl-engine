@@ -1,7 +1,5 @@
 #pragma once
 
-#include <xhash>
-
 #include "pgr.h"
 
 class Transform {

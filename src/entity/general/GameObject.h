@@ -7,17 +7,13 @@
 #include "../../Mesh.h"
 #include "../../entity/Camera.h"
 #include "../../texture/Texture.h"
+#include "../../texture/TextureSet.h"
 
 class GameObject : public Entity {
 public:
-    std::shared_ptr<Mesh> mesh;
-    std::shared_ptr<Material> material;
-
-    std::shared_ptr<Texture> texture;
-    std::shared_ptr<Texture> specularMap;
-    std::shared_ptr<Texture> normalMap;
-	std::shared_ptr<Texture> aoMap;
-    std::shared_ptr<Texture> emissionMap;
+    std::vector<std::shared_ptr<Material>> materials;
+    std::vector<std::shared_ptr<Mesh>> meshes;
+    std::vector<std::shared_ptr<TextureSet>> textureSets;
 
 protected:
     //TODO: Think this is unused?
@@ -34,4 +30,7 @@ public:
 
     void loadMesh(const char* path, bool arraysOrElements);
     void loadMesh(const char* path, bool arraysOrElements, float uvScale);
+
+    void addEmptyMaterial();
+    void addEmptyTextureSet();
 };

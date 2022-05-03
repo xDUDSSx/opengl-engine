@@ -12,7 +12,7 @@ public:
 	static bool show_another_window;
 
 	static void init();
-    static void draw(Scene& scene);
+    static void draw(Scene& scene, Camera& activeCamera);
 	static void dispose();
 
 private:

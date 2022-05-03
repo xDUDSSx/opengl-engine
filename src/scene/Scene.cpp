@@ -36,8 +36,19 @@ void Scene::render(PhongShader* explicitShader, Camera& camera)
 
     // Render the non opaque entities in proper order
     for (auto& e : delayedRenderEntities) {
-        renderEntity(*e, explicitShader, camera);
+        if (e->backFaceCull) {
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+        }
+    	renderEntity(*e, explicitShader, camera);
+        if (e->backFaceCull) {
+            glDisable(GL_CULL_FACE);
+        }
     }
+    //glCullFace(GL_FRONT);
+    //for (auto& e : delayedRenderEntities) {
+    //    renderEntity(*e, explicitShader, camera);
+    //}
 }
 
 void Scene::render(Camera& camera) {

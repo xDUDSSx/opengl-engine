@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "Lighting.h"
 #include "Skybox.h"
+#include "entity/Airship.h"
 
 #include "texture/Texture.h"
 #include "texture/Cubemap.h"
@@ -13,6 +14,7 @@
 #include "entity/Camera.h"
 #include "entity/Capacitor.h"
 #include "entity/C4.h"
+#include "entity/Islands.h"
 #include "entity/TestSurface.h"
 #include "entity/lights/PointLight.h"
 #include "entity/lights/SpotLight.h"
@@ -92,7 +94,7 @@ void render() {
 
 	glStencilMask(0x00);
 
-	ImGuiManager::draw(*scene);
+	ImGuiManager::draw(*scene, *activeCamera);
 
 	glutSwapBuffers();
 }
@@ -105,7 +107,8 @@ void update(int delta)
         InputManager::keyMap[InputManager::IM_KEY_w],
         InputManager::keyMap[InputManager::IM_KEY_s],
         InputManager::keyMap[InputManager::IM_KEY_a],
-        InputManager::keyMap[InputManager::IM_KEY_d]
+        InputManager::keyMap[InputManager::IM_KEY_d],
+		InputManager::isShiftDown()
     );
 	
 	scene->update();
@@ -209,11 +212,11 @@ void init()
 	quad2->create(shader.get());
 	quad2->transform.pos = glm::vec3(6, 7, -0.5);
 	quad2->transform.scale = glm::vec3(3);
-	quad2->material->shininess = 100;
-	quad2->texture = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
-	quad2->specularMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular2.jpg", "specular");
-	quad2->aoMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
-	quad2->normalMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
+    quad2->materials[0]->shininess = 100;
+    quad2->textureSets[0]->texture = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
+    quad2->textureSets[0]->specularMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular2.jpg", "specular");
+    quad2->textureSets[0]->aoMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
+    quad2->textureSets[0]->normalMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
 	scene->add(quad2.get());
 
 	auto grass = new Quad();
@@ -222,8 +225,8 @@ void init()
 	grass->transform.scale = glm::vec3(3);
 	grass->transform.rot = glm::vec3(-90, 0, 0);
 	grass->transform.pos = glm::vec3(-3, 3, 0.5);
-	grass->texture = std::make_shared<Texture>("data/textures/grass.png", "diffuse");
-	grass->texture->setClampToEdge();
+    grass->textureSets[0]->texture = std::make_shared<Texture>("data/textures/grass.png", "diffuse");
+    grass->textureSets[0]->texture->setClampToEdge();
 	scene->add(grass);
 
 	auto window1 = new Quad();
@@ -232,7 +235,7 @@ void init()
 	window1->transform.scale = glm::vec3(3);
 	window1->transform.rot = glm::vec3(-90, 0, 0);
 	window1->transform.pos = glm::vec3(-3, 5, 0.5);
-	window1->texture = std::make_shared<Texture>("data/textures/blending_transparent_window.png", "diffuse");
+	window1->textureSets[0]->texture = std::make_shared<Texture>("data/textures/blending_transparent_window.png", "diffuse");
 	scene->add(window1);
 
 	auto window2 = new Quad();
@@ -241,7 +244,7 @@ void init()
 	window2->transform.scale = glm::vec3(3);
 	window2->transform.rot = glm::vec3(-90, 0, 0);
 	window2->transform.pos = glm::vec3(-3, 8, 0.5);
-	window2->texture = std::make_shared<Texture>("data/textures/blending_transparent_window.png", "diffuse");
+    window2->textureSets[0]->texture = std::make_shared<Texture>("data/textures/blending_transparent_window.png", "diffuse");
 	scene->add(window2);
 
 	cube = std::make_shared<Cube>();
@@ -267,6 +270,18 @@ void init()
 	c4->create(shader.get());
 	c4->transform.pos = glm::vec3(0, 4, 0);
 	c4->transform.scale = glm::vec3(1);
+
+	const auto airship = new Airship();
+    airship->create(shader.get());
+    airship->transform.pos = glm::vec3(0, 0, 5);
+    airship->transform.scale = glm::vec3(1);
+    scene->add(airship);
+
+	const auto islands = new Islands();
+    islands->create(shader.get());
+    islands->transform.pos = glm::vec3(-5, -10, 5);
+    islands->transform.scale = glm::vec3(1);
+    scene->add(islands);
 
 	test = std::make_shared<TestSurface>();
 	test->create(shader.get());
@@ -305,6 +320,8 @@ void reshape(int newWidth, int newHeight) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
+    keyPressed = tolower(keyPressed); //Fixes stuff like shift causing problems with uppercase letters
+
 	switch (keyPressed) {
 		case 27: // escape
 			#ifndef __APPLE__
@@ -346,6 +363,7 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
+    keyReleased = tolower(keyReleased); // Fixes stuff like shift causing problems with uppercase letters
 	ImGui_ImplGLUT_KeyboardUpFunc(keyReleased, mouseX, mouseY);
 	InputManager::keyMap[InputManager::glutKeyToImKey(keyReleased)] = false;
 }
@@ -427,6 +445,7 @@ void mouseDragged(int x, int y) {
 			InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_MIDDLE]
 		);
 	}
+    glutPostRedisplay();
 }
 
 /**

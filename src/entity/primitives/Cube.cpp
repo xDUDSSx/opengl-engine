@@ -20,8 +20,11 @@ void Cube::create(PhongShader* shader)
     loadMesh("data/models/cube.obj", true);
     
     // Load texture
-    this->texture = std::make_shared<Texture>("data/textures/container2.png", "diffuse");
-    this->specularMap = std::make_shared<Texture>("data/textures/container2_specular.png", "specular");
-    this->emissionMap = std::make_shared<Texture>("data/textures/matrix2.png", "emission");
+    const auto tSet = std::make_shared<TextureSet>();
+	tSet->texture = std::make_shared<Texture>("data/textures/container2.png", "diffuse");
+    tSet->specularMap = std::make_shared<Texture>("data/textures/container2_specular.png", "specular");
+    tSet->emissionMap = std::make_shared<Texture>("data/textures/matrix2.png", "emission");
+
+    this->textureSets.push_back(tSet);
 }
 

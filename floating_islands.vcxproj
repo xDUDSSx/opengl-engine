@@ -150,7 +150,9 @@
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_draw.cpp" />
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_tables.cpp" />
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_widgets.cpp" />
+    <ClCompile Include="src\entity\Airship.cpp" />
     <ClCompile Include="src\entity\general\Entity.cpp" />
+    <ClCompile Include="src\entity\Islands.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\shader\GrassShader.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -196,6 +198,8 @@
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_rectpack.h" />
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_textedit.h" />
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_truetype.h" />
+    <ClInclude Include="src\entity\Airship.h" />
+    <ClInclude Include="src\entity\Islands.h" />
     <ClInclude Include="src\shader\GrassShader.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -234,11 +238,11 @@
     <ClInclude Include="src\entity\primitives\Quad.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\entity\general\GameObject.h" />
-    <ClInclude Include="src\entity\general\object.h" />
     <ClInclude Include="src\texture\Texture.h" />
     <ClInclude Include="src\ui\ImGuiManager.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\entity\general\Transform.h" />
+    <ClInclude Include="src\texture\TextureSet.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />

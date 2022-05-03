@@ -18,9 +18,14 @@ void C4::create(PhongShader* shader)
     loadMesh("data/models/c4.obj", true);
 	
 	// Load texture
-	this->texture = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_color.png", "diffuse");
-	this->specularMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_specular.png", "specular");
-    this->normalMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_normal.png", "normal");
-    this->aoMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_ao.png", "ao");
-    this->emissionMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_emission.png", "emission");
+    const auto tSet = std::make_shared<TextureSet>();
+    tSet->texture = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_color.png", "diffuse");
+    tSet->specularMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_specular.png", "specular");
+    tSet->normalMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_normal.png", "normal");
+    tSet->aoMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_ao.png", "ao");
+    tSet->emissionMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_emission.png", "emission");
+
+    this->textureSets.push_back(tSet);
+
+	
 }
