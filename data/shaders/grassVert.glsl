@@ -19,6 +19,7 @@ out vec2 TexCoords;
 out vec3 Normal;
 out vec3 Tangent;
 out vec3 Binormal;
+out float Fog;
 
 //Normal mapping stuff largely inspired from 
 //https://lettier.github.io/3d-game-shaders-for-beginners/normal-mapping.html
@@ -42,5 +43,7 @@ void main() {
 	Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal); //Gram–Schmidt process
 	Binormal = cross(Normal, Tangent); //Get third basis vector as a cross of the two existing orthogonal ones
 	
+	Fog = -FragPos.z;
+
 	TexCoords = aTexCoords;
 }

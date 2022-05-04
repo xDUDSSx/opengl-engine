@@ -1,5 +1,7 @@
 #include "PhongShader.h"
 
+#include "../Game.h"
+
 #define MAX_DIFFUSE_TEXTURES 1
 #define MAX_SPECULAR_TEXTURES 1
 #define MAX_NORMAL_TEXTURES 1
@@ -48,7 +50,11 @@ void PhongShader::setTransformUniforms(const glm::mat4& model, const glm::mat4& 
 
 void PhongShader::setUniforms()
 {
-    // Empty
+    // Fog
+    glUniform1i(glGetUniformLocation(id, "fogEnabled"), Game::fogEnabled);
+    glUniform3fv(glGetUniformLocation(id, "fogColor"), 1, glm::value_ptr(Game::fogColor));
+	glUniform1f(glGetUniformLocation(id, "fogNear"), Game::fogNear);
+    glUniform1f(glGetUniformLocation(id, "fogFar"), Game::fogFar);
 }
 
 void PhongShader::clearTextures() const {

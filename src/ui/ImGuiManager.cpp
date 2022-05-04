@@ -44,15 +44,19 @@ void ImGuiManager::draw(Scene& scene, Camera& activeCamera)
         ImGui::Begin("Settings");
         ImGui::Checkbox("Demo Window", &show_demo_window);
 
-        // ImGui::SliderFloat("float", &f, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
-        // ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
         ImGui::Separator();
 
         ImGui::Checkbox("Draw normals", &Game::drawDebugNormals);
         ImGui::SliderFloat("Normals size", &Game::normalDebugShaderMagnitude, 0.01f, 1.0f);
         ImGui::SliderFloat("Wind strength", &Game::windStrength, 0.01f, 3.0f);
         ImGui::SliderFloat("Animation speed", &Game::animSpeed, 0, 60 * 50);
+
+        ImGui::Separator();
+
+        ImGui::Checkbox("Fog", &Game::fogEnabled);
+        ImGui::ColorEdit3("Fog color", glm::value_ptr(Game::fogColor));
+        ImGui::SliderFloat("Fog near", &Game::fogNear, 1, 100);
+        ImGui::SliderFloat("Fog far", &Game::fogFar, 5, 150);
 
         ImGui::Separator();
 

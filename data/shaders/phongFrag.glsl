@@ -7,10 +7,16 @@ in vec2 TexCoords;
 in vec3 Normal;
 in vec3 Tangent;
 in vec3 Binormal;
+in float Fog;
 
 uniform mat4 viewMatrix;
 
 uniform bool selected;
+
+uniform bool fogEnabled;
+uniform vec3 fogColor;
+uniform float fogNear;
+uniform float fogFar;
 
 // Textures ====================================
 
@@ -218,9 +224,14 @@ void main() {
 		outColor += calculateSpotLight(spotLights[i], material, FragPos, Normal, Tangent, Binormal);
 	}
 
+	if (fogEnabled) {
+		float fogAmount = smoothstep(fogNear, fogFar, Fog);
+		outColor = mix(outColor, fogColor, fogAmount);
+	}
+
 	float gamma = 1.1;
 	float exposure = 1.6;
-	
+
 	vec3 mapped = vec3(1.0) - exp(-outColor * exposure); // HDR correction
 	mapped = pow(mapped, vec3(1.0 / gamma)); // gamma correction
 	
