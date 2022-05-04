@@ -1,10 +1,12 @@
 #include "GameObject.h"
 
 #include "../../parser/ObjParser.h"
+#include "../../entity/Camera.h"
+#include "../../texture/Texture.h"
 
 GameObject::GameObject() : Entity()
 {
-	// Empty
+    // Empty
 }
 
 void GameObject::render(PhongShader& shader, Camera& camera)
@@ -13,8 +15,6 @@ void GameObject::render(PhongShader& shader, Camera& camera)
 }
 
 void GameObject::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) {
-    this->modelMatrix = modelMatrix;
-
 	// Apply transform
     camera.matrix(shader, modelMatrix);
 
@@ -124,4 +124,8 @@ void GameObject::dispose() {
             tSet->emissionMap->dispose();
         }
     }
+}
+
+std::string GameObject::getName() {
+    return "GameObject" + std::to_string(id);
 }

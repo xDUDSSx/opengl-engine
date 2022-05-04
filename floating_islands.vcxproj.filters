@@ -46,6 +46,8 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\entity\Airship.cpp" />
     <ClCompile Include="src\entity\Islands.cpp" />
+    <ClCompile Include="src\entity\general\Empty.cpp" />
+    <ClCompile Include="src\entity\animation\RotateEmpty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\GameObject.h" />
@@ -99,6 +101,8 @@
     <ClInclude Include="src\entity\Airship.h" />
     <ClInclude Include="src\texture\TextureSet.h" />
     <ClInclude Include="src\entity\Islands.h" />
+    <ClInclude Include="src\entity\general\Empty.h" />
+    <ClInclude Include="src\entity\animation\RotateEmpty.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />

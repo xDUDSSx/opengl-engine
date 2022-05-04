@@ -67,7 +67,7 @@ class Scene {
     void clearSelection();
     Entity* getSelectedEntity();
 
-private:
+protected:
 	SceneNode* findNodeForEntity(Entity* entity) const;
     void renderEntity(Entity& entity, PhongShader* explicitShader, Camera& camera);
 };

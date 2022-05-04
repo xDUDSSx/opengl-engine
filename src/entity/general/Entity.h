@@ -2,8 +2,10 @@
 
 #include "pgr.h"
 
-#include "../../entity/Camera.h"
 #include "Transform.h"
+#include "../../shader/PhongShader.h"
+
+class Camera;
 
 class Entity {
 public:
@@ -11,11 +13,22 @@ public:
 	unsigned long id = -1;
 
 	bool opaque = true;
-    bool backFaceCull = false;
+	bool backFaceCull = false;
+	bool wireframe = false;
 
+	std::string name = "";
+
+	/** \brief Local coordinates transform */
 	Transform transform;
-	glm::mat4 worldMatrix = glm::mat4(1);
+	/** \brief World coordinates transform */
+	Transform worldTransform;
 
+	/** \brief World transform matrix */
+	glm::mat4 worldMatrix = glm::mat4(1);
+    /** \brief Entities scene graph parent's world transform matrix */
+    glm::mat4 parentMatrix = glm::mat4(1);
+
+	/** \brief Default shader to use when rendering this entity */
 	PhongShader* shader;
 
 	Entity() = default;
@@ -26,6 +39,11 @@ public:
 	virtual void update() = 0;
 	virtual void create(PhongShader* shader);
 	virtual void dispose() = 0;
+
+	virtual void updateTransform(glm::mat4 worldMatrix, glm::mat4 parentMatrix);
+
+    virtual void setName(std::string name);
+	virtual std::string getName();
 
 	friend bool operator==(const Entity& lhs, const Entity& rhs)
 	{

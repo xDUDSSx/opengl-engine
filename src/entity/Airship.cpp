@@ -1,23 +1,13 @@
 #include "Airship.h"
 
-void Airship::render(PhongShader& shader, Camera& camera)
-{
-	GameObject::render(shader, camera);
-}
-
-void Airship::update()
-{
-	GameObject::update();
-}
-
 void Airship::create(PhongShader* shader)
 {
 	GameObject::create(shader);
 
 	// Load models
     //loadMesh("data/models/airship.obj", true); // Higher res model
-	loadMesh("data/models/airship.obj", true);
-    loadMesh("data/models/airship_windows.obj", true);
+	loadMesh("data/models/airship_decimated.obj", true);
+    loadMesh("data/models/airship_windows_decimated.obj", true);
 
 	// Load textures
     const auto tSet = std::make_shared<TextureSet>();

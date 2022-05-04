@@ -5,8 +5,6 @@
 #include "Entity.h"
 #include "../../Material.h"
 #include "../../Mesh.h"
-#include "../../entity/Camera.h"
-#include "../../texture/Texture.h"
 #include "../../texture/TextureSet.h"
 
 class GameObject : public Entity {
@@ -14,10 +12,6 @@ public:
     std::vector<std::shared_ptr<Material>> materials;
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::vector<std::shared_ptr<TextureSet>> textureSets;
-
-protected:
-    //TODO: Think this is unused?
-    glm::mat4 modelMatrix;
 
 public:
     GameObject();
@@ -27,6 +21,8 @@ public:
     void update() override;
     void create(PhongShader* shader) override;
     void dispose() override;
+
+    std::string getName() override;
 
     void loadMesh(const char* path, bool arraysOrElements);
     void loadMesh(const char* path, bool arraysOrElements, float uvScale);

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "general/GameObject.h"
+#include "GameObject.h"
 
-class Airship : public GameObject {
+class Empty : public GameObject {
 public:
     void create(PhongShader* shader) override;
 };

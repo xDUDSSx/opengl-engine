@@ -8,4 +8,5 @@ public:
     static float normalDebugShaderMagnitude;
 
     static float windStrength;
+    static float animSpeed;
 };

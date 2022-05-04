@@ -28,25 +28,18 @@ void ObjParser::parseObj(const char* path, float uvScale) {
     unsigned int lineCount = std::count(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>(), '\n');
 
     std::ifstream file(path);
+	std::string line;
     std::vector<std::string> words;
-    std::string line;
-    int index = 0;
+	int index = 0;
     while (std::getline(file, line)) {
         index++;
         if (index % 50000 == 0) {
             int progress = static_cast<unsigned int>((float)index / lineCount * 100);
             std::cout << "Loaded " << index << "/" << lineCount << " lines (" << progress << "%)" << std::endl;
         }
-        std::istringstream iss(line);
         words.clear();
-        while (iss) {
-            std::string word;
-            iss >> word;
-            if (!iss) {
-                break;
-            }
-            words.push_back(word);
-        }
+		Utils::tokenize(line, ' ', words);
+    	
         if (words.empty()) {
             continue;
         }
@@ -114,7 +107,8 @@ void ObjParser::parseObj(const char* path, float uvScale) {
             // }
         }
     }
-    std::cout << "Loaded obj from file '" << path << "'" << std::endl;
+	std::cout << "Loaded obj from file '" << path << "'" << std::endl;
+	
     // std::cout << "CW: " << std::to_string(cwCount) << std::endl;
     // std::cout << "CCW: " << std::to_string(ccwCount) << std::endl;
 }

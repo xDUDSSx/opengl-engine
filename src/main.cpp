@@ -16,6 +16,8 @@
 #include "entity/C4.h"
 #include "entity/Islands.h"
 #include "entity/TestSurface.h"
+#include "entity/animation/RotateEmpty.h"
+#include "entity/general/Empty.h"
 #include "entity/lights/PointLight.h"
 #include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
@@ -30,10 +32,10 @@
 #include "shader/SkyboxShader.h"
 #include "ui/ImGuiManager.h"
 
-int winWidth = 500;
-int winHeight = 500;
+int winWidth = 1200;
+int winHeight = 800;
 std::string winTitle = "Floating islands";
-int fps = 1000 / 500;
+int fps = 1000 / 144;
 
 int mouseX = 0;
 int mouseY = 0;
@@ -44,6 +46,7 @@ std::shared_ptr<Scene> scene;
 
 std::shared_ptr<Camera> camera1;
 std::shared_ptr<Camera> camera2;
+std::shared_ptr<Camera> airshipCamera;
 std::shared_ptr<Camera> activeCamera;
 
 std::shared_ptr<PhongShader> shader;
@@ -137,17 +140,6 @@ void init()
 
 	scene = std::make_shared<Scene>();
 
-	// Create cameras
-	camera1 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-	camera1->setZNear(0.2f);
-	camera1->setZFar(100.0f);
-
-	camera2 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 5, 0));
-	camera2->setZNear(0.2f);
-	camera2->setZFar(100.0f);
-
-	activeCamera = camera2;
-
 	// Create shaders
 	shader = std::make_shared<PhongShader>("data/shaders/phongVert.glsl", "data/shaders/phongFrag.glsl");
 
@@ -157,6 +149,20 @@ void init()
 	skyboxShader = std::make_shared<SkyboxShader>("data/shaders/skyboxVert.glsl", "data/shaders/skyboxFrag.glsl");
 
 	grassShader = std::make_shared<GrassShader>("data/shaders/grassVert.glsl", "data/shaders/phongFrag.glsl");
+
+	// Create cameras
+    camera1 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
+    camera1->create(shader.get());
+    scene->add(camera1.get());
+
+    camera2 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 5, 0));
+    camera2->create(shader.get());
+
+	airshipCamera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
+    airshipCamera->rotationX = -90;
+	airshipCamera->create(shader.get());
+
+    activeCamera = camera1;
 
 	// Create lights
 	lighting = std::make_shared<Lighting>();
@@ -271,22 +277,35 @@ void init()
 	c4->transform.pos = glm::vec3(0, 4, 0);
 	c4->transform.scale = glm::vec3(1);
 
-	const auto airship = new Airship();
-    airship->create(shader.get());
-    airship->transform.pos = glm::vec3(0, 0, 5);
-    airship->transform.scale = glm::vec3(1);
-    scene->add(airship);
-
-	const auto islands = new Islands();
-    islands->create(shader.get());
-    islands->transform.pos = glm::vec3(-5, -10, 5);
-    islands->transform.scale = glm::vec3(1);
-    scene->add(islands);
+	//const auto islands = new Islands();
+ //   islands->create(shader.get());
+ //   islands->transform.pos = glm::vec3(-5, -10, 5);
+ //   islands->transform.scale = glm::vec3(1);
+ //   scene->add(islands);
 
 	test = std::make_shared<TestSurface>();
 	test->create(shader.get());
 	test->transform.pos = glm::vec3(4, 10,-1);
 	test->transform.scale = glm::vec3(0.5f);
+
+	auto empty = new RotateEmpty(glm::vec3(0, 0, 1), 0.05f);
+    empty->create(shader.get());
+    empty->transform.pos = glm::vec3(0, 0, 0);
+    scene->add(empty);
+
+	const auto airship = new Airship();
+    airship->create(shader.get());
+    airship->transform.pos = glm::vec3(20, 0, 5);
+    airship->transform.rot = glm::vec3(0, 0, 90);
+    airship->transform.scale = glm::vec3(1);
+    scene->add(empty, airship);
+    scene->add(airship, airshipCamera.get());
+
+	auto cameraEmpty = new Empty();
+    cameraEmpty->create(shader.get());
+    cameraEmpty->transform.pos = glm::vec3(-5, -5, 0);
+    scene->add(cameraEmpty);
+    scene->add(cameraEmpty, camera2.get());
 
 	// Create skybox
 	std::vector<std::string> cubemapTextures;
@@ -338,11 +357,15 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 			activeCamera = camera2;
 			activeCamera->size(winWidth, winHeight);
 			break;
+        case '3':
+            activeCamera = airshipCamera;
+            activeCamera->size(winWidth, winHeight);
+            break;
 		case ',': 
 			{
 	            Entity* e = scene->getSelectedEntity();
 	            if (e != nullptr) {
-	                activeCamera->pivot = e->transform.pos;
+	                activeCamera->pivot = e->worldTransform.pos;
 	            }
             }
             break;

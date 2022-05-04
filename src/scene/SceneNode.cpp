@@ -36,7 +36,14 @@ void SceneNode::matrix()
     updateWorldMatrix();
 
     if (entity != nullptr) {
-        entity->worldMatrix = worldMatrix;
+        glm::mat4 parentMatrix;
+    	if (parent != nullptr) {
+            parentMatrix = parent->worldMatrix;
+        } else {
+            parentMatrix = glm::mat4(1.0f);
+        }
+        // Updates world transform and transform matrices
+        entity->updateTransform(worldMatrix, parentMatrix);
     }
 
     for (auto& child : children) {
