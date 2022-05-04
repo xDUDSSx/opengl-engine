@@ -152,6 +152,7 @@
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_widgets.cpp" />
     <ClCompile Include="src\entity\Airship.cpp" />
     <ClCompile Include="src\entity\animation\RotateEmpty.cpp" />
+    <ClCompile Include="src\entity\Bridge.cpp" />
     <ClCompile Include="src\entity\general\Empty.cpp" />
     <ClCompile Include="src\entity\general\Entity.cpp" />
     <ClCompile Include="src\entity\Islands.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_truetype.h" />
     <ClInclude Include="src\entity\Airship.h" />
     <ClInclude Include="src\entity\animation\RotateEmpty.h" />
+    <ClInclude Include="src\entity\Bridge.h" />
     <ClInclude Include="src\entity\general\Empty.h" />
     <ClInclude Include="src\entity\Islands.h" />
     <ClInclude Include="src\shader\GrassShader.h" />

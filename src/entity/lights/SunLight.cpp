@@ -6,3 +6,9 @@ void SunLight::setUniforms(const PhongShader& shader, int index) const {
     glUniform3fv(glGetUniformLocation(shader.id, (prefix + ".color").c_str()), 1, glm::value_ptr(color));
     glUniform3fv(glGetUniformLocation(shader.id, (prefix + ".direction").c_str()), 1, glm::value_ptr(direction));
 }
+
+std::string SunLight::getName() {
+    if (name.empty())
+        return "Sun Light " + std::to_string(id);
+    return name;
+}

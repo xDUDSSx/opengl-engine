@@ -7,3 +7,10 @@ void PointLight::setUniforms(const PhongShader& shader, int index) const {
 	glUniform3fv(glGetUniformLocation(shader.id, (prefix + ".position").c_str()), 1, glm::value_ptr(transform.pos));
     glUniform1f(glGetUniformLocation(shader.id, (prefix + ".radius").c_str()), radius);
 }
+
+std::string PointLight::getName()
+{
+    if (name.empty())
+        return "Point Light " + std::to_string(id);
+    return name;
+}

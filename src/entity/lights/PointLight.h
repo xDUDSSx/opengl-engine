@@ -7,4 +7,5 @@ public:
     float radius = 12.0f;
 
     void setUniforms(const PhongShader& shader, int index) const override;
+    std::string getName() override;
 };

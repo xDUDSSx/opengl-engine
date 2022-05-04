@@ -127,5 +127,7 @@ void GameObject::dispose() {
 }
 
 std::string GameObject::getName() {
-    return "GameObject" + std::to_string(id);
+    if (name.empty())
+		return "GameObject" + std::to_string(id);
+    return name;
 }

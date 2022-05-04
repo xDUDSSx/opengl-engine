@@ -84,8 +84,9 @@ void ImGuiManager::draw(Scene& scene, Camera& activeCamera)
 
         ImGui::Separator();
 
-        ImGui::SliderFloat("zNear", &activeCamera.zNear, 0.005f, 0.5f);
-        ImGui::SliderFloat("zFar", &activeCamera.zFar, 10.0f, 200.0f);
+        ImGui::SliderFloat("FOV", &activeCamera.fov, 10, 130);
+    	ImGui::SliderFloat("zNear", &activeCamera.zNear, 0.005f, 0.5f);
+        ImGui::SliderFloat("zFar", &activeCamera.zFar, 10.0f, 300);
 
         ImGui::End();
     }
@@ -161,6 +162,43 @@ void ImGuiManager::drawEntityInfo(Entity& entity) {
     ImGui::Separator();
 
     if (GameObject* gameObject = dynamic_cast<GameObject*>(&entity)) {
-        //ImGui::SliderFloat("test", &gameObject->material->shininess, 0, 300);
+        ImGui::Text("Materials");
+    	for (auto& material  : gameObject->materials) {
+            ImGui::ColorEdit3("Diffuse", glm::value_ptr(material->diffuse));
+            ImGui::ColorEdit3("Specular", glm::value_ptr(material->specular));
+            ImGui::ColorEdit3("Ambient", glm::value_ptr(material->ambient));
+            ImGui::SliderFloat("Shininess", &material->shininess, 0.01f, 300);
+            ImGui::Separator();
+    	}
+
+        ImGui::Text("Textures");
+        for (auto& tSet : gameObject->textureSets) {
+	        if (tSet->texture != nullptr) {
+		        ImGui::Text("Diffuse:");
+		        ImGui::SameLine();
+		        ImGui::Text(tSet->texture->path);
+	        }
+	        if (tSet->specularMap != nullptr) {
+		        ImGui::Text("Specular:");
+		        ImGui::SameLine();
+		        ImGui::Text(tSet->specularMap->path);
+	        }
+	        if (tSet->normalMap != nullptr) {
+		        ImGui::Text("Normal:");
+		        ImGui::SameLine();
+		        ImGui::Text(tSet->normalMap->path);
+	        }
+	        if (tSet->aoMap != nullptr) {
+		        ImGui::Text("AO:");
+		        ImGui::SameLine();
+		        ImGui::Text(tSet->aoMap->path);
+	        }
+	        if (tSet->emissionMap != nullptr) {
+		        ImGui::Text("Emission:");
+		        ImGui::SameLine();
+		        ImGui::Text(tSet->emissionMap->path);
+	        }
+	        ImGui::Separator();
+        }
     }
 }

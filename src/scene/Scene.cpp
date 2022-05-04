@@ -150,7 +150,6 @@ void Scene::renderEntity(Entity& entity, PhongShader* explicitShader, Camera& ca
 		}
 	}
 	if (shader == nullptr) {
-		pgr::dieWithError("Scene::renderEntity(): shader was null! (entity id: " + std::to_string(entity.id) + ")");
 		return;
 	}
 	shader->use();

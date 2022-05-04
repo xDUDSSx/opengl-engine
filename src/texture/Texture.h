@@ -8,6 +8,7 @@ public:
     GLuint id;
     GLenum target;
     std::string type;
+    const char* path;
 
     Texture(const char* path);
     Texture(const char* path, std::string type);

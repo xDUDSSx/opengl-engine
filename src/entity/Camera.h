@@ -39,8 +39,8 @@ public:
 	int width;
 	int height;
 
-	float zNear = 0.2f;
-	float zFar = 100.0f;
+	float zNear = 0.3f;
+	float zFar = 175.0f;
 	float fov = 90.0f;
 
 	Camera(int width, int height, glm::vec3 pivot);

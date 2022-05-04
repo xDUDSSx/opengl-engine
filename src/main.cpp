@@ -7,6 +7,7 @@
 #include "Lighting.h"
 #include "Skybox.h"
 #include "entity/Airship.h"
+#include "entity/Bridge.h"
 
 #include "texture/Texture.h"
 #include "texture/Cubemap.h"
@@ -62,8 +63,6 @@ std::shared_ptr<Quad> quad;
 std::shared_ptr<Quad> quad2;
 std::shared_ptr<Cube> cube;
 std::shared_ptr<Teapot> teapot;
-std::shared_ptr<Capacitor> capacitor;
-std::shared_ptr<C4> c4;
 std::shared_ptr<TestSurface> test;
 
 bool ignoreMouseEvent = false;
@@ -152,14 +151,17 @@ void init()
 
 	// Create cameras
     camera1 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-    camera1->create(shader.get());
+    camera1->setName("Camera 1");
+	camera1->create(shader.get());
     scene->add(camera1.get());
 
     camera2 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 5, 0));
-    camera2->create(shader.get());
+    camera2->setName("Camera 2");
+	camera2->create(shader.get());
 
 	airshipCamera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-    airshipCamera->rotationX = -90;
+    airshipCamera->setName("Camera 3 (Airship)");
+	airshipCamera->rotationX = -90;
 	airshipCamera->create(shader.get());
 
     activeCamera = camera1;
@@ -170,49 +172,57 @@ void init()
 	PointLight* light1 = new PointLight();
 	light1->transform.pos = glm::vec3(6, 4, 5);
 	lighting->addLight(light1);
+	scene->add(light1);
 
 	PointLight* light2 = new PointLight();
 	light2->transform.pos = glm::vec3(0, -2, 5);
 	light2->color = glm::vec3(1.0, 0.0, 0.0);
 	lighting->addLight(light2);
+    scene->add(light2); 
 
 	PointLight* light3 = new PointLight();
 	light3->transform.pos = glm::vec3(-3, -1.5, 0.5);
 	lighting->addLight(light3);
+    scene->add(light3); 
 
 	PointLight* light4 = new PointLight();
 	light4->intensity = 2.0f;
 	light4->radius = 15;
 	light4->transform.pos = glm::vec3(2, 7, 3);
 	lighting->addLight(light4);
+    scene->add(light4); 
 
 	PointLight* light5 = new PointLight();
 	light4->radius = 8;
 	light5->transform.pos = glm::vec3(6, 7, 1);
 	lighting->addLight(light5);
+    scene->add(light5); 
 
 	PointLight* light6 = new PointLight();
 	light6->radius = 20.0f;
 	light6->transform.pos = glm::vec3(4, 10, 2);
 	lighting->addLight(light6);
+    scene->add(light6); 
 
 	SunLight* sun = new SunLight();
 	sun->color = glm::vec3(0.93, 0.98, 1.0);
 	sun->direction = glm::vec3(0.5, 0.5, -1);
 	lighting->addLight(sun);
+    scene->add(sun); 
 
 	SpotLight* spot = new SpotLight();
 	spot->intensity = 0.4f;
 	spot->transform.pos = glm::vec3(4, 3, 6);
 	spot->direction = glm::vec3(3, -1.5, -6);
 	lighting->addLight(spot);
+    scene->add(spot); 
 
 	// Create objects
-	quad = std::make_shared<Quad>();
-	quad->create(shader.get());
-	quad->transform.pos = glm::vec3(0, -10, -1);
-	quad->transform.scale = glm::vec3(100);
-	scene->add(quad.get()); 
+	//quad = std::make_shared<Quad>();
+	//quad->create(shader.get());
+	//quad->transform.pos = glm::vec3(0, -10, -1);
+	//quad->transform.scale = glm::vec3(100);
+	//scene->add(quad.get()); 
 
 	quad2 = std::make_shared<Quad>();
 	quad2->create(shader.get());
@@ -227,6 +237,7 @@ void init()
 
 	auto grass = new Quad();
 	grass->create(grassShader.get());
+    grass->setName("Grass 1");
 	grass->opaque = false;
 	grass->transform.scale = glm::vec3(3);
 	grass->transform.rot = glm::vec3(-90, 0, 0);
@@ -236,6 +247,7 @@ void init()
 	scene->add(grass);
 
 	auto window1 = new Quad();
+    window1->setName("Window 1");
 	window1->create(shader.get());
 	window1->opaque = false;
 	window1->transform.scale = glm::vec3(3);
@@ -245,6 +257,7 @@ void init()
 	scene->add(window1);
 
 	auto window2 = new Quad();
+    window2->setName("Window 2");
 	window2->create(shader.get());
 	window2->opaque = false;
 	window2->transform.scale = glm::vec3(3);
@@ -254,51 +267,82 @@ void init()
 	scene->add(window2);
 
 	cube = std::make_shared<Cube>();
-	cube->transform.pos = glm::vec3(0, -3, 0);
+    cube->setName("Cube 1");
+	cube->transform.pos = glm::vec3(0, -10, 0);
 	cube->create(shader.get());
 	scene->add(cube.get());
 
 	auto cube2 = new Cube();
 	cube2->transform.pos = glm::vec3(0, 3, 0);
 	cube2->create(shader.get());
+    cube2->setName("Cube 2");
 	scene->add(cube.get(), cube2);
+	
+	auto cube3 = new Cube();
+    cube3->transform.pos = glm::vec3(0, 3, 1);
+    cube3->create(shader.get());
+    cube3->setName("Cube 3");
+    scene->add(cube2, cube3);
 
-	teapot = std::make_shared<Teapot>();
-	teapot->create(shader.get());
-	teapot->transform.pos = glm::vec3(8, 0, 0);
+	auto cube4 = new Cube();
+    cube4->transform.pos = glm::vec3(3, 0, 2);
+    cube4->create(shader.get());
+    cube4->setName("Cube 4");
+    scene->add(cube2, cube4);
 
-	capacitor = std::make_shared<Capacitor>();
+	//teapot = std::make_shared<Teapot>();
+	//teapot->create(shader.get());
+	//teapot->transform.pos = glm::vec3(8, 0, 0);
+
+	auto capacitor = new Capacitor();
+    capacitor->setName("Capacitor");
 	capacitor->create(shader.get());
 	capacitor->transform.pos = glm::vec3(0, 7, -1);
 	capacitor->transform.scale = glm::vec3(3);
+    scene->add(capacitor);
 
-	c4 = std::make_shared<C4>();
+	auto c4 = new C4();
+    c4->setName("C4");
 	c4->create(shader.get());
 	c4->transform.pos = glm::vec3(0, 4, 0);
 	c4->transform.scale = glm::vec3(1);
+    scene->add(c4);
 
-	//const auto islands = new Islands();
- //   islands->create(shader.get());
- //   islands->transform.pos = glm::vec3(-5, -10, 5);
- //   islands->transform.scale = glm::vec3(1);
- //   scene->add(islands);
+	const auto islands = new Islands();
+	islands->create(shader.get());
+    islands->setName("Islands");
+	islands->transform.pos = glm::vec3(-16.3f, 186.7f, -6.04f);
+	islands->transform.scale = glm::vec3(6);
+    islands->transform.rot= glm::vec3(0, 0, 90.0f);
+	scene->add(islands);
 
-	test = std::make_shared<TestSurface>();
-	test->create(shader.get());
-	test->transform.pos = glm::vec3(4, 10,-1);
-	test->transform.scale = glm::vec3(0.5f);
+	const auto bridge = new Bridge();
+    bridge->create(shader.get());
+    bridge->setName("Bridge");
+    bridge->transform.pos = glm::vec3(13.99f, 50.8f, -2.21);
+    bridge->transform.scale = glm::vec3(0.85);
+    bridge->transform.rot = glm::vec3(-3.750, 0, 84.95f);
+    scene->add(bridge);
 
-	auto empty = new RotateEmpty(glm::vec3(0, 0, 1), 0.05f);
-    empty->create(shader.get());
-    empty->transform.pos = glm::vec3(0, 0, 0);
-    scene->add(empty);
+	//test = std::make_shared<TestSurface>();
+	//test->create(shader.get());
+	//test->transform.pos = glm::vec3(4, 10,-1);
+	//test->transform.scale = glm::vec3(0.5f);
+
+	auto airshipEmpty = new RotateEmpty(glm::vec3(0, 0, 1), 0.05f);
+    airshipEmpty->create(shader.get());
+    airshipEmpty->setName("Airship empty");
+	airshipEmpty->transform.pos = glm::vec3(6.66, 36.8, 0);
+    scene->add(airshipEmpty);
 
 	const auto airship = new Airship();
     airship->create(shader.get());
-    airship->transform.pos = glm::vec3(20, 0, 5);
+    airship->setName("Airship");
+    airship->transform.pos = glm::vec3(83, 0, 16.6);
     airship->transform.rot = glm::vec3(0, 0, 90);
-    airship->transform.scale = glm::vec3(1);
-    scene->add(empty, airship);
+    airship->transform.scale = glm::vec3(4);
+
+    scene->add(airshipEmpty, airship);
     scene->add(airship, airshipCamera.get());
 
 	auto cameraEmpty = new Empty();

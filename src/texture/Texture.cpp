@@ -17,6 +17,7 @@ Texture::Texture(const char* path, std::string type, GLenum target)
 	, type(type)
 {
 	id = loadTexture(path);
+    this->path = path;
 }
 
 void Texture::bind()

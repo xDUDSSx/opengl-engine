@@ -10,3 +10,9 @@ void SpotLight::setUniforms(const PhongShader& shader, int index) const {
     glUniform1f(glGetUniformLocation(shader.id, (prefix + ".cutoffAngle").c_str()), glm::radians(90.0f - cutoffAngle));
     glUniform1f(glGetUniformLocation(shader.id, (prefix + ".cutoffSoftAngle").c_str()), glm::radians(90.0f - cutoffSoftAngle));
 }
+
+std::string SpotLight::getName() {
+    if (name.empty())
+        return "Spot Light " + std::to_string(id);
+    return name;
+}

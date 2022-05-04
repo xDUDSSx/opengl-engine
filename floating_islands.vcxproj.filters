@@ -48,6 +48,7 @@
     <ClCompile Include="src\entity\Islands.cpp" />
     <ClCompile Include="src\entity\general\Empty.cpp" />
     <ClCompile Include="src\entity\animation\RotateEmpty.cpp" />
+    <ClCompile Include="src\entity\Bridge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\GameObject.h" />
@@ -103,6 +104,7 @@
     <ClInclude Include="src\entity\Islands.h" />
     <ClInclude Include="src\entity\general\Empty.h" />
     <ClInclude Include="src\entity\animation\RotateEmpty.h" />
+    <ClInclude Include="src\entity\Bridge.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />
