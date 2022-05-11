@@ -7,18 +7,25 @@ in vec2 TexCoords;
 in vec3 Normal;
 in vec3 Tangent;
 in vec3 Binormal;
+in vec3 Color;
 in float Fog;
+
+uniform float time;
 
 uniform mat4 viewMatrix;
 
 uniform bool selected;
+uniform bool basic;
 
+// Fog
 uniform bool fogEnabled;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
 
 // Textures ====================================
+
+uniform float normalStrength;
 
 uniform sampler2D	diffuse0;
 uniform bool		diffuse0_active = false;
@@ -34,6 +41,18 @@ uniform bool		ao0_active = false;
 
 uniform sampler2D	emission0;
 uniform bool		emission0_active = false;
+
+// Animation
+uniform bool animTexture;
+uniform float animHStep;
+uniform float animVStep;
+uniform float animSpeed;
+
+// UV transformation matrix
+uniform bool uvMatActive;
+uniform mat3 uvMat;
+
+// Material ====================================
 
 struct Material {
 	vec3 diffuse;
@@ -87,29 +106,53 @@ uniform SunLight sunLights[MAX_SUN_LIGHTS];
 uniform int spotLightsCount;
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
-//float map(float value, float min1, float max1, float min2, float max2) {
-//	return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
-//}
+float map(float value, float min1, float max1, float min2, float max2) {
+	return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
+vec2 texCoords() {
+	vec2 coords = TexCoords;
+	if (animTexture) {
+		int atlasWidth = int(round(1.0/animHStep));
+		int atlasHeight = int(round(1.0/animVStep));
+		int frameCount = atlasWidth * atlasHeight;
+		float animLength = 1 / animSpeed;
+		float timeRemainder = mod(time, animLength);
+		int frame = int(floor(map(timeRemainder, 0, animLength, 0, 1) * frameCount));
+		int frameX = frame % atlasWidth;
+		int frameY = atlasHeight - frame / atlasWidth;
+
+		coords.x = animHStep * TexCoords.x + frameX * animHStep;
+		coords.y = animVStep * TexCoords.y + frameY * animVStep;
+	}
+	if (uvMatActive) {
+		coords = (uvMat * vec3(coords, 1)).xy;
+	}
+	return coords;
+}
 
 vec3 calculateAmbientLight(vec3 lightColor, vec3 ambient) {
-	return lightColor * ambient * (diffuse0_active ? vec3(texture(diffuse0, TexCoords)) : vec3(1));
+	return lightColor * ambient * (diffuse0_active ? vec3(texture(diffuse0, texCoords())) : vec3(1));
 }
 
 vec3 calculateDiffuseLight(vec3 lightColor, vec3 diffuse, vec3 N, vec3 L) {
 	vec3 res = lightColor * diffuse * max(0.0, dot(N, L));
-	res *= (diffuse0_active ? vec3(texture(diffuse0, TexCoords)) : vec3(1));
-	res *= (ao0_active ? vec3(texture(ao0, TexCoords)) : vec3(1));
-	res += (emission0_active ? vec3(texture(emission0, TexCoords)) : vec3(0));
+	res *= (diffuse0_active ? vec3(texture(diffuse0, texCoords())) : vec3(1));
+	res *= (ao0_active ? vec3(texture(ao0, texCoords())) : vec3(1));
+	res += (emission0_active ? vec3(texture(emission0, texCoords())) : vec3(0));
 	return res;
 }
 
 vec3 calculateSpecularLight(vec3 lightColor, vec3 specular, vec3 R, vec3 V, float shininess) {
-	return lightColor * specular * pow(max(0.0, dot(R, V)), material.shininess) * (specular0_active ? vec3(texture(specular0, TexCoords)) : vec3(1));
+	return lightColor * specular * pow(max(0.0, dot(R, V)), material.shininess) * (specular0_active ? vec3(texture(specular0, texCoords())) : vec3(1));
 }
 
 vec3 calculateNormalMapping(vec3 normal, vec3 tangent, vec3 binormal) {
 	if (normal0_active) {
-		vec3 mapNormal = texture(normal0, TexCoords).rgb;
+		vec3 mapNormal = texture(normal0, texCoords()).rgb;
+		//Apply normal strength by just mixing with a neutral normal
+		//This can only make normals "weaker"
+		mapNormal = mix(vec3(0.5, 0.5, 1), mapNormal, normalStrength);
 		mapNormal = normalize(mapNormal * 2.0 - 1.0); // from [0, 1] to [-1, 1]
 		normal = normalize(mat3(tangent, binormal, normal) * mapNormal); // from tangent space to view space
 	}
@@ -203,7 +246,7 @@ vec3 calculatePointLight(PointLight light, Material material, vec3 fragPos, vec3
 void main() {
 	float alpha = 1.0;
 	if (diffuse0_active) {
-		alpha = texture(diffuse0, TexCoords).a;
+		alpha = texture(diffuse0, texCoords()).a;
 	}
 	if (selected) {
 		FragColor = vec4(1, 1, 1, 1);
@@ -211,6 +254,11 @@ void main() {
 	}
 	if (alpha < 0.1f) {
 		discard;
+	}
+
+	if (basic) {
+		FragColor = vec4(Color, alpha);
+		return;
 	}
 
 	vec3 outColor = vec3(0);

@@ -17,11 +17,14 @@
 #include "entity/C4.h"
 #include "entity/Islands.h"
 #include "entity/TestSurface.h"
+#include "entity/Waterfall.h"
 #include "entity/animation/RotateEmpty.h"
 #include "entity/general/Empty.h"
 #include "entity/lights/PointLight.h"
 #include "entity/lights/SpotLight.h"
 #include "entity/lights/SunLight.h"
+#include "entity/primitives/Arrow.h"
+#include "entity/primitives/Billboard.h"
 #include "entity/primitives/Cube.h"
 #include "entity/primitives/Quad.h"
 #include "entity/primitives/Teapot.h"
@@ -235,6 +238,13 @@ void init()
     quad2->textureSets[0]->normalMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
 	scene->add(quad2.get());
 
+	auto waterfall = new Waterfall();
+    waterfall->create(shader.get());
+    waterfall->setName("Watefall");
+    waterfall->transform.pos = glm::vec3(11, 7, -0.5);
+    waterfall->transform.scale = glm::vec3(3);
+	scene->add(waterfall);
+
 	auto grass = new Quad();
 	grass->create(grassShader.get());
     grass->setName("Grass 1");
@@ -265,6 +275,24 @@ void init()
 	window2->transform.pos = glm::vec3(-3, 8, 0.5);
     window2->textureSets[0]->texture = std::make_shared<Texture>("data/textures/blending_transparent_window.png", "diffuse");
 	scene->add(window2);
+
+	auto fireTest = new Quad();
+    fireTest->setName("Fire test");
+    fireTest->create(shader.get());
+    fireTest->opaque = false;
+    fireTest->transform.scale = glm::vec3(3);
+    fireTest->transform.rot = glm::vec3(0, -90, 90);
+    fireTest->transform.pos = glm::vec3(8, 2, 0.5);
+    fireTest->textureSets[0]->texture = std::make_shared<Texture>("data/textures/fire.png", "diffuse");
+    fireTest->textureSets[0]->texture->setAnimated(1.0f / 5, 1.0f / 5, 0.5f);
+	scene->add(fireTest);
+
+	auto bill = new Billboard();
+    bill->create(shader.get());
+    bill->setName("Billboard");
+    bill->transform.pos = glm::vec3(2, 1, 2);
+    bill->textureSets[0]->texture = std::make_shared<Texture>("data/textures/light.png", "diffuse");
+	scene->add(bill);
 
 	cube = std::make_shared<Cube>();
     cube->setName("Cube 1");

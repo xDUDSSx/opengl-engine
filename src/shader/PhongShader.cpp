@@ -50,11 +50,20 @@ void PhongShader::setTransformUniforms(const glm::mat4& model, const glm::mat4& 
 
 void PhongShader::setUniforms()
 {
+    // Time
+    glUniform1f(glGetUniformLocation(id, "time"), Game::time);
+
+    // Normal strength
+    glUniform1f(glGetUniformLocation(id, "normalStrength"), 1.0f); //Default value
+
     // Fog
     glUniform1i(glGetUniformLocation(id, "fogEnabled"), Game::fogEnabled);
     glUniform3fv(glGetUniformLocation(id, "fogColor"), 1, glm::value_ptr(Game::fogColor));
 	glUniform1f(glGetUniformLocation(id, "fogNear"), Game::fogNear);
     glUniform1f(glGetUniformLocation(id, "fogFar"), Game::fogFar);
+
+    // UV matrix
+    glUniform1f(glGetUniformLocation(id, "uvMatActive"), false);
 }
 
 void PhongShader::clearTextures() const {

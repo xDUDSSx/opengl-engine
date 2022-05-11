@@ -187,6 +187,7 @@ void ImGuiManager::drawEntityInfo(Entity& entity) {
 		        ImGui::Text("Normal:");
 		        ImGui::SameLine();
 		        ImGui::Text(tSet->normalMap->path);
+                ImGui::SliderFloat("Normal strength", &tSet->normalStrength, 0.0f, 1.0f);
 	        }
 	        if (tSet->aoMap != nullptr) {
 		        ImGui::Text("AO:");

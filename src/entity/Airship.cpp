@@ -4,6 +4,9 @@ void Airship::create(PhongShader* shader)
 {
 	GameObject::create(shader);
 
+    addEmptyMaterial();
+    addEmptyMaterial();
+
 	// Load models
     //loadMesh("data/models/airship.obj", true); // Higher res model
 	loadMesh("data/models/airship_decimated.obj", true);

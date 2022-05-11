@@ -4,28 +4,36 @@
 
 #include "shader/PhongShader.h"
 
+enum MeshType {
+	TRIANGLES_ARRAYS, TRIANGLES_ELEMENTS,
+	UNINITIALIZED
+};
+
 class Mesh {
 public:
+    MeshType type = UNINITIALIZED;
+
 	float* verts;
 	unsigned int* indices = nullptr;
 
 	unsigned int vertsCount;
 	unsigned int indiciesCount = -1;
 
-	unsigned int triangleCount;
-	bool drawElementsMode;
+	unsigned int elementCount; // ~ triangle count
 
 	GLuint vbo = -1;
 	GLuint ebo = -1;
 	GLuint vao = -1;
 
-	Mesh(float* verts, const int vertsCount, unsigned int* indices, const int indicesCount, const int triangleCount, PhongShader& shader);
-	Mesh(float* verts, const int vertsCount, const int triangleCount, PhongShader& shader);
+	Mesh() = default;
+	Mesh(MeshType type, float* verts, int vertsCount, unsigned int* indices, int indicesCount, unsigned int triangleCount, PhongShader& shader);
+	Mesh(MeshType type, float* verts, int vertsCount, unsigned int triangleCount, PhongShader& shader);
 
 	void render() const;
-	void dispose();
+	void dispose() const;
 
 private:
-	void initDrawElements(float* verts, int vertsCount, unsigned int* indices, int indicesCount, PhongShader& shader);
-	void initDrawArrays(float* verts, int vertsCount, PhongShader& shader);
+    void initDrawElements(float* verts, int vertsCount, unsigned int* indices, int indicesCount, PhongShader& shader);
+    void initDrawArrays(float* verts, int vertsCount, PhongShader& shader);
+	//std::array<bool, 5> attr
 };

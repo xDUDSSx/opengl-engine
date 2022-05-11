@@ -8,4 +8,5 @@ struct TextureSet {
     std::shared_ptr<Texture> normalMap = nullptr;
     std::shared_ptr<Texture> aoMap = nullptr;
     std::shared_ptr<Texture> emissionMap = nullptr;
+    float normalStrength = 1.0f;
 };

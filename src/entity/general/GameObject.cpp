@@ -42,6 +42,7 @@ void GameObject::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatr
                 tSet->specularMap->bind(0, 1, shader);
             }
             if (tSet->normalMap != nullptr) {
+                glUniform1f(glGetUniformLocation(shader.id, "normalStrength"), tSet->normalStrength);
                 tSet->normalMap->bind(0, 2, shader);
             }
             if (tSet->aoMap != nullptr) {
@@ -80,11 +81,11 @@ void GameObject::loadMesh(const char* path, bool arraysOrElements, float uvScale
     Mesh* g = nullptr;
     if (arraysOrElements) {
         parser.getDrawArraysGeo(vbo);
-        g = new Mesh(vbo.data(), vbo.size(), triangles, *this->shader);
+        g = new Mesh(MeshType::TRIANGLES_ARRAYS, vbo.data(), vbo.size(), triangles, *this->shader);
     } else {
         std::vector<unsigned int> ebo;
         parser.getDrawElementsGeo(vbo, ebo);
-        g = new Mesh(vbo.data(), vbo.size(), ebo.data(), ebo.size(), triangles, *this->shader);
+        g = new Mesh(MeshType::TRIANGLES_ELEMENTS, vbo.data(), vbo.size(), ebo.data(), ebo.size(), triangles, *this->shader);
     }
     this->meshes.push_back(std::shared_ptr<Mesh>(g));
 }

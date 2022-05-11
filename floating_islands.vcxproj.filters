@@ -49,6 +49,10 @@
     <ClCompile Include="src\entity\general\Empty.cpp" />
     <ClCompile Include="src\entity\animation\RotateEmpty.cpp" />
     <ClCompile Include="src\entity\Bridge.cpp" />
+    <ClCompile Include="src\entity\primitives\Billboard.cpp" />
+    <ClCompile Include="src\entity\primitives\Axes.cpp" />
+    <ClCompile Include="src\entity\primitives\Arrow.cpp" />
+    <ClCompile Include="src\entity\Waterfall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\general\GameObject.h" />
@@ -105,6 +109,10 @@
     <ClInclude Include="src\entity\general\Empty.h" />
     <ClInclude Include="src\entity\animation\RotateEmpty.h" />
     <ClInclude Include="src\entity\Bridge.h" />
+    <ClInclude Include="src\entity\primitives\Billboard.h" />
+    <ClInclude Include="src\entity\primitives\Axes.h" />
+    <ClInclude Include="src\entity\primitives\Arrow.h" />
+    <ClInclude Include="src\entity\Waterfall.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\basicFrag.glsl" />

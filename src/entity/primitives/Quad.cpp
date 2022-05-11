@@ -1,10 +1,5 @@
 #include "Quad.h"
 
-void Quad::render(PhongShader& shader, Camera& camera)
-{
-    GameObject::render(shader, camera);
-}
-
 void Quad::create(PhongShader* shader)
 {
     GameObject::create(shader);
@@ -27,6 +22,6 @@ void Quad::create(PhongShader* shader)
     };
     unsigned int triangles = 2;
 
-	Mesh* g = new Mesh(vertices, verticiesCount, indices, indicesCount, triangles, *this->shader);
+	Mesh* g = new Mesh(MeshType::TRIANGLES_ELEMENTS, vertices, verticiesCount, indices, indicesCount, triangles, *this->shader);
     this->meshes.push_back(std::shared_ptr<Mesh>(g));
 }
