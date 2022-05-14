@@ -1,0 +1,15 @@
+# Blender MTL File: 'untitled4.blend'
+# Material Count: 1
+
+newmtl planks_mat
+Ns 216.592870
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump C:\\Users\\Dan\\Downloads\\uploads_files_2013631_rope_bridge\\rope_bridge\\planks\\planks_2K_Normal.png
+map_Kd C:\\Users\\Dan\\Downloads\\uploads_files_2013631_rope_bridge\\rope_bridge\\planks\\planks_2K_Diffuse.png
+map_Ns C:\\Users\\Dan\\Downloads\\uploads_files_2013631_rope_bridge\\rope_bridge\\planks\\planks_2K_Roughness.png

@@ -20,8 +20,6 @@ public:
     bool transformUvs = false;
     glm::mat3 uvTransformMatrix = glm::mat3(1);
 
-    Texture(const char* path);
-    Texture(const char* path, std::string type);
     Texture(const char* path, std::string type, GLenum target);
 
     void setAnimated(float horizontalStep, float verticalStep, float speed);

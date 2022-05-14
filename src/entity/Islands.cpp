@@ -1,4 +1,5 @@
 #include "Islands.h"
+#include "../Game.h"
 
 void Islands::render(PhongShader& shader, Camera& camera)
 {
@@ -15,13 +16,13 @@ void Islands::create(PhongShader* shader)
 	GameObject::create(shader);
 
 	// Load model
-	loadMesh("data/models/islands.obj", true, 5);
+	loadMesh("data/models/island_new.obj", true, 1);
 
 	// Load textures
     const auto tSet = std::make_shared<TextureSet>();
-    tSet->texture = std::make_shared<Texture>("data/textures/islands/Rock-cold_Albedo_light.jpg", "diffuse");
-	tSet->specularMap = std::make_shared<Texture>("data/textures/islands/Rock_Specular.jpg", "specular");
-    tSet->normalMap = std::make_shared<Texture>("data/textures/islands/Rock_Normal-s.jpg", "normal");
-    tSet->aoMap = std::make_shared<Texture>("data/textures/islands/Rock_AO.jpg", "ao");
+    tSet->texture = Game::textures->load("data/textures/islands/islands_bake_high_color.jpg", "diffuse");
+	tSet->specularMap = Game::textures->load("data/textures/islands/islands_bake_high_specular.jpg", "specular");
+    tSet->normalMap = Game::textures->load("data/textures/islands/islands_bake_high_normal.jpg", "normal");
+    tSet->aoMap = Game::textures->load("data/textures/islands/islands_bake_high_ao.jpg", "ao");
     this->textureSets.push_back(tSet);
 }

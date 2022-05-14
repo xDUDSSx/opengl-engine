@@ -75,19 +75,8 @@ void GameObject::loadMesh(const char* path, bool arraysOrElements) {
 }
 
 void GameObject::loadMesh(const char* path, bool arraysOrElements, float uvScale) {
-    ObjParser parser(path, uvScale);
-    int triangles = parser.getTriangleCount();
-    std::vector<float> vbo;
-    Mesh* g = nullptr;
-    if (arraysOrElements) {
-        parser.getDrawArraysGeo(vbo);
-        g = new Mesh(MeshType::TRIANGLES_ARRAYS, vbo.data(), vbo.size(), triangles, *this->shader);
-    } else {
-        std::vector<unsigned int> ebo;
-        parser.getDrawElementsGeo(vbo, ebo);
-        g = new Mesh(MeshType::TRIANGLES_ELEMENTS, vbo.data(), vbo.size(), ebo.data(), ebo.size(), triangles, *this->shader);
-    }
-    this->meshes.push_back(std::shared_ptr<Mesh>(g));
+    Mesh* mesh = Game::meshes->load(path, arraysOrElements, uvScale, *this->shader);
+    this->meshes.push_back(std::shared_ptr<Mesh>(mesh));
 }
 
 void GameObject::addEmptyMaterial() {

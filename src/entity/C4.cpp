@@ -1,4 +1,5 @@
 #include "C4.h"
+#include "../Game.h"
 
 void C4::render(PhongShader& shader, Camera& camera)
 {
@@ -19,11 +20,11 @@ void C4::create(PhongShader* shader)
 	
 	// Load texture
     const auto tSet = std::make_shared<TextureSet>();
-    tSet->texture = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_color.png", "diffuse");
-    tSet->specularMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_specular.png", "specular");
-    tSet->normalMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_normal.png", "normal");
-    tSet->aoMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_ao.png", "ao");
-    tSet->emissionMap = std::make_shared<Texture>("data/textures/c4/c4bakeFinal.001_emission.png", "emission");
+    tSet->texture = Game::textures->load("data/textures/c4/c4bakeFinal.001_color.jpg", "diffuse");
+    tSet->specularMap = Game::textures->load("data/textures/c4/c4bakeFinal.001_specular.jpg", "specular");
+    tSet->normalMap = Game::textures->load("data/textures/c4/c4bakeFinal.001_normal.jpg", "normal");
+    tSet->aoMap = Game::textures->load("data/textures/c4/c4bakeFinal.001_ao.jpg", "ao");
+    tSet->emissionMap = Game::textures->load("data/textures/c4/c4bakeFinal.001_emission.jpg", "emission");
 
     this->textureSets.push_back(tSet);
 

@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\mesh\MeshManager.cpp" />
+    <ClCompile Include="src\entity\lights\CampfireGlow.cpp" />
+    <ClCompile Include="src\entity\lights\Light.cpp" />
     <ClCompile Include="src\entity\primitives\Arrow.cpp" />
     <ClCompile Include="src\entity\primitives\Axes.cpp" />
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui.cpp" />
@@ -154,13 +157,13 @@
     <ClCompile Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imgui_widgets.cpp" />
     <ClCompile Include="src\entity\Airship.cpp" />
     <ClCompile Include="src\entity\animation\RotateEmpty.cpp" />
-    <ClCompile Include="src\entity\Bridge.cpp" />
     <ClCompile Include="src\entity\general\Empty.cpp" />
     <ClCompile Include="src\entity\general\Entity.cpp" />
     <ClCompile Include="src\entity\Islands.cpp" />
     <ClCompile Include="src\entity\primitives\Billboard.cpp" />
     <ClCompile Include="src\entity\Waterfall.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\scene\IslandScene.cpp" />
     <ClCompile Include="src\shader\GrassShader.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -192,13 +195,16 @@
     <ClCompile Include="src\shader\PhongShader.cpp" />
     <ClCompile Include="src\shader\Shader.cpp" />
     <ClCompile Include="src\entity\primitives\Quad.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\mesh\Mesh.cpp" />
     <ClCompile Include="src\entity\general\GameObject.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\texture\Texture.cpp" />
+    <ClCompile Include="src\texture\TextureManager.cpp" />
     <ClCompile Include="src\ui\ImGuiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\mesh\MeshManager.h" />
+    <ClInclude Include="src\entity\lights\CampfireGlow.h" />
     <ClInclude Include="src\entity\primitives\Arrow.h" />
     <ClInclude Include="src\entity\primitives\Axes.h" />
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imconfig.h" />
@@ -209,11 +215,11 @@
     <ClInclude Include="C:\Users\Dan\Downloads\imgui-1.87\imgui-1.87\imstb_truetype.h" />
     <ClInclude Include="src\entity\Airship.h" />
     <ClInclude Include="src\entity\animation\RotateEmpty.h" />
-    <ClInclude Include="src\entity\Bridge.h" />
     <ClInclude Include="src\entity\general\Empty.h" />
     <ClInclude Include="src\entity\Islands.h" />
     <ClInclude Include="src\entity\primitives\Billboard.h" />
     <ClInclude Include="src\entity\Waterfall.h" />
+    <ClInclude Include="src\scene\IslandScene.h" />
     <ClInclude Include="src\shader\GrassShader.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -250,9 +256,10 @@
     <ClInclude Include="src\shader\PhongShader.h" />
     <ClInclude Include="src\shader\Shader.h" />
     <ClInclude Include="src\entity\primitives\Quad.h" />
-    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\mesh\Mesh.h" />
     <ClInclude Include="src\entity\general\GameObject.h" />
     <ClInclude Include="src\texture\Texture.h" />
+    <ClInclude Include="src\texture\TextureManager.h" />
     <ClInclude Include="src\ui\ImGuiManager.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\entity\general\Transform.h" />

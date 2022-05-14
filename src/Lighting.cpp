@@ -9,15 +9,15 @@ void Lighting::setUniforms(const PhongShader& shader) const {
     int sunLightCount = 0;
     int spotLightCount = 0;
     for (auto& light : lights) {
-        if (typeid(*light) == typeid(PointLight)) {
+        if (dynamic_cast<PointLight*>(light.get())) {
             light->setUniforms(shader, pointLightCount);
-        	pointLightCount++;
+            pointLightCount++;
         } else
-        if (typeid(*light) == typeid(SunLight)) {
+        if (dynamic_cast<SunLight*>(light.get())) {
             light->setUniforms(shader, sunLightCount);
-        	sunLightCount++;
-        } else 
-        if (typeid(*light) == typeid(SpotLight)) {
+            sunLightCount++;
+        } else
+        if (dynamic_cast<SpotLight*>(light.get())) {
             light->setUniforms(shader, spotLightCount);
             spotLightCount++;
         }

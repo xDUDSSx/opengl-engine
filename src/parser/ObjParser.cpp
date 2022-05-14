@@ -17,11 +17,10 @@ ObjParser::ObjParser(const char* path, float uvScale)
     calculateTangents();
 }
 
-// Only parses obj files with triangle faces, so the mesh needs to be triangulated prior to export.
 void ObjParser::parseObj(const char* path, float uvScale) {
     // int cwCount = 0;
     // int ccwCount = 0;
-    std::cout << "Loading obj from file '" << path << "' ..." << std::endl;
+    std::cout << "[MESH] Loading obj from file '" << path << "' ..." << std::endl;
 
 	// Count number of lines
 	std::ifstream inFile(path);
@@ -35,7 +34,7 @@ void ObjParser::parseObj(const char* path, float uvScale) {
         index++;
         if (index % 50000 == 0) {
             int progress = static_cast<unsigned int>((float)index / lineCount * 100);
-            std::cout << "Loaded " << index << "/" << lineCount << " lines (" << progress << "%)" << std::endl;
+            std::cout << "[MESH] Loaded " << index << "/" << lineCount << " lines (" << progress << "%)" << std::endl;
         }
         words.clear();
 		Utils::tokenize(line, ' ', words);
@@ -60,7 +59,7 @@ void ObjParser::parseObj(const char* path, float uvScale) {
             normals.push_back(glm::vec3(x, y, z));
         } else if (words[0] == "f") {
             if (words.size() != 4) {
-                std::cerr << "Face is not a triangle at index " << index << "!" << std::endl;
+                std::cerr << "[MESH] Face is not a triangle at index " << index << "!" << std::endl;
                 break;
             }
             std::vector<int> vs;
@@ -78,7 +77,7 @@ void ObjParser::parseObj(const char* path, float uvScale) {
                     vs.push_back(std::stoi(tokens[0]));
                     vns.push_back(std::stoi(tokens[1]));
                 } else {
-                    std::cerr << "Invalid face attribute count (" << tokens.size() << ") at index " << index << "!" << std::endl;
+                    std::cerr << "[MESH] Invalid face attribute count (" << tokens.size() << ") at index " << index << "!" << std::endl;
                     break;
                 }
             }
@@ -107,7 +106,7 @@ void ObjParser::parseObj(const char* path, float uvScale) {
             // }
         }
     }
-	std::cout << "Loaded obj from file '" << path << "'" << std::endl;
+	std::cout << "[MESH] Loaded obj from file '" << path << "'" << std::endl;
 	
     // std::cout << "CW: " << std::to_string(cwCount) << std::endl;
     // std::cout << "CCW: " << std::to_string(ccwCount) << std::endl;

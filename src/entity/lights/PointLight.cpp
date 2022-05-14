@@ -1,4 +1,10 @@
 #include "PointLight.h"
+#include "../../Game.h"
+
+void PointLight::create(PhongShader* shader) {
+	Light::create(shader);
+    lightIcon->textureSets[0]->texture = Game::textures->load("data/textures/point.png", "diffuse");
+}
 
 void PointLight::setUniforms(const PhongShader& shader, int index) const {
     const std::string prefix = "pointLights[" + std::to_string(index) + "]";

@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include "../Utils.h"
+#include "../Game.h"
 
 Camera::Camera(int width, int height, glm::vec3 pivot) {
 	setPivot(pivot);
@@ -103,9 +104,15 @@ void Camera::mouseDrag(int dx, int dy, bool left, bool middle)
 		}
 	}
 	if (middle) {
+		glm::vec3 oldPivot = glm::vec3(pivot);
+
 		const float ratio = radius / zNear / 100.0f;
 		pivot += glm::vec3(right) * (translateSpeed * dx * ratio);
 		pivot += glm::vec3(up) * (translateSpeed * dy * ratio);
+
+		if (checkCollision(pivot)) {
+            pivot = oldPivot;
+        }
 	}
 }
 
@@ -141,6 +148,8 @@ void Camera::mouseWheel(int direction, int notches) {
 
 void Camera::keyboard(bool w, bool s, bool a, bool d, bool shift) {
 	if (fpsMode) {
+        glm::vec3 oldPos = glm::vec3(transform.pos);
+
 		float speed = fpsTranslateSpeed;
 		if (shift) {
 			speed *= fpsSpeedBoostMultiplier;
@@ -157,9 +166,39 @@ void Camera::keyboard(bool w, bool s, bool a, bool d, bool shift) {
 		if (d) {
             transform.pos -= right * speed;
 		}
+
+        if (checkCollision(transform.pos)) {
+            transform.pos = oldPos;
+		}
 	}
 }
 
+bool Camera::checkCollision(glm::vec3 pos)
+{
+    if (!Game::cameraCollision) {
+        return false;
+    }
+
+    // Boundary check
+    float maxDist = 100;
+    if (abs(pos.x) > maxDist) {
+        return true;
+    }
+    if (abs(pos.y) > maxDist) {
+        return true;
+    }
+    if (abs(pos.z) > maxDist) {
+        return true;
+    }
+
+    // Campfire check
+    glm::vec3 toCampfire = pos - glm::vec3(5, 5, 1);
+    if (glm::length(toCampfire) < 2.0f) {
+        return true;
+    }
+
+    return false;
+}
 
 void Camera::toggleFpsMode() {
 	enableFpsMode(!fpsMode);

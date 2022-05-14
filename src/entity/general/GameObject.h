@@ -4,16 +4,19 @@
 
 #include "Entity.h"
 #include "../../Material.h"
-#include "../../Mesh.h"
+#include "../../mesh/Mesh.h"
 #include "../../texture/TextureSet.h"
+#include "../../Game.h"
 
+/**
+ * \brief Basic world object entity. Represents a physical drawable object.
+ */
 class GameObject : public Entity {
 public:
     std::vector<std::shared_ptr<Material>> materials;
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::vector<std::shared_ptr<TextureSet>> textureSets;
 
-public:
     GameObject();
 
     void render(PhongShader& shader, Camera& camera) override;

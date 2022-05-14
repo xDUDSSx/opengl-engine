@@ -5,6 +5,11 @@
 
 #include "ObjVertex.h"
 
+/**
+ * \brief A very rudimentary Wavefront .obj file parser. Does not parse .mtl files.
+ * Only parses files with triangle faces, so the mesh needs to be triangulated prior to export.
+ * \see Mesh for vertex attribute structure.
+ */
 class ObjParser {
 public:
 	ObjParser(const char* path);

@@ -2,11 +2,14 @@
 
 #include "Texture.h"
 
+/**
+ * \brief A set of textures for multi-mapping.
+ */
 struct TextureSet {
-    std::shared_ptr<Texture> texture = nullptr;
-    std::shared_ptr<Texture> specularMap = nullptr;
-    std::shared_ptr<Texture> normalMap = nullptr;
-    std::shared_ptr<Texture> aoMap = nullptr;
-    std::shared_ptr<Texture> emissionMap = nullptr;
+    Texture* texture = nullptr;
+    Texture* specularMap = nullptr;
+    Texture* normalMap = nullptr;
+    Texture* aoMap = nullptr;
+    Texture* emissionMap = nullptr;
     float normalStrength = 1.0f;
 };

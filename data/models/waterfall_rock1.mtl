@@ -1,0 +1,13 @@
+# Blender MTL File: 'untitled4.blend'
+# Material Count: 1
+
+newmtl Large_Rock_01
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.150000 0.150000 0.150000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Dan\\blenderkit_data\\models\\large_rock_01_acb888ca-e190-47f8-99be-2ea2fc0067d3\\textures_1k\\Large_Rock_01_Normal.jpg

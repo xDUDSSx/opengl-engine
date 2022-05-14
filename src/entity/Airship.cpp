@@ -1,4 +1,5 @@
 #include "Airship.h"
+#include "../Game.h"
 
 void Airship::create(PhongShader* shader)
 {
@@ -14,15 +15,15 @@ void Airship::create(PhongShader* shader)
 
 	// Load textures
     const auto tSet = std::make_shared<TextureSet>();
-    tSet->texture = std::make_shared<Texture>("data/textures/airship/123_air Ship_BaseColor.png", "diffuse");
-    tSet->specularMap = std::make_shared<Texture>("data/textures/airship/123_air Ship_Specular.png", "specular");
-    tSet->normalMap = std::make_shared<Texture>("data/textures/airship/123_air Ship_Normal.png", "normal");
+    tSet->texture = Game::textures->load("data/textures/airship/123_air Ship_BaseColor.png", "diffuse");
+    tSet->specularMap = Game::textures->load("data/textures/airship/123_air Ship_Specular.png", "specular");
+    tSet->normalMap = Game::textures->load("data/textures/airship/123_air Ship_Normal.png", "normal");
     this->textureSets.push_back(tSet);
 
     const auto tSetGlass = std::make_shared<TextureSet>();
-    tSetGlass->texture = std::make_shared<Texture>("data/textures/airship/123_glass_BaseColor.png", "diffuse");
-    tSetGlass->specularMap = std::make_shared<Texture>("data/textures/airship/123_glass_Specular.png", "specular");
-    tSetGlass->normalMap = std::make_shared<Texture>("data/textures/airship/123_glass_Normal.png", "normal");
+    tSetGlass->texture = Game::textures->load("data/textures/airship/123_glass_BaseColor.png", "diffuse");
+    tSetGlass->specularMap = Game::textures->load("data/textures/airship/123_glass_Specular.png", "specular");
+    tSetGlass->normalMap = Game::textures->load("data/textures/airship/123_glass_Normal.png", "normal");
     this->textureSets.push_back(tSetGlass);
 
     opaque = false;

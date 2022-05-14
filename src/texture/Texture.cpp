@@ -4,16 +4,6 @@
 #include "../Game.h"
 #include "../Utils.h"
 
-Texture::Texture(const char* path)
-	: Texture(path, "texture")
-{
-}
-
-Texture::Texture(const char* path, std::string type)
-	: Texture(path, type, GL_TEXTURE_2D)
-{
-}
-
 Texture::Texture(const char* path, std::string type, GLenum target)
 	: target(target) 
 	, type(type)
@@ -79,6 +69,6 @@ void Texture::setClampToEdge() {
 
 GLuint Texture::loadTexture(const char* path)
 {
-	std::cout << "Loading texture file: " << path << std::endl;
+	std::cout << "[TEXTURE] Loading texture file: " << path << std::endl;
 	return pgr::createTexture(path);
 }

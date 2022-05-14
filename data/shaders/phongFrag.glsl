@@ -11,11 +11,13 @@ in vec3 Color;
 in float Fog;
 
 uniform float time;
+uniform float alphaCutoff;
 
 uniform mat4 viewMatrix;
 
 uniform bool selected;
 uniform bool basic;
+uniform bool disableLighting;
 
 // Fog
 uniform bool fogEnabled;
@@ -252,7 +254,7 @@ void main() {
 		FragColor = vec4(1, 1, 1, 1);
 		return;
 	}
-	if (alpha < 0.1f) {
+	if (alpha < alphaCutoff) {
 		discard;
 	}
 
@@ -262,14 +264,22 @@ void main() {
 	}
 
 	vec3 outColor = vec3(0);
-	for (int i = 0; i < sunLightsCount; i++) {
-		outColor += calculateSunLight(sunLights[i], material, FragPos, Normal, Tangent, Binormal);
-	}
-	for (int i = 0; i < pointLightsCount; i++) {
-		outColor += calculatePointLight(pointLights[i], material, FragPos, Normal, Tangent, Binormal);
-	}
-	for (int i = 0; i < spotLightsCount; i++) {
-		outColor += calculateSpotLight(spotLights[i], material, FragPos, Normal, Tangent, Binormal);
+	if (!disableLighting) {
+		for (int i = 0; i < sunLightsCount; i++) {
+			outColor += calculateSunLight(sunLights[i], material, FragPos, Normal, Tangent, Binormal);
+		}
+		for (int i = 0; i < pointLightsCount; i++) {
+			outColor += calculatePointLight(pointLights[i], material, FragPos, Normal, Tangent, Binormal);
+		}
+		for (int i = 0; i < spotLightsCount; i++) {
+			outColor += calculateSpotLight(spotLights[i], material, FragPos, Normal, Tangent, Binormal);
+		}
+	} else {
+		if (diffuse0_active) {
+			outColor = texture(diffuse0, texCoords()).xyz;
+		} else {
+			outColor = vec3(1, 0, 1);
+		}
 	}
 
 	if (fogEnabled) {

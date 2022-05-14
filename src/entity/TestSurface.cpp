@@ -1,4 +1,5 @@
 #include "TestSurface.h"
+#include "../Game.h"
 
 void TestSurface::render(PhongShader& shader, Camera& camera)
 {
@@ -23,10 +24,10 @@ void TestSurface::create(PhongShader* shader)
 
     // Load texture
     const auto tSet = std::make_shared<TextureSet>();
-    tSet->texture = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
-    tSet->specularMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular2.jpg", "specular");
-    tSet->aoMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
-    tSet->normalMap = std::make_shared<Texture>("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
+    tSet->texture = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
+    tSet->specularMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular2.jpg", "specular");
+    tSet->aoMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
+    tSet->normalMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
 
     this->textureSets.push_back(tSet);
 

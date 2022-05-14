@@ -1,4 +1,5 @@
 #include "Capacitor.h"
+#include "../Game.h"
 
 void Capacitor::render(PhongShader& shader, Camera& camera)
 {
@@ -25,9 +26,9 @@ void Capacitor::create(PhongShader* shader)
 
 	// Load texture
     const auto tSet = std::make_shared<TextureSet>();
-    tSet->texture = std::make_shared<Texture>("data/textures/capacitor/capacitor_base_color.png", "diffuse");
-    // tSet->specularMap = std::make_shared<Texture>("data/textures/container2_specular.png", "specular");
-    tSet->normalMap = std::make_shared<Texture>("data/textures/capacitor/capacitor_base_normal.png", "normal");
+    tSet->texture = Game::textures->load("data/textures/capacitor/capacitor_base_color.png", "diffuse");
+    // tSet->specularMap = Game::textures->load("data/textures/container2_specular.png", "specular");
+    tSet->normalMap = Game::textures->load("data/textures/capacitor/capacitor_base_normal.png", "normal");
 
     this->textureSets.push_back(tSet);
 

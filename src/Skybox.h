@@ -4,6 +4,9 @@
 #include "entity/Camera.h"
 #include "texture/Cubemap.h"
 
+/**
+ * \brief A skybox implementation that uses and manages a cubemap.
+ */
 class Skybox {
 public:
     GLuint vao;

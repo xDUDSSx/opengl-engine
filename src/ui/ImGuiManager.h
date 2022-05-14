@@ -17,5 +17,5 @@ public:
 
 private:
 	static void drawEntityInfo(Entity& entity);
-    static void drawSceneGraphTree(std::shared_ptr<SceneNode> node);
+    static void drawSceneGraphTree(Scene& scene, std::shared_ptr<SceneNode> node);
 };

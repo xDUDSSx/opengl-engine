@@ -7,6 +7,9 @@
 
 class Camera;
 
+/**
+ * \brief An entity. Holds basic information and a world transform.
+ */
 class Entity {
 public:
 	/** Id of the entity, -1 if not assigned, a positive integer otherwise */
@@ -15,6 +18,8 @@ public:
 	bool opaque = true;
 	bool backFaceCull = false;
 	bool wireframe = false;
+    bool disableLighting = false;
+    float alphaCutoff = 0.1f;
 
 	std::string name = "";
 
@@ -29,7 +34,7 @@ public:
     glm::mat4 parentMatrix = glm::mat4(1);
 
 	/** \brief Default shader to use when rendering this entity */
-	PhongShader* shader;
+    PhongShader* shader = nullptr;
 
 	Entity() = default;
 	virtual ~Entity() = default;

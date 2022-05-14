@@ -1,0 +1,14 @@
+# Blender MTL File: 'untitled4.blend'
+# Material Count: 1
+
+newmtl WC_Hornbeam_Leaf
+Ns 100.000018
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\Dan\\Downloads\\uploads_files_2654599_11+Hornbeam+Tree_Texture_Maps\\WC_Hornbeam_Leaf.tga
+map_d C:\\Users\\Dan\\Downloads\\uploads_files_2654599_11+Hornbeam+Tree_Texture_Maps\\WC_Hornbeam_Leaf.tga

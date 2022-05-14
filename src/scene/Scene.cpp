@@ -7,6 +7,7 @@
 
 #include "../shader/GrassShader.h"
 #include "../entity/Camera.h";
+#include "../Game.h"
 
 unsigned long Scene::counter = 1;
 
@@ -157,8 +158,10 @@ void Scene::renderEntity(Entity& entity, PhongShader* explicitShader, Camera& ca
 
 	glStencilFunc(GL_ALWAYS, entity.id, 0xFF);
 
-	bool selected = selectedEntities.find(entity.id) != selectedEntities.end();
+	const bool selected = selectedEntities.find(entity.id) != selectedEntities.end();
 
+	glUniform1f(glGetUniformLocation(shader->id, "alphaCutoff"), entity.alphaCutoff);
+    glUniform1i(glGetUniformLocation(shader->id, "disableLighting"), Game::disableLighting ? true : entity.disableLighting);
 	if (entity.wireframe) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glUniform1i(glGetUniformLocation(shader->id, "selected"), selected);

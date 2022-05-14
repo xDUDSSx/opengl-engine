@@ -1,4 +1,16 @@
 #include "SpotLight.h"
+#include "../../Game.h"
+#include "../../Utils.h"
+
+void SpotLight::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) {
+	Light::render(shader, camera, modelMatrix);
+    Utils::drawArrow(direction, glm::vec3(1, 0.8, 0), shader, camera, modelMatrix);
+}
+
+void SpotLight::create(PhongShader* shader) {
+	Light::create(shader);
+    lightIcon->textureSets[0]->texture = Game::textures->load("data/textures/spot.png", "diffuse");
+}
 
 void SpotLight::setUniforms(const PhongShader& shader, int index) const {
     const std::string prefix = "spotLights[" + std::to_string(index) + "]";

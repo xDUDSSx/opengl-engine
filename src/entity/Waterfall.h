@@ -2,7 +2,7 @@
 
 #include "primitives/Quad.h"
 
-class Waterfall : public Quad {
+class Waterfall : public GameObject {
 public:
     Waterfall() = default;
 

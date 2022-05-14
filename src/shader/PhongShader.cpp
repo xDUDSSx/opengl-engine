@@ -56,6 +56,9 @@ void PhongShader::setUniforms()
     // Normal strength
     glUniform1f(glGetUniformLocation(id, "normalStrength"), 1.0f); //Default value
 
+    // Alpha cutoff
+    glUniform1f(glGetUniformLocation(id, "alphaCutoff"), 0.1f); // Default value
+
     // Fog
     glUniform1i(glGetUniformLocation(id, "fogEnabled"), Game::fogEnabled);
     glUniform3fv(glGetUniformLocation(id, "fogColor"), 1, glm::value_ptr(Game::fogColor));

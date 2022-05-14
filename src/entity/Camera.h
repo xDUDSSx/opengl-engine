@@ -71,6 +71,8 @@ public:
 private:
 	void updateMatrix();
 
+	bool checkCollision(glm::vec3 pos);
+
 public:
 	glm::vec3 getPivot() const;
 	void setPivot(const glm::vec3& pivot);
