@@ -6,20 +6,22 @@
 A game engine hosting a fictional floating island scene written from scratch using OpenGL and FreeGlut.
 This project was written for learning purposes and perhaps hosting it publicly will help someone trying to tackle similar topics.
 
+![](img/sc1.PNG)
+
 | **Note** that the project doesn't have a license yet, consider everything "all rights reserved", especially the resources (models / textures), do not redistribute them. |
 | --- |
 
-![](img/sc1.png)
-
-# Controls
-## UI
+## Controls
+### UI
 There are many settings in the UI of the program realized using Dear ImGui. There are 4 windows:
 * Settings - General scene parameters and settings.
 * Inspector - Information and parameters of the currently selected object
 * Scene Graph - A tree showing the scene graph structure with an option to select specific objects.
 * Active camera - Information and parameters about the currently active camera
 
-## General
+![](img/s5.PNG)
+
+### General
 <dl>
   <dt>RMB</dt>
   <dd>Select object</dd>
@@ -33,19 +35,23 @@ There are many settings in the UI of the program realized using Dear ImGui. Ther
   <dd>Exit</dd>
 </dl>
 
-## Camera controls
+### Camera controls
 <dl>
   <dt>F</dt>
   <dd>Switch between pivot and FPS camera modes</dd>
 </dl>
-### Pivot mode
+
+Pivot mode
+
 <dl>
   <dt>LMB Drag</dt>
   <dd>Rotate camera around the pivot point</dd>
   <dt>MMB Drag</dt>
   <dd>Move the pivot perpendicular to the camera's direction</dd>
 </dl>
-### First person mode
+
+First person mode
+
 <dl>
   <dt>W, S, A, D</dt>
   <dd>Move camera</dd>
@@ -58,5 +64,3 @@ There are many settings in the UI of the program realized using Dear ImGui. Ther
   <dt>Shift Hold</dt>
   <dd>Speed boost</dd>
 </dl>
-
-![](img/s5.png)
