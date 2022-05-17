@@ -192,7 +192,7 @@ bool Camera::checkCollision(glm::vec3 pos)
     }
 
     // Campfire check
-    glm::vec3 toCampfire = pos - glm::vec3(5, 5, 1);
+    glm::vec3 toCampfire = pos - glm::vec3(8.3, 35.2, -0.77);
     if (glm::length(toCampfire) < 2.0f) {
         return true;
     }
