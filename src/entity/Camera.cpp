@@ -38,14 +38,14 @@ void Camera::updateMatrix() {
 		const glm::vec3 cameraCenter = transform.pos + cameraDirTransformed;
 
 		const glm::vec3 cameraPosWorld = glm::vec3(parentMatrix * glm::vec4(transform.pos, 1.0));
-        const glm::vec3 cameraCenterWorld = glm::vec3(parentMatrix * glm::vec4(cameraCenter, 1.0));
-        const glm::vec3 cameraUpWorld = glm::vec3(parentMatrix * glm::vec4(cameraUpTransformed, 0.0));
+		const glm::vec3 cameraCenterWorld = glm::vec3(parentMatrix * glm::vec4(cameraCenter, 1.0));
+		const glm::vec3 cameraUpWorld = glm::vec3(parentMatrix * glm::vec4(cameraUpTransformed, 0.0));
 
 		projection = glm::perspective(glm::radians(fov), width / (float)height, zNear, zFar);
 		view = glm::lookAt(
-            cameraPosWorld,
-            cameraCenterWorld,
-            cameraUpWorld
+			cameraPosWorld,
+			cameraCenterWorld,
+			cameraUpWorld
 		);
 
 		position = transform.pos;
@@ -54,41 +54,41 @@ void Camera::updateMatrix() {
 		right = glm::cross(up, direction);
 
 		// Update entity transforms
-        worldTransform.pos = cameraPosWorld;
-        transform.rot = glm::vec3(rotationX, rotationY, 0);
+		worldTransform.pos = cameraPosWorld;
+		transform.rot = glm::vec3(rotationX, rotationY, 0);
 	} else {
 		cameraTransform = glm::translate(cameraTransform, pivot);
-        cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationX), glm::vec3(0.0f, 0.0f, 1.0f));
-        cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
-        cameraTransform = glm::translate(cameraTransform, glm::vec3(radius, 0.0f, 0.0f));
+		cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationX), glm::vec3(0.0f, 0.0f, 1.0f));
+		cameraTransform = glm::rotate(cameraTransform, glm::radians(rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
+		cameraTransform = glm::translate(cameraTransform, glm::vec3(radius, 0.0f, 0.0f));
 
-        const glm::vec4 cameraPos = glm::vec4(0.0f, 0.0f, 0.0f, 1.0);
-        const glm::vec4 cameraUp = glm::vec4(0.0f, 0.0f, 1.0f, 0.0);
-        const glm::vec3 cameraPosTransformed = glm::vec3(cameraTransform * cameraPos);
-        const glm::vec3 cameraUpTransformed = glm::vec3(cameraTransform * cameraUp);
+		const glm::vec4 cameraPos = glm::vec4(0.0f, 0.0f, 0.0f, 1.0);
+		const glm::vec4 cameraUp = glm::vec4(0.0f, 0.0f, 1.0f, 0.0);
+		const glm::vec3 cameraPosTransformed = glm::vec3(cameraTransform * cameraPos);
+		const glm::vec3 cameraUpTransformed = glm::vec3(cameraTransform * cameraUp);
 
 		const glm::vec3 cameraPosWorld = glm::vec3(parentMatrix * glm::vec4(cameraPosTransformed, 1.0));
-        const glm::vec3 cameraPivotWorld = glm::vec3(parentMatrix * glm::vec4(pivot, 1.0));
-        const glm::vec3 cameraUpWorld = glm::vec3(parentMatrix * glm::vec4(cameraUpTransformed, 0.0));
+		const glm::vec3 cameraPivotWorld = glm::vec3(parentMatrix * glm::vec4(pivot, 1.0));
+		const glm::vec3 cameraUpWorld = glm::vec3(parentMatrix * glm::vec4(cameraUpTransformed, 0.0));
 
 		projection = glm::perspective(glm::radians(fov), width / (float)height, zNear, zFar);
-        view = glm::lookAt(
-            cameraPosWorld,
-            cameraPivotWorld,
-            cameraUpWorld
+		view = glm::lookAt(
+			cameraPosWorld,
+			cameraPivotWorld,
+			cameraUpWorld
 		);
 
 		worldPivot = cameraPivotWorld;
 
 		position = cameraPosTransformed;
 		up = glm::normalize(cameraUpTransformed);
-        direction = glm::normalize(pivot - glm::vec3(cameraPosTransformed));
+		direction = glm::normalize(pivot - glm::vec3(cameraPosTransformed));
 		right = glm::cross(up, direction);
 
 		// Update entity transforms
 		transform.pos = cameraPosTransformed;
-        worldTransform.pos = cameraPosWorld;
-        transform.rot = glm::vec3(rotationX, rotationY, 0);
+		worldTransform.pos = cameraPosWorld;
+		transform.rot = glm::vec3(rotationX, rotationY, 0);
 	}
 }
 
@@ -111,8 +111,8 @@ void Camera::mouseDrag(int dx, int dy, bool left, bool middle)
 		pivot += glm::vec3(up) * (translateSpeed * dy * ratio);
 
 		if (checkCollision(pivot)) {
-            pivot = oldPivot;
-        }
+			pivot = oldPivot;
+		}
 	}
 }
 
@@ -148,56 +148,56 @@ void Camera::mouseWheel(int direction, int notches) {
 
 void Camera::keyboard(bool w, bool s, bool a, bool d, bool shift) {
 	if (fpsMode) {
-        glm::vec3 oldPos = glm::vec3(transform.pos);
+		glm::vec3 oldPos = glm::vec3(transform.pos);
 
 		float speed = fpsTranslateSpeed;
 		if (shift) {
 			speed *= fpsSpeedBoostMultiplier;
 		}
 		if (w) {
-            transform.pos += direction * speed;
+			transform.pos += direction * speed;
 		}
 		if (s) {
-            transform.pos -= direction * speed;
+			transform.pos -= direction * speed;
 		}
 		if (a) {
-            transform.pos += right * speed;
+			transform.pos += right * speed;
 		}
 		if (d) {
-            transform.pos -= right * speed;
+			transform.pos -= right * speed;
 		}
 
-        if (checkCollision(transform.pos)) {
-            transform.pos = oldPos;
+		if (checkCollision(transform.pos)) {
+			transform.pos = oldPos;
 		}
 	}
 }
 
 bool Camera::checkCollision(glm::vec3 pos)
 {
-    if (!Game::cameraCollision) {
-        return false;
-    }
+	if (!Game::cameraCollision) {
+		return false;
+	}
 
-    // Boundary check
-    float maxDist = 100;
-    if (abs(pos.x) > maxDist) {
-        return true;
-    }
-    if (abs(pos.y) > maxDist) {
-        return true;
-    }
-    if (abs(pos.z) > maxDist) {
-        return true;
-    }
+	// Boundary check
+	float maxDist = 100;
+	if (abs(pos.x) > maxDist) {
+		return true;
+	}
+	if (abs(pos.y) > maxDist) {
+		return true;
+	}
+	if (abs(pos.z) > maxDist) {
+		return true;
+	}
 
-    // Campfire check
-    glm::vec3 toCampfire = pos - glm::vec3(8.3, 35.2, -0.77);
-    if (glm::length(toCampfire) < 2.0f) {
-        return true;
-    }
+	// Campfire check
+	glm::vec3 toCampfire = pos - glm::vec3(8.3, 35.2, -0.77);
+	if (glm::length(toCampfire) < 2.0f) {
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 void Camera::toggleFpsMode() {
@@ -207,7 +207,7 @@ void Camera::toggleFpsMode() {
 void Camera::enableFpsMode(bool b) {
 	fpsMode = b;
 	if (!fpsMode) {
-        pivot = transform.pos + (direction * radius);
+		pivot = transform.pos + (direction * radius);
 	}
 }
 
@@ -233,7 +233,7 @@ void Camera::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix)
 
 void Camera::create(PhongShader* shader)
 {
-    this->shader = shader;
+	this->shader = shader;
 }
 
 void Camera::dispose()
@@ -242,8 +242,8 @@ void Camera::dispose()
 }
 
 void Camera::updateTransform(glm::mat4 worldMatrix, glm::mat4 parentMatrix) {
-    this->worldMatrix = worldMatrix;
-    this->parentMatrix = parentMatrix;
+	this->worldMatrix = worldMatrix;
+	this->parentMatrix = parentMatrix;
 }
 
 glm::vec3 Camera::getPivot() const { return pivot; }

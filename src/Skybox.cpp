@@ -84,6 +84,6 @@ void Skybox::create(SkyboxShader& shader) {
 }
 
 void Skybox::dispose() {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 }

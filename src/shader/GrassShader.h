@@ -4,7 +4,7 @@
 
 class GrassShader : public PhongShader {
 public:
-    GrassShader(const std::string& vertShader, const std::string& fragShader);
+	GrassShader(const std::string& vertShader, const std::string& fragShader);
 
-    void setUniforms() override;
+	void setUniforms() override;
 };

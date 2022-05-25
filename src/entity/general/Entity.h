@@ -18,8 +18,8 @@ public:
 	bool opaque = true;
 	bool backFaceCull = false;
 	bool wireframe = false;
-    bool disableLighting = false;
-    float alphaCutoff = 0.1f;
+	bool disableLighting = false;
+	float alphaCutoff = 0.1f;
 
 	std::string name = "";
 
@@ -30,11 +30,11 @@ public:
 
 	/** \brief World transform matrix */
 	glm::mat4 worldMatrix = glm::mat4(1);
-    /** \brief Entities scene graph parent's world transform matrix */
-    glm::mat4 parentMatrix = glm::mat4(1);
+	/** \brief Entities scene graph parent's world transform matrix */
+	glm::mat4 parentMatrix = glm::mat4(1);
 
 	/** \brief Default shader to use when rendering this entity */
-    PhongShader* shader = nullptr;
+	PhongShader* shader = nullptr;
 
 	Entity() = default;
 	virtual ~Entity() = default;
@@ -47,7 +47,7 @@ public:
 
 	virtual void updateTransform(glm::mat4 worldMatrix, glm::mat4 parentMatrix);
 
-    virtual void setName(std::string name);
+	virtual void setName(std::string name);
 	virtual std::string getName();
 
 	friend bool operator==(const Entity& lhs, const Entity& rhs)

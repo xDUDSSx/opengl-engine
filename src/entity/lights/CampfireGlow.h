@@ -3,6 +3,6 @@
 
 class CampfireGlow : public PointLight {
 public:
-    void update() override;
-    std::string getName() override;
+	void update() override;
+	std::string getName() override;
 };

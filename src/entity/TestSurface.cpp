@@ -16,20 +16,20 @@ void TestSurface::create(PhongShader* shader)
 	GameObject::create(shader);
 
 	// Load model
-    loadMesh("data/models/test.obj", true, 4.0f);
+	loadMesh("data/models/test.obj", true, 4.0f);
 
-    auto material = std::make_shared<Material>();
-    material->shininess = 64;
-    materials.push_back(material);
+	auto material = std::make_shared<Material>();
+	material->shininess = 64;
+	materials.push_back(material);
 
-    // Load texture
-    const auto tSet = std::make_shared<TextureSet>();
-    tSet->texture = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
-    tSet->specularMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular2.jpg", "specular");
-    tSet->aoMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
-    tSet->normalMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
+	// Load texture
+	const auto tSet = std::make_shared<TextureSet>();
+	tSet->texture = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-diffuse.jpg", "diffuse");
+	tSet->specularMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-specular2.jpg", "specular");
+	tSet->aoMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-ao.jpg", "ao");
+	tSet->normalMap = Game::textures->load("data/textures/stone_floor_4-2K/2K-stone_floor_4-normal.jpg", "normal");
 
-    this->textureSets.push_back(tSet);
+	this->textureSets.push_back(tSet);
 
 
 }

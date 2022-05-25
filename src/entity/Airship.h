@@ -4,5 +4,5 @@
 
 class Airship : public GameObject {
 public:
-    void create(PhongShader* shader) override;
+	void create(PhongShader* shader) override;
 };

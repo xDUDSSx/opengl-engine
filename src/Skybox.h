@@ -9,14 +9,14 @@
  */
 class Skybox {
 public:
-    GLuint vao;
-    GLuint vbo;
+	GLuint vao;
+	GLuint vbo;
 
-    std::shared_ptr<Cubemap> cubemap;
+	std::shared_ptr<Cubemap> cubemap;
 
-    Skybox(std::shared_ptr<Cubemap> cubemap);
+	Skybox(std::shared_ptr<Cubemap> cubemap);
 
-    void render(SkyboxShader& shader, Camera& camera) const;
-    void create(SkyboxShader& shader);
-    void dispose();
+	void render(SkyboxShader& shader, Camera& camera) const;
+	void create(SkyboxShader& shader);
+	void dispose();
 };

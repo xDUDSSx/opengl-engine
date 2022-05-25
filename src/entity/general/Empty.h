@@ -4,5 +4,5 @@
 
 class Empty : public GameObject {
 public:
-    void create(PhongShader* shader) override;
+	void create(PhongShader* shader) override;
 };

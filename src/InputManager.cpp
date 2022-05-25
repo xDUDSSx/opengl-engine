@@ -112,12 +112,12 @@ std::map<InputManager::ImKey, bool> InputManager::initKeyMap()
 	map.insert(std::pair<ImKey, bool>(IM_KEY_F10, false));
 	map.insert(std::pair<ImKey, bool>(IM_KEY_F11, false));
 	map.insert(std::pair<ImKey, bool>(IM_KEY_F12, false));
-    map.insert(std::pair<ImKey, bool>(IM_KEY_SHIFT_L, false));
-    map.insert(std::pair<ImKey, bool>(IM_KEY_SHIFT_R, false));
-    map.insert(std::pair<ImKey, bool>(IM_KEY_CTRL_L, false));
-    map.insert(std::pair<ImKey, bool>(IM_KEY_CTRL_R, false));
-    map.insert(std::pair<ImKey, bool>(IM_KEY_ALT_L, false));
-    map.insert(std::pair<ImKey, bool>(IM_KEY_ALT_R, false));
+	map.insert(std::pair<ImKey, bool>(IM_KEY_SHIFT_L, false));
+	map.insert(std::pair<ImKey, bool>(IM_KEY_SHIFT_R, false));
+	map.insert(std::pair<ImKey, bool>(IM_KEY_CTRL_L, false));
+	map.insert(std::pair<ImKey, bool>(IM_KEY_CTRL_R, false));
+	map.insert(std::pair<ImKey, bool>(IM_KEY_ALT_L, false));
+	map.insert(std::pair<ImKey, bool>(IM_KEY_ALT_R, false));
 	map.insert(std::pair<ImKey, bool>(IM_KEY_UNDEFINED, false));
 
 	return map;
@@ -472,17 +472,17 @@ InputManager::ImKey InputManager::glutSpecialKeyToImKey(int key)
 		case GLUT_KEY_F12:
 			return IM_KEY_F12;
 		case GLUT_KEY_SHIFT_L:
-            return IM_KEY_SHIFT_L;
-        case GLUT_KEY_SHIFT_R:
-            return IM_KEY_SHIFT_R;
-        case GLUT_KEY_CTRL_L:
-            return IM_KEY_CTRL_L;
-        case GLUT_KEY_CTRL_R:
-            return IM_KEY_CTRL_R;
-        case GLUT_KEY_ALT_L:
-            return IM_KEY_ALT_L;
-        case GLUT_KEY_ALT_R:
-            return IM_KEY_ALT_R;
+			return IM_KEY_SHIFT_L;
+		case GLUT_KEY_SHIFT_R:
+			return IM_KEY_SHIFT_R;
+		case GLUT_KEY_CTRL_L:
+			return IM_KEY_CTRL_L;
+		case GLUT_KEY_CTRL_R:
+			return IM_KEY_CTRL_R;
+		case GLUT_KEY_ALT_L:
+			return IM_KEY_ALT_L;
+		case GLUT_KEY_ALT_R:
+			return IM_KEY_ALT_R;
 		default:
 			return IM_KEY_UNDEFINED;
 	}
@@ -581,13 +581,13 @@ void InputManager::debugPrint() {
 }
 
 bool InputManager::isShiftDown() {
-    return keyMap[IM_KEY_SHIFT_L] || keyMap[IM_KEY_SHIFT_R];
+	return keyMap[IM_KEY_SHIFT_L] || keyMap[IM_KEY_SHIFT_R];
 }
 
 bool InputManager::isCtrlDown() {
-    return keyMap[IM_KEY_CTRL_L] || keyMap[IM_KEY_CTRL_R];
+	return keyMap[IM_KEY_CTRL_L] || keyMap[IM_KEY_CTRL_R];
 }
 
 bool InputManager::isAltDown() {
-    return keyMap[IM_KEY_ALT_L] || keyMap[IM_KEY_ALT_R];
+	return keyMap[IM_KEY_ALT_L] || keyMap[IM_KEY_ALT_R];
 }

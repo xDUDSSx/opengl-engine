@@ -13,7 +13,7 @@
 class ObjParser {
 public:
 	ObjParser(const char* path);
-    ObjParser(const char* path, float uvScale);
+	ObjParser(const char* path, float uvScale);
 
 	void getDrawArraysGeo(std::vector<float>& vbo);
 	void getDrawElementsGeo(std::vector<float>& vbo, std::vector<unsigned int>& ebo);
@@ -38,6 +38,6 @@ protected:
 	std::vector<unsigned int> tangentIndices; //Start at 0
 
 	void parseObj(const char* path);
-    void parseObj(const char* path, float uvScale);
-    void calculateTangents();
+	void parseObj(const char* path, float uvScale);
+	void calculateTangents();
 };

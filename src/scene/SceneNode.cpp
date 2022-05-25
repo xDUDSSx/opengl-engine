@@ -3,11 +3,11 @@
 SceneNode::SceneNode() : SceneNode(nullptr) {}
 
 SceneNode::SceneNode(Entity* entity)
-    : entity(entity)
+	: entity(entity)
 	, worldMatrix(glm::mat4(1.0f))
 	, localMatrix(glm::mat4(1.0f))
 {
-    updateLocalMatrix();
+	updateLocalMatrix();
 }
 
 //void SceneNode::render(PhongShader& shader, Camera& camera) const
@@ -32,49 +32,49 @@ SceneNode::SceneNode(Entity* entity)
 
 void SceneNode::matrix()
 {
-    updateLocalMatrix();
-    updateWorldMatrix();
+	updateLocalMatrix();
+	updateWorldMatrix();
 
-    if (entity != nullptr) {
-        glm::mat4 parentMatrix;
-    	if (parent != nullptr) {
-            parentMatrix = parent->worldMatrix;
-        } else {
-            parentMatrix = glm::mat4(1.0f);
-        }
-        // Updates world transform and transform matrices
-        entity->updateTransform(worldMatrix, parentMatrix);
-    }
+	if (entity != nullptr) {
+		glm::mat4 parentMatrix;
+		if (parent != nullptr) {
+			parentMatrix = parent->worldMatrix;
+		} else {
+			parentMatrix = glm::mat4(1.0f);
+		}
+		// Updates world transform and transform matrices
+		entity->updateTransform(worldMatrix, parentMatrix);
+	}
 
-    for (auto& child : children) {
-        child->matrix();
-    }
+	for (auto& child : children) {
+		child->matrix();
+	}
 }
 
 void SceneNode::update() {
-    if (entity != nullptr) {
-        entity->update();
-    }
+	if (entity != nullptr) {
+		entity->update();
+	}
 }
 
 void SceneNode::add(std::shared_ptr<SceneNode>& node) {
-    children.push_back(node);
-    node->setParent(this);
+	children.push_back(node);
+	node->setParent(this);
 }
 
 void SceneNode::updateLocalMatrix() {
-    if (entity != nullptr) {
-        transform = entity->transform;
-    }
-    localMatrix = transform.constructMatrix();
+	if (entity != nullptr) {
+		transform = entity->transform;
+	}
+	localMatrix = transform.constructMatrix();
 }
 
 void SceneNode::updateWorldMatrix() {
-    if (parent != nullptr) {
-        worldMatrix = parent->worldMatrix * localMatrix;
-    } else {
-        worldMatrix = localMatrix;
-    }
+	if (parent != nullptr) {
+		worldMatrix = parent->worldMatrix * localMatrix;
+	} else {
+		worldMatrix = localMatrix;
+	}
 }
 
 Transform SceneNode::getTransform() const { return transform; }

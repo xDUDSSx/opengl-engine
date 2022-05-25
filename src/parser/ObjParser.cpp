@@ -13,103 +13,103 @@ ObjParser::ObjParser(const char* path) : ObjParser(path, 1.0f)
 
 ObjParser::ObjParser(const char* path, float uvScale)
 {
-    parseObj(path, uvScale);
-    calculateTangents();
+	parseObj(path, uvScale);
+	calculateTangents();
 }
 
 void ObjParser::parseObj(const char* path, float uvScale) {
-    // int cwCount = 0;
-    // int ccwCount = 0;
-    std::cout << "[MESH] Loading obj from file '" << path << "' ..." << std::endl;
+	// int cwCount = 0;
+	// int ccwCount = 0;
+	std::cout << "[MESH] Loading obj from file '" << path << "' ..." << std::endl;
 
 	// Count number of lines
 	std::ifstream inFile(path);
-    unsigned int lineCount = std::count(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>(), '\n');
+	unsigned int lineCount = std::count(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>(), '\n');
 
-    std::ifstream file(path);
+	std::ifstream file(path);
 	std::string line;
-    std::vector<std::string> words;
+	std::vector<std::string> words;
 	int index = 0;
-    while (std::getline(file, line)) {
-        index++;
-        if (index % 50000 == 0) {
-            int progress = static_cast<unsigned int>((float)index / lineCount * 100);
-            std::cout << "[MESH] Loaded " << index << "/" << lineCount << " lines (" << progress << "%)" << std::endl;
-        }
-        words.clear();
+	while (std::getline(file, line)) {
+		index++;
+		if (index % 50000 == 0) {
+			int progress = static_cast<unsigned int>((float)index / lineCount * 100);
+			std::cout << "[MESH] Loaded " << index << "/" << lineCount << " lines (" << progress << "%)" << std::endl;
+		}
+		words.clear();
 		Utils::tokenize(line, ' ', words);
-    	
-        if (words.empty()) {
-            continue;
-        }
+		
+		if (words.empty()) {
+			continue;
+		}
 
-        if (words[0] == "v") {
-            float x = std::stof(words[1]);
-            float y = std::stof(words[2]);
-            float z = std::stof(words[3]);
-            vertices.push_back(glm::vec3(x, y, z));
-        } else if (words[0] == "vt") {
-            float u = std::stof(words[1]) * uvScale;
-            float v = std::stof(words[2]) * uvScale;
-            uvs.push_back(glm::vec2(u, v));
-        } else if (words[0] == "vn") {
-            float x = std::stof(words[1]);
-            float y = std::stof(words[2]);
-            float z = std::stof(words[3]);
-            normals.push_back(glm::vec3(x, y, z));
-        } else if (words[0] == "f") {
-            if (words.size() != 4) {
-                std::cerr << "[MESH] Face is not a triangle at index " << index << "!" << std::endl;
-                break;
-            }
-            std::vector<int> vs;
-            std::vector<int> vts;
-            std::vector<int> vns;
-            for (int i = 1; i < words.size(); i++) {
-                // Three v/vt/vn or v//vn
-                std::vector<std::string> tokens;
-                Utils::tokenize(words[i], '/', tokens);
-                if (tokens.size() == 3) {
-                    vs.push_back(std::stoi(tokens[0]));
-                    vts.push_back(std::stoi(tokens[1]));
-                    vns.push_back(std::stoi(tokens[2]));
-                } else if (tokens.size() == 2) {
-                    vs.push_back(std::stoi(tokens[0]));
-                    vns.push_back(std::stoi(tokens[1]));
-                } else {
-                    std::cerr << "[MESH] Invalid face attribute count (" << tokens.size() << ") at index " << index << "!" << std::endl;
-                    break;
-                }
-            }
-            triangleCount++;
-            vertexIndices.push_back({ vs[0], vs[1], vs[2] });
-            uvIndices.push_back({ vts[0], vts[1], vts[2] });
-            normalIndices.push_back({ vns[0], vns[1], vns[2] });
+		if (words[0] == "v") {
+			float x = std::stof(words[1]);
+			float y = std::stof(words[2]);
+			float z = std::stof(words[3]);
+			vertices.push_back(glm::vec3(x, y, z));
+		} else if (words[0] == "vt") {
+			float u = std::stof(words[1]) * uvScale;
+			float v = std::stof(words[2]) * uvScale;
+			uvs.push_back(glm::vec2(u, v));
+		} else if (words[0] == "vn") {
+			float x = std::stof(words[1]);
+			float y = std::stof(words[2]);
+			float z = std::stof(words[3]);
+			normals.push_back(glm::vec3(x, y, z));
+		} else if (words[0] == "f") {
+			if (words.size() != 4) {
+				std::cerr << "[MESH] Face is not a triangle at index " << index << "!" << std::endl;
+				break;
+			}
+			std::vector<int> vs;
+			std::vector<int> vts;
+			std::vector<int> vns;
+			for (int i = 1; i < words.size(); i++) {
+				// Three v/vt/vn or v//vn
+				std::vector<std::string> tokens;
+				Utils::tokenize(words[i], '/', tokens);
+				if (tokens.size() == 3) {
+					vs.push_back(std::stoi(tokens[0]));
+					vts.push_back(std::stoi(tokens[1]));
+					vns.push_back(std::stoi(tokens[2]));
+				} else if (tokens.size() == 2) {
+					vs.push_back(std::stoi(tokens[0]));
+					vns.push_back(std::stoi(tokens[1]));
+				} else {
+					std::cerr << "[MESH] Invalid face attribute count (" << tokens.size() << ") at index " << index << "!" << std::endl;
+					break;
+				}
+			}
+			triangleCount++;
+			vertexIndices.push_back({ vs[0], vs[1], vs[2] });
+			uvIndices.push_back({ vts[0], vts[1], vts[2] });
+			normalIndices.push_back({ vns[0], vns[1], vns[2] });
 
-            // Detect winding (unused)
-            // glm::vec3 a = vertices[vs[0] - 1];
-            // glm::vec3 b = vertices[vs[1] - 1];
-            // glm::vec3 c = vertices[vs[2] - 1];
+			// Detect winding (unused)
+			// glm::vec3 a = vertices[vs[0] - 1];
+			// glm::vec3 b = vertices[vs[1] - 1];
+			// glm::vec3 c = vertices[vs[2] - 1];
 
-            // glm::vec3 x = glm::normalize(b - a);
-            // glm::vec3 y = glm::normalize(c - a);
-            // glm::vec3 z = glm::cross(x, y);
+			// glm::vec3 x = glm::normalize(b - a);
+			// glm::vec3 y = glm::normalize(c - a);
+			// glm::vec3 z = glm::cross(x, y);
 
-            // glm::mat3 triangleSpaceToStandardBasis = glm::inverse(glm::mat3(x, y, z));
-            // glm::vec3 normal = triangleSpaceToStandardBasis * z;
-            // if (normal.z > 0.0f) {
-            //	// CCW
-            //	ccwCount++;
-            // } else {
-            //	// CW
-            //	cwCount++;
-            // }
-        }
-    }
+			// glm::mat3 triangleSpaceToStandardBasis = glm::inverse(glm::mat3(x, y, z));
+			// glm::vec3 normal = triangleSpaceToStandardBasis * z;
+			// if (normal.z > 0.0f) {
+			//	// CCW
+			//	ccwCount++;
+			// } else {
+			//	// CW
+			//	cwCount++;
+			// }
+		}
+	}
 	std::cout << "[MESH] Loaded obj from file '" << path << "'" << std::endl;
 	
-    // std::cout << "CW: " << std::to_string(cwCount) << std::endl;
-    // std::cout << "CCW: " << std::to_string(ccwCount) << std::endl;
+	// std::cout << "CW: " << std::to_string(cwCount) << std::endl;
+	// std::cout << "CCW: " << std::to_string(ccwCount) << std::endl;
 }
 
 void ObjParser::calculateTangents() {
@@ -147,11 +147,11 @@ void ObjParser::calculateTangents() {
 		glm::vec3 tangent = glm::vec3(0);
 
 		glm::mat2 dMatInv = glm::inverse(glm::mat2(d1.x, d2.x, d1.y, d2.y));
-        glm::mat3x2 eMat = glm::mat3x2(e1.x, e2.x, e1.y, e2.y, e1.z, e2.z);
-        glm::mat3x2 result = dMatInv * eMat;
-        tangent.x = result[0][0];
-        tangent.y = result[1][0];
-        tangent.z = result[2][0];
+		glm::mat3x2 eMat = glm::mat3x2(e1.x, e2.x, e1.y, e2.y, e1.z, e2.z);
+		glm::mat3x2 result = dMatInv * eMat;
+		tangent.x = result[0][0];
+		tangent.y = result[1][0];
+		tangent.z = result[2][0];
 
 		//Following code is used at learnopengl.com, might perhaps be faster (depends on glm::inverse speed)
 		//float d = d1.x * d2.y - d2.x * d1.y;
@@ -160,7 +160,7 @@ void ObjParser::calculateTangents() {
 		//tangent.y = f * (d2.y * e1.y - d1.y * e2.y);
 		//tangent.z = f * (d2.y * e1.z - d1.y * e2.z);
 
-        tangent = glm::normalize(tangent);
+		tangent = glm::normalize(tangent);
 
 		tangents.push_back(tangent);
 		// Assign tangent to the triangle. Same for all vertices of a triangle (only store a single index)

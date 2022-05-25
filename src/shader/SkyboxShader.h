@@ -4,21 +4,21 @@
 
 class SkyboxShader : public Shader {
 public:
-    // Attributes
-    GLuint aPos;
+	// Attributes
+	GLuint aPos;
 
-    // Uniforms
-    GLuint pvMatrixId;
+	// Uniforms
+	GLuint pvMatrixId;
 
-    // Sampler
-    GLuint samplerId;
+	// Sampler
+	GLuint samplerId;
 
-    SkyboxShader(const std::string& vertShader, const std::string& fragShader);
+	SkyboxShader(const std::string& vertShader, const std::string& fragShader);
 
-    /**
-     * \brief Applies view and projection matrices.
-     * \param view View matrix
-     * \param projection Projection matrix
-     */
-    void setTransformUniforms(const glm::mat4& view, const glm::mat4& projection) const;
+	/**
+	 * \brief Applies view and projection matrices.
+	 * \param view View matrix
+	 * \param projection Projection matrix
+	 */
+	void setTransformUniforms(const glm::mat4& view, const glm::mat4& projection) const;
 };

@@ -88,12 +88,12 @@ void update(int delta)
 	Game::time = 0.001f * (float)glutGet(GLUT_ELAPSED_TIME);
 
 	activeCamera->keyboard(
-        InputManager::keyMap[InputManager::IM_KEY_w],
-        InputManager::keyMap[InputManager::IM_KEY_s],
-        InputManager::keyMap[InputManager::IM_KEY_a],
-        InputManager::keyMap[InputManager::IM_KEY_d],
+		InputManager::keyMap[InputManager::IM_KEY_w],
+		InputManager::keyMap[InputManager::IM_KEY_s],
+		InputManager::keyMap[InputManager::IM_KEY_a],
+		InputManager::keyMap[InputManager::IM_KEY_d],
 		InputManager::isShiftDown()
-    );
+	);
 	
 	scene->update();
 
@@ -129,24 +129,24 @@ void init()
 	grassShader = std::make_shared<GrassShader>("data/shaders/grassVert.glsl", "data/shaders/phongFrag.glsl");
 
 	// Create cameras
-    camera1 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-    camera1->setName("Camera 1");
+	camera1 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
+	camera1->setName("Camera 1");
 	camera1->create(shader.get());
-    camera1->radius = 34;
-    camera1->rotationX = -34;
-    camera1->rotationY = -30;
-    scene->add(camera1.get());
+	camera1->radius = 34;
+	camera1->rotationX = -34;
+	camera1->rotationY = -30;
+	scene->add(camera1.get());
 
-    camera2 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 5, 0));
-    camera2->setName("Camera 2");
+	camera2 = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 5, 0));
+	camera2->setName("Camera 2");
 	camera2->create(shader.get());
 
 	airshipCamera = std::make_shared<Camera>(winWidth, winHeight, glm::vec3(0, 0, 0));
-    airshipCamera->setName("Camera 3 (Airship)");
+	airshipCamera->setName("Camera 3 (Airship)");
 	airshipCamera->rotationX = -90;
 	airshipCamera->create(shader.get());
 
-    activeCamera = camera1;
+	activeCamera = camera1;
 
 	// Create lighting
 	lighting = std::make_shared<Lighting>();
@@ -155,10 +155,10 @@ void init()
 	createIslandScene(scene.get(), lighting.get(), Game::textures.get(), shader.get(), grassShader.get(), airshipCamera.get());
 
 	auto cameraEmpty = new Empty();
-    cameraEmpty->create(shader.get());
-    cameraEmpty->transform.pos = glm::vec3(-5, -5, 0);
-    scene->add(cameraEmpty);
-    scene->add(cameraEmpty, camera2.get());
+	cameraEmpty->create(shader.get());
+	cameraEmpty->transform.pos = glm::vec3(-5, -5, 0);
+	scene->add(cameraEmpty);
+	scene->add(cameraEmpty, camera2.get());
 
 	// Create skybox
 	std::vector<std::string> cubemapTextures;
@@ -192,7 +192,7 @@ void reshape(int newWidth, int newHeight) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
-    keyPressed = tolower(keyPressed); //Fixes stuff like shift causing problems with uppercase letters
+	keyPressed = tolower(keyPressed); //Fixes stuff like shift causing problems with uppercase letters
 
 	switch (keyPressed) {
 		case 27: // escape
@@ -204,14 +204,14 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 			break;
 		case ',': 
 			{
-	            Entity* e = scene->getSelectedEntity();
-	            if (e != nullptr) {
-	                activeCamera->pivot = e->worldTransform.pos;
-	            }
-            }
-            break;
+				Entity* e = scene->getSelectedEntity();
+				if (e != nullptr) {
+					activeCamera->pivot = e->worldTransform.pos;
+				}
+			}
+			break;
 		case 'f':
-            activeCamera->toggleFpsMode(); 
+			activeCamera->toggleFpsMode(); 
 			break;
 	}
 	ImGui_ImplGLUT_KeyboardFunc(keyPressed, mouseX, mouseY);
@@ -227,7 +227,7 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
-    keyReleased = tolower(keyReleased); // Fixes stuff like shift causing problems with uppercase letters
+	keyReleased = tolower(keyReleased); // Fixes stuff like shift causing problems with uppercase letters
 	ImGui_ImplGLUT_KeyboardUpFunc(keyReleased, mouseX, mouseY);
 	InputManager::keyMap[InputManager::glutKeyToImKey(keyReleased)] = false;
 }
@@ -242,23 +242,23 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
-    switch (specKeyPressed) {
-	    case GLUT_KEY_F1:
-	        activeCamera = camera1;
-	        activeCamera->size(winWidth, winHeight);
-	        break;
-	    case GLUT_KEY_F2:
-	        activeCamera = camera2;
-	        activeCamera->size(winWidth, winHeight);
-	        break;
-	    case GLUT_KEY_F3:
-	        activeCamera = airshipCamera;
-	        activeCamera->size(winWidth, winHeight);
-	        break;
-	    case GLUT_KEY_F4:
-	        Game::drawDebugNormals = !Game::drawDebugNormals;
-	        break;
-    }
+	switch (specKeyPressed) {
+		case GLUT_KEY_F1:
+			activeCamera = camera1;
+			activeCamera->size(winWidth, winHeight);
+			break;
+		case GLUT_KEY_F2:
+			activeCamera = camera2;
+			activeCamera->size(winWidth, winHeight);
+			break;
+		case GLUT_KEY_F3:
+			activeCamera = airshipCamera;
+			activeCamera->size(winWidth, winHeight);
+			break;
+		case GLUT_KEY_F4:
+			Game::drawDebugNormals = !Game::drawDebugNormals;
+			break;
+	}
 	ImGui_ImplGLUT_SpecialFunc(specKeyPressed, mouseX, mouseY);
 	InputManager::keyMap[InputManager::glutSpecialKeyToImKey(specKeyPressed)] = true;
 }
@@ -321,7 +321,7 @@ void mouseDragged(int x, int y) {
 			InputManager::mouseMap[InputManager::IM_MOUSE_BUTTON_MIDDLE]
 		);
 	}
-    glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 /**
@@ -331,29 +331,29 @@ void mouseDragged(int x, int y) {
  */
 void mouseMoved(int x, int y) {
 	mouseDx = x - mouseX;
-    mouseDy = y - mouseY;
+	mouseDy = y - mouseY;
 	mouseX = x;
 	mouseY = y;
 	ImGui_ImplGLUT_MotionFunc(x, y);
-    if (!ImGui::GetIO().WantCaptureMouse) {
-        activeCamera->mouseMoved(mouseDx, mouseDy);
-    	if (activeCamera->fpsMode) {
-            //int border = 3;
-            //if (x < border) {
-            //    glutWarpPointer(winWidth - border, y);    
-            //}
-            //if (x > winWidth - border) {
-            //    glutWarpPointer(border, y);
-            //}
+	if (!ImGui::GetIO().WantCaptureMouse) {
+		activeCamera->mouseMoved(mouseDx, mouseDy);
+		if (activeCamera->fpsMode) {
+			//int border = 3;
+			//if (x < border) {
+			//    glutWarpPointer(winWidth - border, y);    
+			//}
+			//if (x > winWidth - border) {
+			//    glutWarpPointer(border, y);
+			//}
 
-            //int centerX = winWidth / 2;
-            //int centerY = winHeight / 2;
-            //if (x != centerX || y != centerY) {
-            //    glutWarpPointer(centerX, centerY);
-            //}
-        }
-    }
-    glutPostRedisplay();
+			//int centerX = winWidth / 2;
+			//int centerY = winHeight / 2;
+			//if (x != centerX || y != centerY) {
+			//    glutWarpPointer(centerX, centerY);
+			//}
+		}
+	}
+	glutPostRedisplay();
 }
 
 /**

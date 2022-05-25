@@ -9,7 +9,7 @@ Texture* TextureManager::load(const char* path, std::string type) {
 }
 
 Texture* TextureManager::load(const char* path, std::string type, GLenum target) {
-    std::string textureKey = (path + std::string("#") + type + "#" + std::to_string(target));
+	std::string textureKey = (path + std::string("#") + type + "#" + std::to_string(target));
 	if (textures.find(textureKey) == textures.end()) {
 		// Texture is not registered
 		auto texture = std::make_shared<Texture>(path, type, target);
@@ -20,7 +20,7 @@ Texture* TextureManager::load(const char* path, std::string type, GLenum target)
 }
 
 void TextureManager::dispose() {
-    for (auto& e : textures) {
-        e.second->dispose();
-    }
+	for (auto& e : textures) {
+		e.second->dispose();
+	}
 }

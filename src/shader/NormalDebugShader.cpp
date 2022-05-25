@@ -12,5 +12,5 @@ void NormalDebugShader::setUniforms()
 {
 	PhongShader::setUniforms();
 
-    glUniform1f(glGetUniformLocation(id, "magnitude"), Game::normalDebugShaderMagnitude);
+	glUniform1f(glGetUniformLocation(id, "magnitude"), Game::normalDebugShaderMagnitude);
 }

@@ -4,8 +4,8 @@
 
 class Waterfall : public GameObject {
 public:
-    Waterfall() = default;
+	Waterfall() = default;
 
-    void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
-    void create(PhongShader* shader) override;
+	void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
+	void create(PhongShader* shader) override;
 };

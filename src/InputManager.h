@@ -106,11 +106,11 @@ public:
 		IM_KEY_F11,
 		IM_KEY_F12,
 		IM_KEY_SHIFT_L,
-        IM_KEY_SHIFT_R,
-        IM_KEY_CTRL_L,
-        IM_KEY_CTRL_R,
-        IM_KEY_ALT_L,
-        IM_KEY_ALT_R,
+		IM_KEY_SHIFT_R,
+		IM_KEY_CTRL_L,
+		IM_KEY_CTRL_R,
+		IM_KEY_ALT_L,
+		IM_KEY_ALT_R,
 		IM_KEY_UNDEFINED = 999,
 	};
 
@@ -125,22 +125,22 @@ public:
 	static std::map<ImMouseButton, bool> mouseMap;
 
 	// String conversion map
-    static std::map<ImKey, std::string> keyToStringMap;
-    static std::map<ImMouseButton, std::string> mouseToStringMap;
+	static std::map<ImKey, std::string> keyToStringMap;
+	static std::map<ImMouseButton, std::string> mouseToStringMap;
 
 	static ImKey glutKeyToImKey(int key);
-    static ImKey glutSpecialKeyToImKey(int key);
-    static ImMouseButton glutMouseButtonToImMouseButton(int key);
-    static int imKeyToAtbKey(ImKey key);
-    static void debugPrint();
+	static ImKey glutSpecialKeyToImKey(int key);
+	static ImMouseButton glutMouseButtonToImMouseButton(int key);
+	static int imKeyToAtbKey(ImKey key);
+	static void debugPrint();
 
 	static bool isShiftDown();
-    static bool isCtrlDown();
-    static bool isAltDown();
+	static bool isCtrlDown();
+	static bool isAltDown();
 
 private:
 	static std::map<ImKey, bool> initKeyMap();
-    static std::map<ImKey, std::string> initKeyToStringMap();
+	static std::map<ImKey, std::string> initKeyToStringMap();
 	static std::map<ImMouseButton, bool> initMouseMap();
-    static std::map<ImMouseButton, std::string> initMouseToStringMap();
+	static std::map<ImMouseButton, std::string> initMouseToStringMap();
 };

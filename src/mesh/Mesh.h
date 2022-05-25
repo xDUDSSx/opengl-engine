@@ -20,7 +20,7 @@ enum MeshType {
  */
 class Mesh {
 public:
-    MeshType type = UNINITIALIZED;
+	MeshType type = UNINITIALIZED;
 
 	float* verts;
 	unsigned int* indices = nullptr;
@@ -35,17 +35,17 @@ public:
 	GLuint vao = -1;
 
 	Mesh() = default;
-    /**
-     * \brief Create drawElements geometry.
-     * \param type Geo type (currently just TRIANGLES_ELEMENTS)
-     * \param verts Vertex array 
-     * \param vertsCount Vertex array size
-     * \param indices Indices array
-     * \param indicesCount Indices array size
-     * \param triangleCount Triangle count
-     * \param shader Shader for vertex attribute ids
-     */
-    Mesh(MeshType type, float* verts, int vertsCount, unsigned int* indices, int indicesCount, unsigned int triangleCount, PhongShader& shader);
+	/**
+	 * \brief Create drawElements geometry.
+	 * \param type Geo type (currently just TRIANGLES_ELEMENTS)
+	 * \param verts Vertex array 
+	 * \param vertsCount Vertex array size
+	 * \param indices Indices array
+	 * \param indicesCount Indices array size
+	 * \param triangleCount Triangle count
+	 * \param shader Shader for vertex attribute ids
+	 */
+	Mesh(MeshType type, float* verts, int vertsCount, unsigned int* indices, int indicesCount, unsigned int triangleCount, PhongShader& shader);
 
 	/**
 	 * @brief Create drawArrays geometry.
@@ -61,7 +61,7 @@ public:
 	void dispose() const;
 
 private:
-    void initDrawElements(float* verts, int vertsCount, unsigned int* indices, int indicesCount, PhongShader& shader);
-    void initDrawArrays(float* verts, int vertsCount, PhongShader& shader);
+	void initDrawElements(float* verts, int vertsCount, unsigned int* indices, int indicesCount, PhongShader& shader);
+	void initDrawArrays(float* verts, int vertsCount, PhongShader& shader);
 	//std::array<bool, 5> attr
 };

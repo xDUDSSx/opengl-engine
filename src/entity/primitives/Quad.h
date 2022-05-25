@@ -4,7 +4,7 @@
 
 class Quad : public GameObject {
 public:
-    Quad() = default;
+	Quad() = default;
 
-    void create(PhongShader* shader) override;
+	void create(PhongShader* shader) override;
 };

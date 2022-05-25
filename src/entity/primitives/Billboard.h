@@ -3,7 +3,7 @@
 
 class Billboard : public Quad {
 public:
-    Billboard();
+	Billboard();
 
-    void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
+	void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
 };

@@ -31,7 +31,7 @@ void Scene::render(PhongShader* explicitShader, Camera& camera)
 	// Sort non opaque entities by distance from camera
 	auto sortByDistanceToCamera = [&](Entity* e1, Entity* e2) -> bool {
 		const float e1dist = glm::distance(camera.worldTransform.pos, e1->transform.pos);
-        const float e2dist = glm::distance(camera.worldTransform.pos, e2->transform.pos);
+		const float e2dist = glm::distance(camera.worldTransform.pos, e2->transform.pos);
 		return e1dist > e2dist;
 	};
 	std::sort(delayedRenderEntities.begin(), delayedRenderEntities.end(), sortByDistanceToCamera);
@@ -161,7 +161,7 @@ void Scene::renderEntity(Entity& entity, PhongShader* explicitShader, Camera& ca
 	const bool selected = selectedEntities.find(entity.id) != selectedEntities.end();
 
 	glUniform1f(glGetUniformLocation(shader->id, "alphaCutoff"), entity.alphaCutoff);
-    glUniform1i(glGetUniformLocation(shader->id, "disableLighting"), Game::disableLighting ? true : entity.disableLighting);
+	glUniform1i(glGetUniformLocation(shader->id, "disableLighting"), Game::disableLighting ? true : entity.disableLighting);
 	if (entity.wireframe) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glUniform1i(glGetUniformLocation(shader->id, "selected"), selected);

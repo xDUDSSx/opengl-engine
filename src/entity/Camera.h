@@ -11,7 +11,7 @@ public:
 	bool fpsMode = false;
 
 	glm::vec3 pivot = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 worldPivot = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 worldPivot = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	float radius = 3.0f;
 	float rotationX = 0.0f;
@@ -60,11 +60,11 @@ public:
 	void size(int width, int height);
 
 	// Entity overrides
-    void render(PhongShader& shader, Camera& camera) override;
-    void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
-    void update() override;
-    void create(PhongShader* shader) override;
-    void dispose() override;
+	void render(PhongShader& shader, Camera& camera) override;
+	void render(PhongShader& shader, Camera& camera, glm::mat4 modelMatrix) override;
+	void update() override;
+	void create(PhongShader* shader) override;
+	void dispose() override;
 
 	void updateTransform(glm::mat4 worldMatrix, glm::mat4 parentMatrix) override;
 

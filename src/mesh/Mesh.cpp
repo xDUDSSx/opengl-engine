@@ -24,13 +24,13 @@ Mesh::Mesh(MeshType type, float* verts, const int vertsCount, const unsigned int
 
 void Mesh::render() const
 {
-    if (type == UNINITIALIZED) {
-        pgr::dieWithError("Cannot render an uninitialized mesh!");
-    	return;
-    }
+	if (type == UNINITIALIZED) {
+		pgr::dieWithError("Cannot render an uninitialized mesh!");
+		return;
+	}
 	glBindVertexArray(vao);
 	switch (type) {
-        default:
+		default:
 		case TRIANGLES_ARRAYS: 
 			glDrawArrays(GL_TRIANGLES, 0, elementCount * 3);
 			break;

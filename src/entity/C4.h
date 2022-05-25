@@ -4,7 +4,7 @@
 
 class C4 : public GameObject {
 public:
-    void render(PhongShader& shader, Camera& camera) override;
-    void update() override;
-    void create(PhongShader* shader) override;
+	void render(PhongShader& shader, Camera& camera) override;
+	void update() override;
+	void create(PhongShader* shader) override;
 };

@@ -3,5 +3,5 @@
 #include "../general/GameObject.h"
 
 class Axes : public GameObject {
-    Axes();
+	Axes();
 };

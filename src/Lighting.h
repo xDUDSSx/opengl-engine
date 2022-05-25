@@ -11,19 +11,19 @@
  */
 class Lighting {
 private:
-    std::vector<std::shared_ptr<Light>> lights;
+	std::vector<std::shared_ptr<Light>> lights;
 
 public:
-    /**
-     * \brief Set light information uniforms for a shader.
-     * \param shader The shader
-     */
-    void setUniforms(const PhongShader& shader) const;
+	/**
+	 * \brief Set light information uniforms for a shader.
+	 * \param shader The shader
+	 */
+	void setUniforms(const PhongShader& shader) const;
 
-    void addLight(Light* light);
-    void addLight(const std::shared_ptr<Light>& light);
+	void addLight(Light* light);
+	void addLight(const std::shared_ptr<Light>& light);
 
 	void removeLight(std::shared_ptr<Light>& light);
 
-    std::vector<std::shared_ptr<Light>> getLights() const;
+	std::vector<std::shared_ptr<Light>> getLights() const;
 };
