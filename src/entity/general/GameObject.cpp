@@ -42,7 +42,11 @@ void GameObject::render(PhongShader& shader, Camera& camera, glm::mat4 modelMatr
                 tSet->specularMap->bind(0, 1, shader);
             }
             if (tSet->normalMap != nullptr) {
-                glUniform1f(glGetUniformLocation(shader.id, "normalStrength"), tSet->normalStrength);
+                if (!Game::disableNormalMapping) {
+                    glUniform1f(glGetUniformLocation(shader.id, "normalStrength"), tSet->normalStrength);
+                } else {
+                    glUniform1f(glGetUniformLocation(shader.id, "normalStrength"), 0.0f);
+                }
                 tSet->normalMap->bind(0, 2, shader);
             }
             if (tSet->aoMap != nullptr) {

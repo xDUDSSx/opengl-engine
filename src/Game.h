@@ -28,4 +28,5 @@ public:
     static bool cameraCollision;
 
     static bool disableLighting;
+    static bool disableNormalMapping;
 };

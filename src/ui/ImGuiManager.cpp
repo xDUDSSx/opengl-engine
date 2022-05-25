@@ -53,6 +53,7 @@ void ImGuiManager::draw(Scene& scene, Camera& activeCamera)
         ImGui::Checkbox("Draw normals", &Game::drawDebugNormals);
         ImGui::SliderFloat("Normals size", &Game::normalDebugShaderMagnitude, 0.01f, 1.0f);
         ImGui::Checkbox("Disable lighting", &Game::disableLighting);
+        ImGui::Checkbox("Disable normal mapping", &Game::disableNormalMapping);
     	ImGui::Checkbox("Camera collision", &Game::cameraCollision);
 
         ImGui::Separator();

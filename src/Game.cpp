@@ -19,3 +19,4 @@ float Game::fogFar = 100;
 bool Game::cameraCollision = true;
 
 bool Game::disableLighting = false;
+bool Game::disableNormalMapping = false;

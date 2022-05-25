@@ -150,7 +150,7 @@ vec3 calculateSpecularLight(vec3 lightColor, vec3 specular, vec3 R, vec3 V, floa
 }
 
 vec3 calculateNormalMapping(vec3 normal, vec3 tangent, vec3 binormal) {
-	if (normal0_active) {
+	if (normal0_active && normalStrength > 0) {
 		vec3 mapNormal = texture(normal0, texCoords()).rgb;
 		//Apply normal strength by just mixing with a neutral normal
 		//This can only make normals "weaker"
